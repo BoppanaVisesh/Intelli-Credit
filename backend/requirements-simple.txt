@@ -1,0 +1,21 @@
+# Simplified requirements - just what we need for the demo
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+sqlalchemy==2.0.25
+python-multipart==0.0.6
+python-dotenv==1.0.0
+
+# Document Processing (optional for now)
+# PyPDF2==3.0.1
+# pdfplumber==0.10.3
+# python-docx==1.1.0
+# openpyxl==3.1.2
+
+# AI & ML - Just Gemini for now
+google-generativeai>=0.7.0
+requests>=2.31.0
+
+# Web Scraping
+beautifulsoup4==4.12.3
