@@ -1,0 +1,12 @@
+[
+  "dscr",
+  "current_ratio",
+  "debt_to_equity",
+  "gst_vs_bank_variance",
+  "circular_trading_risk_score",
+  "litigation_count",
+  "sector_risk_score",
+  "due_diligence_score",
+  "sector_encoded",
+  "promoter_sentiment_encoded"
+]
