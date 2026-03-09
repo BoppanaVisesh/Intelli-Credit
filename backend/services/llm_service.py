@@ -7,10 +7,12 @@ from typing import Optional, Dict, Any, List
 from enum import Enum
 import google.generativeai as genai
 import requests
+from openai import OpenAI
 
 
 class LLMProvider(str, Enum):
     GEMINI = "gemini"  # FREE: 1500 req/day, 60 req/min
+    OPENAI = "openai"  # Paid: GPT-4o-mini / GPT-4o
     OLLAMA = "ollama"  # FREE: Runs locally, no API costs
     GROQ = "groq"      # FREE tier available
 
@@ -28,19 +30,29 @@ class LLMService:
         model: Optional[str] = None
     ):
         self.provider = provider
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        
+        # Default API keys per provider
+        if api_key:
+            self.api_key = api_key
+        elif provider == LLMProvider.OPENAI:
+            self.api_key = os.getenv("OPENAI_API_KEY")
+        else:
+            self.api_key = os.getenv("GEMINI_API_KEY")
         
         # Default models for each provider
         self.model = model or {
-            LLMProvider.GEMINI: "gemini-1.5-flash",  # Fast & free
+            LLMProvider.GEMINI: "gemini-2.5-flash",
+            LLMProvider.OPENAI: "gpt-4o-mini",
             LLMProvider.OLLAMA: "llama3",
             LLMProvider.GROQ: "llama3-70b-8192"
-        }.get(provider, "gemini-1.5-flash")
+        }.get(provider, "gemini-2.5-flash")
         
         # Initialize provider
         if provider == LLMProvider.GEMINI:
             genai.configure(api_key=self.api_key)
             self.client = genai.GenerativeModel(self.model)
+        elif provider == LLMProvider.OPENAI:
+            self.openai_client = OpenAI(api_key=self.api_key)
         elif provider == LLMProvider.OLLAMA:
             self.base_url = "http://localhost:11434/api/generate"
         elif provider == LLMProvider.GROQ:
@@ -49,9 +61,10 @@ class LLMService:
     def generate_text(
         self,
         prompt: str,
-        max_tokens: int = 1000,
+        max_tokens: int = 4000,
         temperature: float = 0.7,
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False
     ) -> str:
         """
         Generate text using the configured LLM provider.
@@ -61,12 +74,15 @@ class LLMService:
             max_tokens: Maximum tokens to generate
             temperature: Sampling temperature (0-1)
             system_prompt: System/instruction prompt
+            json_mode: If True, force JSON output (Gemini response_mime_type)
             
         Returns:
             Generated text response
         """
         if self.provider == LLMProvider.GEMINI:
-            return self._generate_gemini(prompt, max_tokens, temperature, system_prompt)
+            return self._generate_gemini(prompt, max_tokens, temperature, system_prompt, json_mode)
+        elif self.provider == LLMProvider.OPENAI:
+            return self._generate_openai(prompt, max_tokens, temperature, system_prompt)
         elif self.provider == LLMProvider.OLLAMA:
             return self._generate_ollama(prompt, max_tokens, temperature, system_prompt)
         elif self.provider == LLMProvider.GROQ:
@@ -77,25 +93,62 @@ class LLMService:
         prompt: str, 
         max_tokens: int, 
         temperature: float,
-        system_prompt: Optional[str]
+        system_prompt: Optional[str],
+        json_mode: bool = False
     ) -> str:
         """Generate using Google Gemini (FREE: 1500 req/day)"""
         try:
             full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
             
-            generation_config = genai.GenerationConfig(
-                max_output_tokens=max_tokens,
-                temperature=temperature,
-            )
+            config_kwargs = {
+                "max_output_tokens": max_tokens,
+                "temperature": temperature,
+            }
+            if json_mode:
+                config_kwargs["response_mime_type"] = "application/json"
+            
+            generation_config = genai.GenerationConfig(**config_kwargs)
             
             response = self.client.generate_content(
                 full_prompt,
                 generation_config=generation_config
             )
             
-            return response.text
+            # Handle gemini-2.5-flash thinking tokens: response.text may fail
+            # if all tokens were used for thinking with none left for output
+            try:
+                return response.text
+            except ValueError:
+                if response.candidates and response.candidates[0].content.parts:
+                    return response.candidates[0].content.parts[0].text
+                raise Exception("Gemini returned empty response (thinking tokens may have consumed all output tokens)")
         except Exception as e:
             raise Exception(f"Gemini API error: {str(e)}")
+    
+    def _generate_openai(
+        self, 
+        prompt: str, 
+        max_tokens: int, 
+        temperature: float,
+        system_prompt: Optional[str]
+    ) -> str:
+        """Generate using OpenAI GPT models"""
+        try:
+            messages = []
+            if system_prompt:
+                messages.append({"role": "system", "content": system_prompt})
+            messages.append({"role": "user", "content": prompt})
+            
+            response = self.openai_client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+            
+            return response.choices[0].message.content
+        except Exception as e:
+            raise Exception(f"OpenAI API error: {str(e)}")
     
     def _generate_ollama(
         self, 
@@ -216,7 +269,7 @@ def get_llm_service(provider: str = "gemini") -> LLMService:
     Get LLM service instance.
     
     Args:
-        provider: "gemini" (free), "ollama" (free local), or "groq" (free tier)
+        provider: "gemini" (free), "openai" (paid), "ollama" (free local), or "groq" (free tier)
     """
     from core.config import get_settings
     settings = get_settings()
@@ -225,6 +278,11 @@ def get_llm_service(provider: str = "gemini") -> LLMService:
         return LLMService(
             provider=LLMProvider.GEMINI,
             api_key=settings.GEMINI_API_KEY
+        )
+    elif provider == "openai":
+        return LLMService(
+            provider=LLMProvider.OPENAI,
+            api_key=settings.OPENAI_API_KEY
         )
     elif provider == "ollama":
         return LLMService(provider=LLMProvider.OLLAMA)
@@ -235,6 +293,31 @@ def get_llm_service(provider: str = "gemini") -> LLMService:
         )
     else:
         raise ValueError(f"Unknown provider: {provider}")
+
+
+def get_llm_service_with_fallback() -> LLMService:
+    """
+    Get LLM service with automatic fallback.
+    Tries Gemini first, falls back to OpenAI if available.
+    """
+    from core.config import get_settings
+    settings = get_settings()
+    
+    # Try Gemini first (free)
+    if settings.GEMINI_API_KEY:
+        try:
+            svc = LLMService(provider=LLMProvider.GEMINI, api_key=settings.GEMINI_API_KEY)
+            # Quick test to verify quota isn't exhausted
+            return svc
+        except Exception:
+            pass
+    
+    # Fallback to OpenAI
+    if settings.OPENAI_API_KEY:
+        return LLMService(provider=LLMProvider.OPENAI, api_key=settings.OPENAI_API_KEY)
+    
+    # Default to Gemini anyway
+    return LLMService(provider=LLMProvider.GEMINI, api_key=settings.GEMINI_API_KEY)
 
 
 # Example usage

@@ -33,6 +33,12 @@ export const api = {
     return response.json();
   },
 
+  async getApplicationSummary(id) {
+    const response = await fetch(`${API_BASE_URL}/applications/${id}/summary`);
+    if (!response.ok) throw new Error('Failed to fetch application summary');
+    return response.json();
+  },
+
   // Due Diligence
   async addDueDiligenceNotes(data) {
     const response = await fetch(`${API_BASE_URL}/due-diligence/add-notes`, {
@@ -47,6 +53,14 @@ export const api = {
   async getDueDiligenceNotes(applicationId) {
     const response = await fetch(`${API_BASE_URL}/due-diligence/${applicationId}/notes`);
     if (!response.ok) throw new Error('Failed to fetch notes');
+    return response.json();
+  },
+
+  async deleteDueDiligenceNote(applicationId, noteId) {
+    const response = await fetch(`${API_BASE_URL}/due-diligence/${applicationId}/notes/${noteId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete note');
     return response.json();
   },
 
@@ -116,6 +130,36 @@ export const api = {
     if (!response.ok) throw new Error('Failed to fetch research results');
     return response.json();
   },
+
+  // Fraud Detection
+  async runFraudVerification(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/fraud/run-verification/${applicationId}`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to run fraud verification');
+    }
+    return response.json();
+  },
+
+  async getFraudResults(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/fraud/${applicationId}/results`);
+    if (!response.ok) throw new Error('Failed to fetch fraud results');
+    return response.json();
+  },
+
+  // Credit Scoring
+  async calculateScore(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/scoring/calculate-score?application_id=${applicationId}`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to calculate score');
+    }
+    return response.json();
+  },
 };
 
 // Named exports for convenience
@@ -124,8 +168,10 @@ export const {
   createApplication,
   getApplications,
   getApplication,
+  getApplicationSummary,
   addDueDiligenceNotes,
   getDueDiligenceNotes,
+  deleteDueDiligenceNote,
   generateCAM,
   downloadCAM,
   uploadDocuments,
@@ -133,4 +179,7 @@ export const {
   getDocuments,
   triggerResearch,
   getResearchResults,
+  runFraudVerification,
+  getFraudResults,
+  calculateScore,
 } = api;

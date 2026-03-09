@@ -208,6 +208,87 @@ async def list_applications(
     return ApplicationListResponse(applications=items, total=total)
 
 
+@router.get("/{application_id}/summary")
+async def get_application_summary(
+    application_id: str,
+    db: Session = Depends(get_db)
+):
+    """Get application summary with pipeline step status - works for any status."""
+    import json as _json
+    app = db.query(Application).filter(Application.id == application_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    # Check document count
+    from models.uploaded_document import UploadedDocument
+    docs = db.query(UploadedDocument).filter(
+        UploadedDocument.application_id == application_id
+    ).all()
+    docs_uploaded = len(docs)
+    docs_parsed = sum(1 for d in docs if d.parse_status == "COMPLETED")
+
+    # Check research results
+    from models.research_result import ResearchResult
+    research = db.query(ResearchResult).filter(
+        ResearchResult.application_id == application_id
+    ).all()
+
+    # Check due diligence notes
+    from models.due_diligence_note import DueDiligenceNote
+    dd_notes = db.query(DueDiligenceNote).filter(
+        DueDiligenceNote.application_id == application_id
+    ).all()
+
+    return {
+        "application_id": app.id,
+        "company_name": app.company_name,
+        "mca_cin": app.mca_cin,
+        "sector": app.sector,
+        "requested_limit_cr": app.requested_limit_cr,
+        "status": app.status.value if app.status else "PENDING",
+        "created_at": str(app.created_at) if app.created_at else None,
+        "pipeline": {
+            "ingestion": {
+                "docs_uploaded": docs_uploaded,
+                "docs_parsed": docs_parsed,
+                "status": "completed" if docs_parsed > 0 else ("in_progress" if docs_uploaded > 0 else "not_started"),
+            },
+            "research": {
+                "count": len(research),
+                "types": list(set(r.research_type for r in research)),
+                "overall_risk": _compute_risk([r.risk_level for r in research]),
+                "status": "completed" if len(research) > 0 else "not_started",
+            },
+            "due_diligence": {
+                "count": len(dd_notes),
+                "total_adjustment": sum(n.score_adjustment or 0 for n in dd_notes),
+                "status": "completed" if len(dd_notes) > 0 else "not_started",
+            },
+            "scoring": {
+                "score": app.final_credit_score,
+                "decision": app.decision,
+                "status": "completed" if app.final_credit_score else "not_started",
+            },
+            "cam": {
+                "url": app.cam_document_url,
+                "status": "completed" if app.cam_document_url else "not_started",
+            },
+        },
+    }
+
+
+def _compute_risk(levels):
+    if not levels:
+        return None
+    high = levels.count("HIGH")
+    med = levels.count("MEDIUM")
+    if high >= 2:
+        return "HIGH"
+    if high >= 1 or med >= 2:
+        return "MEDIUM"
+    return "LOW"
+
+
 @router.get("/{application_id}", response_model=CreditAnalysisResponse)
 async def get_application(
     application_id: str,

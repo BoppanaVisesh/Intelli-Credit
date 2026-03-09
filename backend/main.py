@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from core.database import engine, Base
-from api.routes import applications, ingestion, research, scoring, cam, due_diligence
+from api.routes import applications, ingestion, research, scoring, cam, due_diligence, fraud_detection
 import uvicorn
 
 
@@ -46,6 +46,7 @@ app.include_router(research.router, prefix="/api/v1/research", tags=["Research"]
 app.include_router(scoring.router, prefix="/api/v1/scoring", tags=["Scoring"])
 app.include_router(cam.router, prefix="/api/v1/cam", tags=["CAM"])
 app.include_router(due_diligence.router, prefix="/api/v1/due-diligence", tags=["Due Diligence"])
+app.include_router(fraud_detection.router, prefix="/api/v1/fraud", tags=["Fraud Detection"])
 
 
 @app.get("/")
