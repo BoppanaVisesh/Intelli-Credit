@@ -6,8 +6,9 @@ import os
 import json
 from pathlib import Path
 import google.generativeai as genai
-from pdf2image import convert_from_path
+import fitz  # PyMuPDF
 from PIL import Image
+import io
 
 
 class AnnualReportParser:
@@ -40,18 +41,15 @@ class AnnualReportParser:
         try:
             # Step 1: Convert PDF to images (only first 15 pages for efficiency)
             print(f"Converting PDF to images: {pdf_path}")
-            image_paths = self.pdf_to_images(pdf_path, max_pages=15)
+            images = self.pdf_to_images(pdf_path, max_pages=15)
             
-            if not image_paths:
+            if not images:
                 print("ERROR: No images extracted from PDF")
                 return self._get_default_data()
             
             # Step 2: Call Vision LLM
-            print(f"Analyzing {len(image_paths)} pages with Gemini Vision...")
-            extracted_data = self._call_vision_llm(image_paths)
-            
-            # Step 3: Cleanup temp images
-            self._cleanup_temp_images(image_paths)
+            print(f"Analyzing {len(images)} pages with Gemini Vision...")
+            extracted_data = self._call_vision_llm(images)
             
             return extracted_data
             
@@ -59,35 +57,41 @@ class AnnualReportParser:
             print(f"ERROR parsing annual report: {e}")
             return self._get_default_data()
     
-    def pdf_to_images(self, pdf_path: str, max_pages: int = 15) -> List[str]:
+    def pdf_to_images(self, pdf_path: str, max_pages: int = 15) -> List[Image.Image]:
         """
-        Convert PDF pages to images
+        Convert PDF pages to images using PyMuPDF (no external dependencies)
         Only convert first max_pages to save time and cost
         """
         try:
-            images = convert_from_path(pdf_path, first_page=1, last_page=max_pages)
-            image_paths = []
+            doc = fitz.open(pdf_path)
+            images = []
             
-            for i, img in enumerate(images):
-                temp_path = f"temp_page_{i}.png"
-                img.save(temp_path, "PNG")
-                image_paths.append(temp_path)
+            # Limit to max_pages
+            pages_to_convert = min(len(doc), max_pages)
             
-            print(f"   ✓ Converted {len(image_paths)} pages to images")
-            return image_paths
+            for page_num in range(pages_to_convert):
+                page = doc[page_num]
+                # Convert to image at 150 DPI (good quality for OCR)
+                pix = page.get_pixmap(matrix=fitz.Matrix(150/72, 150/72))
+                img_data = pix.tobytes("png")
+                img = Image.open(io.BytesIO(img_data))
+                images.append(img)
+            
+            doc.close()
+            print(f"   ✓ Converted {len(images)} pages to images")
+            return images
             
         except Exception as e:
             print(f"ERROR converting PDF to images: {e}")
-            print("   Hint: Install Poppler - https://github.com/oschwartz10612/poppler-windows/releases/")
             return []
     
-    def _call_vision_llm(self, image_paths: List[str]) -> Dict[str, Any]:
+    def _call_vision_llm(self, images: List[Image.Image]) -> Dict[str, Any]:
         """
         Call Gemini Vision API to extract structured data
         """
         
         try:
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             
             prompt = """
 Analyze this annual report and extract information in JSON format.
@@ -120,10 +124,7 @@ EXTRACTION RULES:
 - Return ONLY valid JSON, no explanations
 """
             
-            # Load images
-            images = [Image.open(path) for path in image_paths]
-            
-            # Generate content
+            # Generate content with images
             response = model.generate_content([prompt] + images)
             
             # Parse JSON from response

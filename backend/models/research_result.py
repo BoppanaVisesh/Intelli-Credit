@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, Text, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, Text, Float, ForeignKey
 from sqlalchemy.sql import func
 from core.database import Base
 
@@ -9,17 +9,19 @@ class ResearchResult(Base):
     id = Column(Integer, primary_key=True, index=True)
     application_id = Column(String, ForeignKey("applications.id"), nullable=False)
     
-    # Promoter research
-    promoter_name = Column(String)
-    promoter_finding = Column(Text)
-    promoter_sentiment = Column(String)
+    # Common fields
+    research_type = Column(String, nullable=False)  # news, litigation, promoter, sector, regulatory
+    entity_name = Column(String)  # Company name, promoter name, sector name
+    risk_level = Column(String)  # HIGH, MEDIUM, LOW
+    source_url = Column(String)
     
-    # Litigation
-    litigation_source = Column(String)
-    litigation_summary = Column(Text)
-    severity_penalty = Column(Integer)
+    # Findings stored as JSON text
+    findings_summary = Column(Text)
+    findings_json = Column(Text)  # Full JSON data
+    sentiment = Column(String)  # POSITIVE, NEGATIVE, NEUTRAL
     
-    # Sector
-    sector_headwinds = Column(Text)
+    # Scoring
+    severity_penalty = Column(Integer, default=0)
+    confidence = Column(Float, default=0.0)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
