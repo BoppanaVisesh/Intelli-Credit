@@ -127,7 +127,100 @@ const ScoringResult = () => {
             </div>
           )}
 
-          {/* Key Factors */}
+          {/* Loan Recommendation */}
+          {result.loan_recommendation && (
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Loan Recommendation</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-indigo-600 font-medium">Recommended</p>
+                  <p className="text-2xl font-bold text-indigo-800">₹{result.loan_recommendation.recommended_limit_cr} Cr</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Revenue Method</p>
+                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.revenue_limit_cr} Cr</p>
+                  <p className="text-xs text-gray-400">Revenue × 0.25</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Cash Flow Method</p>
+                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.cashflow_limit_cr} Cr</p>
+                  <p className="text-xs text-gray-400">Cash Flow × 4</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Collateral Method</p>
+                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.collateral_limit_cr} Cr</p>
+                  <p className="text-xs text-gray-400">Collateral × 0.7</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Interest Rate */}
+          {result.interest_rate && (
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Interest Rate Assessment</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-green-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-green-600 font-medium">Final Rate</p>
+                  <p className="text-3xl font-bold text-green-800">{result.interest_rate.final_interest_rate}%</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Base Rate</p>
+                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.base_rate}%</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Risk Premium</p>
+                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.risk_premium}%</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <p className="text-xs text-gray-500 font-medium">Category</p>
+                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.risk_category}</p>
+                </div>
+              </div>
+              {result.interest_rate.adjustments?.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-xs font-medium text-gray-500 mb-1">Micro-adjustments:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {result.interest_rate.adjustments.map((a, i) => (
+                      <span key={i} className={`text-xs px-2 py-1 rounded-full ${a.delta > 0 ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        {a.reason}: {a.delta > 0 ? '+' : ''}{a.delta}%
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Decision Reasons */}
+          {result.decision_reasons?.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-3">Decision Reasons</h2>
+              <div className="space-y-2">
+                {result.decision_reasons.map((r, i) => (
+                  <div key={i} className={`flex items-start gap-3 p-3 rounded-lg ${r.impact === 'POSITIVE' ? 'bg-green-50' : 'bg-red-50'}`}>
+                    <span className={`mt-0.5 text-lg ${r.impact === 'POSITIVE' ? 'text-green-600' : 'text-red-600'}`}>
+                      {r.impact === 'POSITIVE' ? '✓' : '✗'}
+                    </span>
+                    <div className="flex-1">
+                      <p className={`text-sm font-medium ${r.impact === 'POSITIVE' ? 'text-green-800' : 'text-red-800'}`}>{r.text}</p>
+                    </div>
+                    <span className="text-xs font-mono text-gray-400">w:{r.weight}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Narrative */}
+          {result.narrative && (
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-3">Credit Officer Narrative</h2>
+              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{result.narrative}</p>
+            </div>
+          )}
+
+          {/* Key Factors (legacy) */}
           {result.key_factors?.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-3">Key Decision Factors</h2>

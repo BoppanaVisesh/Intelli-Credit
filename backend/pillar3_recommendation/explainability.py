@@ -1,157 +1,96 @@
 """
-Explainability - SHAP-based feature importance and explainability
+Explainable Decision Engine — Human-readable reasons for every credit decision.
+
+Produces a structured list of reasons & a narrative summary suitable for
+inclusion in the CAM document.
 """
 from typing import Dict, List, Any
-import numpy as np
 
 
 class Explainability:
-    """
-    Generate SHAP values and explanations for credit decisions
-    """
-    
-    def __init__(self):
-        pass
-    
-    def generate_shap_explanation(
-        self,
-        features: Dict[str, Any],
-        base_score: int,
-        final_score: int
-    ) -> List[Dict[str, Any]]:
+
+    def generate_reasons(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
-        Generate SHAP-like explanations
-        In production: use actual SHAP library with trained model
+        Walk through all available signals and emit human-readable reasons.
+        Each reason: { text, impact: POSITIVE|NEGATIVE|NEUTRAL, weight }
         """
-        
-        explanations = []
-        
-        # DSCR impact
-        dscr = features.get('dscr', 1.0)
-        if dscr < 1.0:
-            explanations.append({
-                'feature': 'DSCR < 1.0',
-                'impact_value': -18.5,
-                'type': 'NEGATIVE'
-            })
-        elif dscr >= 1.5:
-            explanations.append({
-                'feature': 'Strong DSCR',
-                'impact_value': 10.0,
-                'type': 'POSITIVE'
-            })
-        
+        reasons: List[Dict[str, Any]] = []
+        fin = data.get("financials", {})
+        research = data.get("research", {})
+        scoring = data.get("scoring", {})
+
         # Litigation
-        litigation_penalty = features.get('litigation_penalty', 0)
-        if litigation_penalty < 0:
-            explanations.append({
-                'feature': 'Pending Litigation (eCourts)',
-                'impact_value': float(litigation_penalty),
-                'type': 'NEGATIVE'
-            })
-        
-        # GST/Bank consistency
-        variance = features.get('gst_vs_bank_variance', 0.0)
-        if variance < 2.0:
-            explanations.append({
-                'feature': 'Consistent GST/Bank Inflows',
-                'impact_value': 15.0,
-                'type': 'POSITIVE'
-            })
-        elif variance > 10:
-            explanations.append({
-                'feature': 'High GST/Bank Variance',
-                'impact_value': -15.0,
-                'type': 'NEGATIVE'
-            })
-        
-        # Due Diligence
-        dd_penalty = features.get('due_diligence_penalty', 0)
-        if dd_penalty < 0:
-            explanations.append({
-                'feature': 'Aging Machinery (Primary Insight)',
-                'impact_value': float(dd_penalty),
-                'type': 'NEGATIVE'
-            })
-        
-        # Debt to Equity
-        dte = features.get('debt_to_equity', 1.0)
-        if dte > 2.5:
-            explanations.append({
-                'feature': 'High Leverage (D/E > 2.5)',
-                'impact_value': -10.0,
-                'type': 'NEGATIVE'
-            })
-        elif dte < 1.0:
-            explanations.append({
-                'feature': 'Low Leverage',
-                'impact_value': 8.0,
-                'type': 'POSITIVE'
-            })
-        
-        # Sector risk
-        sector_risk = features.get('sector_risk_score', 0)
-        if sector_risk > 30:
-            explanations.append({
-                'feature': 'Challenging Sector Conditions',
-                'impact_value': -8.0,
-                'type': 'NEGATIVE'
-            })
-        
-        # Sort by absolute impact
-        explanations.sort(key=lambda x: abs(x['impact_value']), reverse=True)
-        
-        return explanations
-    
-    def generate_textual_explanation(
-        self,
-        decision: str,
-        shap_explanations: List[Dict],
-        features: Dict
-    ) -> str:
-        """
-        Generate human-readable explanation
-        """
-        
-        if decision == 'APPROVE':
-            intro = "The application is approved based on strong financial metrics and favorable risk assessment."
-        elif decision == 'CONDITIONAL_APPROVE':
-            intro = "The application is conditionally approved with reduced limit due to mixed signals."
+        lit = research.get("litigation_count", 0)
+        if lit > 2:
+            reasons.append({"text": f"High litigation exposure detected ({lit} cases)", "impact": "NEGATIVE", "weight": 3})
+        elif lit > 0:
+            reasons.append({"text": f"{lit} litigation case(s) on record", "impact": "NEGATIVE", "weight": 1})
         else:
-            intro = "The application is rejected due to significant risk factors."
-        
-        # Top positive factors
-        positive = [exp for exp in shap_explanations if exp['type'] == 'POSITIVE']
-        negative = [exp for exp in shap_explanations if exp['type'] == 'NEGATIVE']
-        
-        explanation_parts = [intro]
-        
-        if positive:
-            explanation_parts.append(
-                f"\n\nPositive factors: {', '.join([p['feature'] for p in positive[:3]])}"
-            )
-        
-        if negative:
-            explanation_parts.append(
-                f"\n\nRisk factors: {', '.join([n['feature'] for n in negative[:3]])}"
-            )
-        
-        return ' '.join(explanation_parts)
-    
-    def create_waterfall_data(self, shap_explanations: List[Dict], base_score: int) -> List[Dict]:
-        """
-        Create data for waterfall chart visualization
-        """
-        
-        waterfall = [{'label': 'Base Score', 'value': base_score, 'cumulative': base_score}]
-        
-        cumulative = base_score
-        for exp in shap_explanations:
-            cumulative += exp['impact_value']
-            waterfall.append({
-                'label': exp['feature'],
-                'value': exp['impact_value'],
-                'cumulative': cumulative
-            })
-        
-        return waterfall
+            reasons.append({"text": "No litigation — clean legal record", "impact": "POSITIVE", "weight": 2})
+
+        # GST variance
+        gst_var = fin.get("gst_vs_bank_variance", 0)
+        if gst_var > 5:
+            reasons.append({"text": f"Mismatch between GSTR-1 and bank inflows ({gst_var:.1f}%)", "impact": "NEGATIVE", "weight": 2})
+        else:
+            reasons.append({"text": "GST and bank records well-aligned", "impact": "POSITIVE", "weight": 1})
+
+        # Overdraft
+        od = fin.get("overdraft_instances", 0)
+        if od and od > 0:
+            reasons.append({"text": f"Irregular bank balance patterns ({od} overdraft instances)", "impact": "NEGATIVE", "weight": 2})
+
+        # Bounced cheques
+        bounced = fin.get("bounced_cheques", 0)
+        if bounced and bounced > 0:
+            reasons.append({"text": f"{bounced} bounced cheque(s) detected", "impact": "NEGATIVE", "weight": 2})
+
+        # D/E ratio
+        de = fin.get("debt_to_equity", 1.0)
+        if de > 3.0:
+            reasons.append({"text": f"Debt-to-equity ratio ({de:.2f}) exceeds acceptable threshold", "impact": "NEGATIVE", "weight": 3})
+        elif de <= 1.0:
+            reasons.append({"text": f"Conservative leverage (D/E {de:.2f})", "impact": "POSITIVE", "weight": 2})
+
+        # DSCR
+        dscr = fin.get("dscr", 1.0)
+        if dscr >= 1.5:
+            reasons.append({"text": f"Strong debt service coverage (DSCR {dscr:.2f})", "impact": "POSITIVE", "weight": 3})
+        elif dscr < 1.0:
+            reasons.append({"text": f"Cash flows insufficient for debt service (DSCR {dscr:.2f})", "impact": "NEGATIVE", "weight": 3})
+
+        # Circular trading
+        circ = research.get("circular_trading_risk_score", 0)
+        if circ > 50:
+            reasons.append({"text": "Circular trading patterns detected in transaction data", "impact": "NEGATIVE", "weight": 3})
+
+        # Promoter sentiment
+        sent = research.get("promoter_sentiment", "Neutral")
+        if sent in ("Negative", "NEGATIVE"):
+            reasons.append({"text": "Adverse news about promoter/management found in web research", "impact": "NEGATIVE", "weight": 2})
+        elif sent in ("Positive", "POSITIVE"):
+            reasons.append({"text": "Positive promoter reputation in market", "impact": "POSITIVE", "weight": 1})
+
+        # Sort by weight descending
+        reasons.sort(key=lambda r: r["weight"], reverse=True)
+        return reasons
+
+    def generate_narrative(self, decision: str, reasons: List[Dict], score: int) -> str:
+        """Build a prose paragraph for the CAM executive summary."""
+        neg = [r["text"] for r in reasons if r["impact"] == "NEGATIVE"]
+        pos = [r["text"] for r in reasons if r["impact"] == "POSITIVE"]
+
+        if decision == "APPROVE":
+            opening = f"With a credit score of {score}/100 the application is APPROVED. "
+        elif decision == "CONDITIONAL_APPROVE":
+            opening = f"With a credit score of {score}/100 the application is conditionally approved with a reduced limit. "
+        else:
+            opening = f"With a credit score of {score}/100 the application is REJECTED due to significant risk factors. "
+
+        parts = [opening]
+        if pos:
+            parts.append("Positive factors: " + "; ".join(pos[:3]) + ". ")
+        if neg:
+            parts.append("Risk factors: " + "; ".join(neg[:3]) + ".")
+
+        return "".join(parts)

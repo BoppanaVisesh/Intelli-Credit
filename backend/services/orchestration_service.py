@@ -14,8 +14,7 @@ from pillar2_research.ecourt_fetcher import ECourtsFetcher
 from pillar2_research.sector_analyzer import SectorAnalyzer
 from pillar2_research.mca_fetcher import MCAFetcher
 
-from pillar3_recommendation.credit_scorer import CreditScorer
-from pillar3_recommendation.credit_scorer_fixed import CreditScorerFixed  # NEW: Fixed scorer
+from pillar3_recommendation.credit_scorer_fixed import CreditScorerFixed
 from pillar3_recommendation.explainability import Explainability
 from pillar3_recommendation.cam_generator import CAMGenerator
 from pillar3_recommendation.loan_limit_engine import LoanLimitEngine

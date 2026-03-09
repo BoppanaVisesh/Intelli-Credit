@@ -1,386 +1,330 @@
 """
-FIXED Credit Scorer - Logical, Deterministic, and Accurate
-Following the hackathon architecture requirements:
-- Deterministic scoring for structured financial data
-- Proper integration of research agent findings
-- Explainable scoring logic (not a black box)
-- 5 Cs Framework: Character, Capacity, Capital, Collateral, Conditions
+Five Cs Credit Scoring Engine — Deterministic, Explainable, Bank-Grade
+
+Weights (per specification):
+  Character  → 20%  (management integrity, litigation, reputation)
+  Capacity   → 30%  (cash flow, profitability, DSCR)
+  Capital    → 20%  (equity, net worth, D/E ratio)
+  Collateral → 20%  (assets pledged, LTV)
+  Conditions → 10%  (sector risk, industry trends, regulatory)
+
+Decision thresholds:
+  Score ≥ 80  → APPROVE
+  Score 60-79 → CONDITIONAL_APPROVE
+  Score < 60  → REJECT
 """
-import numpy as np
 from typing import Dict, Any, List, Tuple
-import pickle
-import os
-import json
 
 
 class CreditScorerFixed:
-    """
-    Fixed Credit Scoring Engine
-    
-    Architecture:
-    1. Financial Analysis (Deterministic) - 40% weight
-    2. Research Agent Findings (AI-powered) - 30% weight
-    3. Due Diligence (Human input) - 20% weight
-    4. Sector & Macro Conditions - 10% weight
-    """
-    
-    def __init__(self):
-        self.model_dir = './ml/models'
-        self.model = None
-        self.load_model_if_available()
-    
+
+    WEIGHTS = {
+        "character":  0.20,
+        "capacity":   0.30,
+        "capital":    0.20,
+        "collateral": 0.20,
+        "conditions": 0.10,
+    }
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
     def calculate_credit_score(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Calculate credit score using 5 Cs framework
-        
-        Args:
-            data: Dictionary containing:
-                - Financial ratios (DSCR, Current Ratio, etc.)
-                - Research findings (litigation, promoter sentiment, etc.)
-                - Due diligence notes
-                - Sector information
-        
-        Returns:
-            Comprehensive scoring result with explanations
-        """
-        
-        # Extract data
-        financials = data.get('financials', {})
-        research = data.get('research', {})
-        due_diligence = data.get('due_diligence', {})
-        sector_info = data.get('sector', {})
-        
-        # Calculate sub-scores (5 Cs)
-        capacity_score, capacity_explanation = self._score_capacity(financials)
-        character_score, character_explanation = self._score_character(research)
-        capital_score, capital_explanation = self._score_capital(financials)
-        conditions_score, conditions_explanation = self._score_conditions(sector_info, research)
-        collateral_score, collateral_explanation = self._score_collateral(financials)
-        
-        # Calculate weighted final score
-        weights = {
-            'capacity': 0.35,      # Ability to repay (most important)
-            'character': 0.30,     # Willingness to repay
-            'capital': 0.20,       # Equity cushion
-            'conditions': 0.10,    # External factors
-            'collateral': 0.05     # Security
-        }
-        
-        final_score = (
-            capacity_score * weights['capacity'] +
-            character_score * weights['character'] +
-            capital_score * weights['capital'] +
-            conditions_score * weights['conditions'] +
-            collateral_score * weights['collateral']
+        financials      = data.get("financials", {})
+        research        = data.get("research", {})
+        due_diligence   = data.get("due_diligence", {})
+        sector_info     = data.get("sector", {})
+        collateral_info = data.get("collateral", {})
+
+        char_score,  char_reasons  = self._score_character(research)
+        cap_score,   cap_reasons   = self._score_capacity(financials)
+        capit_score, capit_reasons = self._score_capital(financials)
+        coll_score,  coll_reasons  = self._score_collateral(financials, collateral_info)
+        cond_score,  cond_reasons  = self._score_conditions(sector_info, research)
+
+        raw_score = (
+            char_score  * self.WEIGHTS["character"]  +
+            cap_score   * self.WEIGHTS["capacity"]   +
+            capit_score * self.WEIGHTS["capital"]     +
+            coll_score  * self.WEIGHTS["collateral"]  +
+            cond_score  * self.WEIGHTS["conditions"]
         )
-        
-        # Apply due diligence adjustments
-        dd_adjustment, dd_explanation = self._apply_due_diligence(due_diligence, final_score)
-        final_score += dd_adjustment
-        
-        # Clamp to 0-100
-        final_score = max(0, min(100, int(final_score)))
-        
-        # Determine decision
-        decision, recommended_limit_pct = self._get_decision(final_score)
-        
-        # Calculate recommended limit
-        requested_limit = data.get('requested_limit_cr', 10.0)
-        recommended_limit = requested_limit * (recommended_limit_pct / 100)
-        
+
+        dd_adj, dd_reasons = self._apply_due_diligence(due_diligence)
+        final_score = max(0, min(100, int(round(raw_score + dd_adj))))
+
+        decision, approval_pct = self._decide(final_score)
+        risk_grade = self._risk_grade(final_score)
+
+        requested = data.get("requested_limit_cr", 10.0)
+        recommended = round(requested * approval_pct / 100, 2)
+
         return {
-            'model_version': 'rule-based-fixed-v2.0',
-            'final_credit_score': final_score,
-            'max_score': 100,
-            'decision': decision,
-            'recommended_limit_cr': round(recommended_limit, 2),
-            'requested_limit_cr': requested_limit,
-            'approval_percentage': recommended_limit_pct,
-            'risk_grade': self._get_risk_grade(final_score),
-            'sub_scores': {
-                'capacity': {'score': int(capacity_score), 'weight': weights['capacity']},
-                'character': {'score': int(character_score), 'weight': weights['character']},
-                'capital': {'score': int(capital_score), 'weight': weights['capital']},
-                'conditions': {'score': int(conditions_score), 'weight': weights['conditions']},
-                'collateral': {'score': int(collateral_score), 'weight': weights['collateral']}
+            "model_version": "five-cs-v3.0",
+            "final_credit_score": final_score,
+            "max_score": 100,
+            "decision": decision,
+            "risk_grade": risk_grade,
+            "requested_limit_cr": requested,
+            "recommended_limit_cr": recommended,
+            "approval_percentage": approval_pct,
+            "sub_scores": {
+                "character":  {"score": int(char_score),  "weight": self.WEIGHTS["character"]},
+                "capacity":   {"score": int(cap_score),   "weight": self.WEIGHTS["capacity"]},
+                "capital":    {"score": int(capit_score),  "weight": self.WEIGHTS["capital"]},
+                "collateral": {"score": int(coll_score),   "weight": self.WEIGHTS["collateral"]},
+                "conditions": {"score": int(cond_score),   "weight": self.WEIGHTS["conditions"]},
             },
-            'explanations': {
-                'capacity': capacity_explanation,
-                'character': character_explanation,
-                'capital': capital_explanation,
-                'conditions': conditions_explanation,
-                'collateral': collateral_explanation,
-                'due_diligence': dd_explanation
+            "explanations": {
+                "character":  " | ".join(char_reasons),
+                "capacity":   " | ".join(cap_reasons),
+                "capital":    " | ".join(capit_reasons),
+                "collateral": " | ".join(coll_reasons),
+                "conditions": " | ".join(cond_reasons),
+                "due_diligence": " | ".join(dd_reasons) if dd_reasons else "No adjustments",
             },
-            'key_factors': self._get_key_factors(
-                capacity_score, character_score, capital_score,
-                conditions_score, collateral_score, dd_adjustment
-            )
+            "key_factors": self._key_factors(
+                char_score, cap_score, capit_score, coll_score, cond_score, dd_adj
+            ),
         }
-    
-    def _score_capacity(self, financials: Dict) -> Tuple[float, str]:
-        """
-        Score CAPACITY (Ability to Repay) - 35% weight
-        
-        Key metrics:
-        - DSCR (Debt Service Coverage Ratio): Most critical
-        - Revenue/Cash flow trends
-        - Operating efficiency
-        """
-        score = 50  # Start from middle
-        reasons = []
-        
-        # DSCR is the most critical metric for capacity
-        dscr = financials.get('dscr', 1.0)
-        
-        if dscr >= 2.0:
-            score += 50
-            reasons.append(f"✅ Excellent DSCR {dscr:.2f} (>2.0) - Strong repayment capacity")
-        elif dscr >= 1.5:
-            score += 35
-            reasons.append(f"✅ Good DSCR {dscr:.2f} (1.5-2.0) - Adequate repayment capacity")
-        elif dscr >= 1.25:
-            score += 15
-            reasons.append(f"⚠️ Acceptable DSCR {dscr:.2f} (1.25-1.5) - Moderate capacity")
-        elif dscr >= 1.0:
-            score -= 10
-            reasons.append(f"⚠️ Low DSCR {dscr:.2f} (1.0-1.25) - Weak repayment capacity")
-        else:
+
+    # ------------------------------------------------------------------
+    # 1. CHARACTER (20%)
+    # ------------------------------------------------------------------
+    def _score_character(self, research: Dict) -> Tuple[float, List[str]]:
+        score = 70
+        reasons: List[str] = []
+
+        lit = research.get("litigation_count", 0)
+        if lit > 3:
             score -= 30
-            reasons.append(f"❌ Critical DSCR {dscr:.2f} (<1.0) - Insufficient income to service debt")
-        
-        # Current ratio (liquidity)
-        current_ratio = financials.get('current_ratio', 1.0)
-        if current_ratio >= 2.0:
-            score += 10
-            reasons.append(f"✅ Strong liquidity with Current Ratio {current_ratio:.2f}")
-        elif current_ratio >= 1.5:
-            score += 5
-            reasons.append(f"✅ Adequate liquidity")
-        elif current_ratio < 1.0:
-            score -= 15
-            reasons.append(f"❌ Poor liquidity - Current Ratio {current_ratio:.2f} < 1.0")
-        
-        # GST vs Bank reconciliation (revenue authenticity)
-        gst_variance = financials.get('gst_vs_bank_variance', 0.0)
-        if gst_variance > 15:
-            score -= 25
-            reasons.append(f"❌ HIGH GST-Bank mismatch {gst_variance:.1f}% - Revenue inflation suspected")
-        elif gst_variance > 10:
-            score -= 10
-            reasons.append(f"⚠️ Moderate GST-Bank variance {gst_variance:.1f}%")
-        elif gst_variance <= 5:
-            score += 5
-            reasons.append(f"✅ Excellent GST-Bank alignment ({gst_variance:.1f}%)")
-        
-        explanation = " | ".join(reasons)
-        return max(0, min(100, score)), explanation
-    
-    def _score_character(self, research: Dict) -> Tuple[float, str]:
-        """
-        Score CHARACTER (Willingness to Repay) - 30% weight
-        
-        Based on:
-        - Litigation history
-        - Promoter background
-        - Payment track record
-        - Circular trading patterns
-        """
-        score = 70  # Start optimistic
-        reasons = []
-        
-        # Litigation (critical red flag)
-        litigation_count = research.get('litigation_count', 0)
-        litigation_severity = research.get('litigation_severity', 'None')
-        
-        if litigation_count == 0:
-            score += 20
-            reasons.append("✅ No litigation found - Clean record")
-        elif litigation_count <= 2 and litigation_severity == 'Low':
-            score -= 5
-            reasons.append(f"⚠️ {litigation_count} minor litigation cases")
-        elif litigation_count <= 5:
-            score -= 20
-            reasons.append(f"❌ {litigation_count} litigation cases - Moderate concern")
+            reasons.append(f"❌ {lit} litigation cases — severe legal exposure")
+        elif lit > 0:
+            score -= lit * 5
+            reasons.append(f"⚠️ {lit} litigation case(s) found")
         else:
-            score -= 40
-            reasons.append(f"❌ SERIOUS: {litigation_count} litigation cases - High character risk")
-        
-        # Promoter sentiment from web research
-        promoter_sentiment = research.get('promoter_sentiment', 'Neutral')
-        if promoter_sentiment == 'Positive':
+            score += 20
+            reasons.append("✅ No litigation — clean legal record")
+
+        sentiment = research.get("promoter_sentiment", "Neutral")
+        if sentiment in ("Positive", "POSITIVE"):
             score += 10
-            reasons.append("✅ Positive promoter reputation from news/web research")
-        elif promoter_sentiment == 'Negative':
+            reasons.append("✅ Positive management reputation")
+        elif sentiment in ("Negative", "NEGATIVE"):
             score -= 25
-            reasons.append("❌ Negative promoter reputation - Adverse news found")
-        
-        # Circular trading detection
-        circular_risk = research.get('circular_trading_risk_score', 0)
-        if circular_risk > 70:
-            score -= 35
-            reasons.append(f"❌ HIGH circular trading risk ({circular_risk}/100) - Suspicious transactions")
-        elif circular_risk > 40:
+            reasons.append("❌ Adverse promoter/management news detected")
+
+        circ = research.get("circular_trading_risk_score", 0)
+        if circ > 70:
+            score -= 30
+            reasons.append(f"❌ HIGH circular trading risk ({circ}/100)")
+        elif circ > 40:
             score -= 15
-            reasons.append(f"⚠️ Moderate circular trading indicators")
-        elif circular_risk < 20:
+            reasons.append(f"⚠️ Moderate circular trading indicators ({circ}/100)")
+        else:
             score += 5
             reasons.append("✅ Clean transaction patterns")
-        
-        explanation = " | ".join(reasons)
-        return max(0, min(100, score)), explanation
-    
-    def _score_capital(self, financials: Dict) -> Tuple[float, str]:
-        """
-        Score CAPITAL (Owner's equity cushion) - 20% weight
-        
-        Metrics:
-        - Debt-to-Equity ratio
-        - Net worth
-        - Capital structure
-        """
-        score = 60
-        reasons = []
-        
-        debt_to_equity = financials.get('debt_to_equity', 1.0)
-        
-        if debt_to_equity <= 1.0:
+
+        return max(0, min(100, score)), reasons
+
+    # ------------------------------------------------------------------
+    # 2. CAPACITY (30%)
+    # ------------------------------------------------------------------
+    def _score_capacity(self, fin: Dict) -> Tuple[float, List[str]]:
+        score = 50
+        reasons: List[str] = []
+
+        dscr = fin.get("dscr", 1.0)
+        if dscr >= 2.0:
             score += 40
-            reasons.append(f"✅ Excellent capital structure - D/E {debt_to_equity:.2f}")
-        elif debt_to_equity <= 2.0:
-            score += 20
-            reasons.append(f"✅ Good leverage - D/E {debt_to_equity:.2f}")
-        elif debt_to_equity <= 3.0:
-            score += 0
-            reasons.append(f"⚠️ Moderate leverage - D/E {debt_to_equity:.2f}")
-        elif debt_to_equity <= 5.0:
+            reasons.append(f"✅ Excellent DSCR {dscr:.2f} — strong repayment capacity")
+        elif dscr >= 1.5:
+            score += 30
+            reasons.append(f"✅ Good DSCR {dscr:.2f}")
+        elif dscr >= 1.25:
+            score += 15
+            reasons.append(f"⚠️ Acceptable DSCR {dscr:.2f}")
+        elif dscr >= 1.0:
+            score -= 5
+            reasons.append(f"⚠️ Low DSCR {dscr:.2f}")
+        else:
+            score -= 25
+            reasons.append(f"❌ DSCR {dscr:.2f} < 1.0 — insufficient to service debt")
+
+        cr = fin.get("current_ratio", 1.0)
+        if cr >= 2.0:
+            score += 10
+            reasons.append(f"✅ Strong liquidity CR {cr:.2f}")
+        elif cr >= 1.5:
+            score += 5
+        elif cr < 1.0:
+            score -= 15
+            reasons.append(f"❌ Liquidity risk CR {cr:.2f}")
+
+        var = fin.get("gst_vs_bank_variance", 0.0)
+        if var > 15:
             score -= 20
-            reasons.append(f"❌ High leverage - D/E {debt_to_equity:.2f} - Limited equity cushion")
+            reasons.append(f"❌ High GST-Bank mismatch {var:.1f}%")
+        elif var > 10:
+            score -= 10
+            reasons.append(f"⚠️ Moderate GST-Bank variance {var:.1f}%")
+        elif var <= 5:
+            score += 5
+            reasons.append(f"✅ GST-Bank aligned ({var:.1f}%)")
+
+        return max(0, min(100, score)), reasons
+
+    # ------------------------------------------------------------------
+    # 3. CAPITAL (20%)
+    # ------------------------------------------------------------------
+    def _score_capital(self, fin: Dict) -> Tuple[float, List[str]]:
+        score = 60
+        reasons: List[str] = []
+
+        de = fin.get("debt_to_equity", 1.0)
+        if de <= 1.0:
+            score += 35
+            reasons.append(f"✅ Excellent D/E {de:.2f}")
+        elif de <= 2.0:
+            score += 20
+            reasons.append(f"✅ Good leverage D/E {de:.2f}")
+        elif de <= 3.0:
+            reasons.append(f"⚠️ Moderate leverage D/E {de:.2f}")
+        elif de <= 5.0:
+            score -= 20
+            reasons.append(f"❌ High leverage D/E {de:.2f}")
         else:
             score -= 40
-            reasons.append(f"❌ EXCESSIVE leverage - D/E {debt_to_equity:.2f} - Very risky capital structure")
-        
-        explanation = " | ".join(reasons)
-        return max(0, min(100, score)), explanation
-    
-    def _score_conditions(self, sector_info: Dict, research: Dict) -> Tuple[float, str]:
-        """
-        Score CONDITIONS (Economic/Sector factors) - 10% weight
-        """
-        score = 70
-        reasons = []
-        
-        sector_risk = sector_info.get('sector_risk_score', 30)
-        
-        if sector_risk < 20:
-            score += 20
-            reasons.append("✅ Stable sector with low macro risk")
-        elif sector_risk < 50:
+            reasons.append(f"❌ Excessive leverage D/E {de:.2f}")
+
+        nw = fin.get("net_worth_cr", 0)
+        if nw and nw > 50:
             score += 5
+            reasons.append(f"✅ Strong net worth ₹{nw:.1f} Cr")
+
+        return max(0, min(100, score)), reasons
+
+    # ------------------------------------------------------------------
+    # 4. COLLATERAL (20%)
+    # ------------------------------------------------------------------
+    def _score_collateral(self, fin: Dict, collateral: Dict) -> Tuple[float, List[str]]:
+        score = 50
+        reasons: List[str] = []
+
+        property_val = collateral.get("property_value_cr", 0) or fin.get("fixed_assets_cr", 0)
+        inventory    = collateral.get("inventory_cr", 0) or fin.get("inventory_cr", 0)
+        machinery    = collateral.get("machinery_cr", 0) or fin.get("plant_machinery_cr", 0)
+        total = property_val + inventory + machinery
+
+        if total > 0:
+            loan = fin.get("requested_limit_cr", 10.0)
+            ltv = loan / total if total else 999
+            if ltv <= 0.5:
+                score += 40
+                reasons.append(f"✅ LTV {ltv:.0%} — excellent collateral (₹{total:.1f} Cr)")
+            elif ltv <= 0.7:
+                score += 25
+                reasons.append(f"✅ LTV {ltv:.0%} — adequate collateral")
+            elif ltv <= 1.0:
+                score += 10
+                reasons.append(f"⚠️ LTV {ltv:.0%} — marginal collateral")
+            else:
+                score -= 10
+                reasons.append(f"❌ LTV {ltv:.0%} — under-collateralized")
+        else:
+            fa = fin.get("total_assets_cr", 0)
+            if fa and fa > 0:
+                score += 10
+                reasons.append(f"Total assets ₹{fa:.1f} Cr (detailed collateral data unavailable)")
+            else:
+                reasons.append("Collateral data not available — assessed on financials only")
+
+        return max(0, min(100, score)), reasons
+
+    # ------------------------------------------------------------------
+    # 5. CONDITIONS (10%)
+    # ------------------------------------------------------------------
+    def _score_conditions(self, sector: Dict, research: Dict) -> Tuple[float, List[str]]:
+        score = 70
+        reasons: List[str] = []
+
+        risk = sector.get("sector_risk_score", 30)
+        if risk < 20:
+            score += 25
+            reasons.append("✅ Stable sector, low macro risk")
+        elif risk < 40:
+            score += 10
             reasons.append("✅ Moderate sector risk")
+        elif risk < 60:
+            score -= 5
+            reasons.append(f"⚠️ Elevated sector risk ({risk}/100)")
         else:
-            score -= 15
-            reasons.append(f"⚠️ High sector risk ({sector_risk}/100)")
-        
-        # Check for adverse sector news from research
-        sector_sentiment = research.get('sector_sentiment', 'Neutral')
-        if sector_sentiment == 'Negative':
+            score -= 20
+            reasons.append(f"❌ High sector risk ({risk}/100)")
+
+        sent = research.get("sector_sentiment", "Neutral")
+        if sent in ("Negative", "NEGATIVE"):
             score -= 10
-            reasons.append("⚠️ Adverse sector news found")
-        
-        explanation = " | ".join(reasons) if reasons else "Sector conditions assessed"
-        return max(0, min(100, score)), explanation
-    
-    def _score_collateral(self, financials: Dict) -> Tuple[float, str]:
-        """
-        Score COLLATERAL (Security) - 5% weight
-        """
-        # Simplified - would normally assess fixed assets, property, etc.
-        score = 60
-        explanation = "Collateral evaluation based on fixed assets"
-        return score, explanation
-    
-    def _apply_due_diligence(self, dd_data: Dict, current_score: float) -> Tuple[float, str]:
-        """
-        Apply human due diligence observations
-        
-        This is where the Credit Officer's field visit findings affect the score
-        """
-        adjustment = 0
-        reasons = []
-        
-        dd_notes = dd_data.get('notes', '')
-        dd_severity = dd_data.get('severity', 'None')
-        
-        if dd_severity == 'Critical':
-            adjustment = -20
-            reasons.append(f"❌ CRITICAL due diligence finding: {dd_notes[:100]}")
-        elif dd_severity == 'High':
-            adjustment = -10
-            reasons.append(f"⚠️ HIGH risk finding: {dd_notes[:100]}")
-        elif dd_severity == 'Moderate':
-            adjustment = -5
-            reasons.append(f"⚠️ Moderate concern noted")
-        elif dd_severity == 'Positive':
-            adjustment = +5
-            reasons.append("✅ Positive observations from field visit")
-        
-        explanation = " | ".join(reasons) if reasons else "No critical due diligence adjustments"
-        return adjustment, explanation
-    
-    def _get_decision(self, score: int) -> Tuple[str, int]:
-        """
-        Decision logic with recommended approval percentage
-        
-        Returns: (decision_string, recommended_limit_percentage)
-        """
-        if score >= 75:
-            return ('APPROVE', 100)  # Full approval
-        elif score >= 65:
-            return ('CONDITIONAL_APPROVE', 75)  # 75% of requested
-        elif score >= 55:
-            return ('CONDITIONAL_APPROVE', 50)  # 50% of requested
-        else:
-            return ('REJECT', 0)  # Rejection
-    
-    def _get_risk_grade(self, score: int) -> str:
-        """Map score to risk grade (like bank ratings)"""
-        if score >= 85:
-            return 'AAA'
-        elif score >= 75:
-            return 'AA'
-        elif score >= 65:
-            return 'A'
-        elif score >= 55:
-            return 'BBB'
-        elif score >= 45:
-            return 'BB'
-        else:
-            return 'B'
-    
-    def _get_key_factors(self, capacity, character, capital, conditions, collateral, dd_adj) -> List[str]:
-        """Identify top 3 factors influencing the decision"""
-        factors = [
-            ('Repayment Capacity (DSCR, Cash Flow)', capacity * 0.35),
-            ('Character & Track Record', character * 0.30),
-            ('Capital Structure', capital * 0.20),
-            ('Sector Conditions', conditions * 0.10),
-            ('Collateral', collateral * 0.05),
-            ('Due Diligence Findings', dd_adj)
+            reasons.append("⚠️ Adverse sector news")
+        elif sent in ("Positive", "POSITIVE"):
+            score += 5
+            reasons.append("✅ Positive sector outlook")
+
+        return max(0, min(100, score)), reasons
+
+    # ------------------------------------------------------------------
+    # Due-diligence overlay
+    # ------------------------------------------------------------------
+    def _apply_due_diligence(self, dd: Dict) -> Tuple[float, List[str]]:
+        adj = 0
+        reasons: List[str] = []
+        sev = dd.get("severity", "None")
+        notes = dd.get("notes", "")
+
+        mapping = {
+            "Critical": -20, "CRITICAL": -20,
+            "High": -10, "HIGH": -10,
+            "Medium": -5, "Moderate": -5, "MEDIUM": -5,
+            "Positive": 5, "POSITIVE": 5,
+        }
+        adj = mapping.get(sev, 0)
+        if adj < 0:
+            reasons.append(f"{'❌' if adj <= -10 else '⚠️'} {sev} finding: {notes[:120]}")
+        elif adj > 0:
+            reasons.append("✅ Positive field observations")
+
+        return adj, reasons
+
+    # ------------------------------------------------------------------
+    # Decision helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _decide(score: int) -> Tuple[str, int]:
+        if score >= 80:
+            return ("APPROVE", 100)
+        if score >= 60:
+            return ("CONDITIONAL_APPROVE", 75 if score >= 70 else 50)
+        return ("REJECT", 0)
+
+    @staticmethod
+    def _risk_grade(score: int) -> str:
+        if score >= 85: return "AAA"
+        if score >= 75: return "AA"
+        if score >= 65: return "A"
+        if score >= 55: return "BBB"
+        if score >= 45: return "BB"
+        return "B"
+
+    @staticmethod
+    def _key_factors(char, cap, capit, coll, cond, dd_adj) -> List[str]:
+        items = [
+            ("Character & Legal Record", char * 0.20),
+            ("Repayment Capacity (DSCR, Cash Flow)", cap * 0.30),
+            ("Capital Structure (D/E, Net Worth)", capit * 0.20),
+            ("Collateral Coverage (LTV)", coll * 0.20),
+            ("Sector & Macro Conditions", cond * 0.10),
         ]
-        
-        # Sort by absolute impact
-        sorted_factors = sorted(factors, key=lambda x: abs(x[1]), reverse=True)
-        
-        return [f[0] for f in sorted_factors[:3]]
-    
-    def load_model_if_available(self):
-        """Try to load XGBoost model if available (future enhancement)"""
-        try:
-            model_path = f'{self.model_dir}/xgboost_credit_model.pkl'
-            if os.path.exists(model_path):
-                with open(model_path, 'rb') as f:
-                    self.model = pickle.load(f)
-                print("✅ Loaded ML model (available for future use)")
-        except:
-            pass  # Fall back to rule-based
+        if dd_adj:
+            items.append(("Due Diligence Findings", abs(dd_adj)))
+        items.sort(key=lambda x: abs(x[1]), reverse=True)
+        return [i[0] for i in items[:3]]

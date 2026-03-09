@@ -1,80 +1,89 @@
 """
-Risk Premium Calculator - Calculate appropriate interest rate/risk premium
+Interest Rate / Risk Premium Calculator
+
+Logic (per specification):
+  Score ≥ 80  → 10.0%
+  Score 70-79 → 11.5%
+  Score 60-69 → 13.0%
+  Score < 60  → REJECT (no rate offered)
+
+Additional micro-adjustments for DSCR, sector risk, litigation.
 """
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class RiskPremiumCalculator:
-    """
-    Calculate risk premium and interest rate based on:
-    - Credit score
-    - Sector risk
-    - Financial strength
-    """
-    
-    def __init__(self):
-        self.base_rate = 9.5  # Base lending rate in %
-    
-    def calculate_risk_premium(
+
+    BASE_RATE = 9.5  # percent
+
+    def calculate(
         self,
         credit_score: int,
-        sector_risk_score: int,
-        dscr: float,
-        litigation_risk: bool
+        dscr: float = 1.0,
+        sector_risk_score: int = 30,
+        litigation_count: int = 0,
     ) -> Dict[str, Any]:
-        """
-        Calculate risk premium and final interest rate
-        """
-        
-        premium = 0.0
-        
-        # Credit score based premium
-        if credit_score >= 80:
-            premium += 0.0  # No premium for excellent credit
-        elif credit_score >= 70:
-            premium += 0.5
-        elif credit_score >= 60:
-            premium += 1.5
-        elif credit_score >= 50:
-            premium += 2.5
-        else:
-            premium += 4.0
-        
-        # Sector risk premium
-        if sector_risk_score >= 40:
-            premium += 1.0
-        elif sector_risk_score >= 25:
-            premium += 0.5
-        
-        # DSCR-based adjustment
-        if dscr < 1.0:
+        # Primary rate from score bands
+        primary_rate = self._band_rate(credit_score)
+        if primary_rate is None:
+            return {
+                "base_rate": self.BASE_RATE,
+                "risk_premium": None,
+                "final_interest_rate": None,
+                "rate_category": "Rejected",
+                "offered": False,
+            }
+
+        # Micro-adjustments
+        premium = primary_rate - self.BASE_RATE
+
+        # DSCR bonus/penalty
+        if dscr >= 2.0:
+            premium -= 0.25
+        elif dscr < 1.0:
             premium += 1.5
         elif dscr < 1.25:
             premium += 0.75
-        elif dscr >= 2.0:
-            premium -= 0.25  # Reward for strong DSCR
-        
-        # Litigation premium
-        if litigation_risk:
+
+        # Sector risk
+        if sector_risk_score >= 50:
+            premium += 1.0
+        elif sector_risk_score >= 30:
             premium += 0.5
-        
-        final_rate = self.base_rate + premium
-        
+
+        # Litigation
+        if litigation_count > 3:
+            premium += 1.0
+        elif litigation_count > 0:
+            premium += 0.5
+
+        final = round(self.BASE_RATE + premium, 2)
+
         return {
-            'base_rate': self.base_rate,
-            'risk_premium': round(premium, 2),
-            'final_interest_rate': round(final_rate, 2),
-            'rate_category': self._get_rate_category(premium)
+            "base_rate": self.BASE_RATE,
+            "risk_premium": round(premium, 2),
+            "final_interest_rate": final,
+            "rate_category": self._category(premium),
+            "offered": True,
         }
-    
-    def _get_rate_category(self, premium: float) -> str:
-        """Map premium to rate category"""
-        
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _band_rate(score: int) -> Optional[float]:
+        if score >= 80:
+            return 10.0
+        if score >= 70:
+            return 11.5
+        if score >= 60:
+            return 13.0
+        return None  # Reject
+
+    @staticmethod
+    def _category(premium: float) -> str:
         if premium <= 1.0:
-            return 'Prime'
-        elif premium <= 2.5:
-            return 'Standard'
-        elif premium <= 4.0:
-            return 'Sub-Prime'
-        else:
-            return 'High Risk'
+            return "Prime"
+        if premium <= 2.5:
+            return "Standard"
+        if premium <= 4.0:
+            return "Sub-Prime"
+        return "High Risk"

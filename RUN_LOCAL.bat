@@ -6,7 +6,7 @@ echo.
 
 echo [STEP 1/4] Installing Backend Dependencies...
 cd backend
-pip install -r requirements-simple.txt
+pip install -r requirements.txt
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Failed to install backend dependencies
     pause

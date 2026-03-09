@@ -5,3 +5,12 @@ __pycache__/
 *.pyc
 dist/
 build/
+
+# Runtime-generated (not committed)
+backend/intellicredit.db
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/downloads/cam_reports/*
+!backend/downloads/cam_reports/.gitkeep
+downloads/*
+!downloads/.gitkeep
