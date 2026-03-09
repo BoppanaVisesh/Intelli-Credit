@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Float, Integer, DateTime, Text, Boolean, Enum as SQLEnum
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from core.database import Base
 import enum
@@ -51,3 +52,6 @@ class Application(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    documents = relationship("UploadedDocument", back_populates="application")

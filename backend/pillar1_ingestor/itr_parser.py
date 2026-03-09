@@ -7,7 +7,9 @@ import os
 import json
 from typing import Dict, Any
 import google.generativeai as genai
-from pdf2image import convert_from_path
+import fitz  # PyMuPDF
+from PIL import Image
+import io
 
 
 class ITRParser:
@@ -37,11 +39,20 @@ class ITRParser:
             return self._get_empty_structure()
         
         try:
-            # Convert PDF to images
-            images = convert_from_path(pdf_path, first_page=1, last_page=3)
+            # Convert PDF to images using PyMuPDF
+            doc = fitz.open(pdf_path)
+            images = []
             
-            # Prepare images for Gemini
-            gemini_images = [img for img in images]
+            # Convert first 3 pages
+            pages_to_convert = min(len(doc), 3)
+            for page_num in range(pages_to_convert):
+                page = doc[page_num]
+                pix = page.get_pixmap(matrix=fitz.Matrix(150/72, 150/72))
+                img_data = pix.tobytes("png")
+                img = Image.open(io.BytesIO(img_data))
+                images.append(img)
+            
+            doc.close()
             
             # Prompt for structured extraction
             prompt = """Analyze this Income Tax Return (ITR) document and extract:
@@ -64,8 +75,8 @@ class ITRParser:
             Extract numbers WITHOUT commas or currency symbols. If field not found, use 0 or "N/A"."""
             
             # Call Gemini Vision
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content([prompt] + gemini_images)
+            model = genai.GenerativeModel("gemini-2.5-flash")
+            response = model.generate_content([prompt] + images)
             
             # Parse response
             response_text = response.text.strip()

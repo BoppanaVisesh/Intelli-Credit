@@ -5,23 +5,3 @@ __pycache__/
 *.pyc
 dist/
 build/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-intellicredit.db
-
-# Large PDF files
-*.pdf
-
-# Upload and download directories
-backend/uploads/
-backend/downloads/
-uploads/
-downloads/
-
-# Temporary files
-*.log
-*.tmp
-temp_*.png
