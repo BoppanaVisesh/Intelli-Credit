@@ -140,7 +140,21 @@ class BankStatementParser:
         # Detect cash flow pattern
         cash_flow_pattern = self._analyze_cash_flow_pattern(df, credit_col, date_col)
         
+        # Extract counterparty transactions from descriptions
+        counterparty_transactions = []
+        if desc_col:
+            counterparty_transactions = self._extract_counterparties(
+                df, desc_col, credit_col, debit_col, date_col, divisor
+            )
+        
         print(f"   ✓ Calculated metrics: Inflows=₹{total_inflows/divisor:.2f}Cr, Outflows=₹{total_outflows/divisor:.2f}Cr")
+        if counterparty_transactions:
+            unique_parties = set()
+            for t in counterparty_transactions:
+                for e in (t.get('from_entity',''), t.get('to_entity','')):
+                    if e and e != '__APPLICANT__':
+                        unique_parties.add(e)
+            print(f"   ✓ Extracted {len(counterparty_transactions)} counterparty transactions ({len(unique_parties)} unique entities)")
         
         return {
             'total_inflows_cr': total_inflows / divisor,
@@ -152,7 +166,8 @@ class BankStatementParser:
             'largest_inflow_cr': largest_inflow / divisor,
             'largest_outflow_cr': largest_outflow / divisor,
             'statement_period_months': 12,
-            'cash_flow_pattern': cash_flow_pattern
+            'cash_flow_pattern': cash_flow_pattern,
+            'counterparty_transactions': counterparty_transactions,
         }
     
     def _find_column(self, df: pd.DataFrame, keywords: List[str]) -> str:
@@ -179,6 +194,104 @@ class BankStatementParser:
                     return col
         
         return None
+    
+    def _extract_counterparties(
+        self, df: pd.DataFrame, desc_col: str,
+        credit_col: str, debit_col: str, date_col: str,
+        divisor: float
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract counterparty names from bank statement descriptions.
+
+        Recognises patterns like:
+          NEFT from <Company>    → inflow from counterparty
+          NEFT to <Company>     → outflow to counterparty
+          RTGS from/to <Company>
+          IMPS from/to <Company>
+          Payment to <Company>
+          Receipt from <Company>
+          Transfer to/from <Company>
+          UPI-<Company>
+          BY <Company> / TO <Company>
+
+        Returns list of {from_entity, to_entity, amount, date, description}.
+        """
+        if desc_col not in df.columns:
+            return []
+
+        # Patterns: (direction_keyword, group_for_name, is_inflow)
+        # 'from X' means money came IN from X; 'to X' means money went OUT to X
+        PATTERNS = [
+            # NEFT/RTGS/IMPS from/to
+            (re.compile(r'(?:NEFT|RTGS|IMPS|ECS|ACH)\s+from\s+(.+)', re.IGNORECASE), True),
+            (re.compile(r'(?:NEFT|RTGS|IMPS|ECS|ACH)\s+to\s+(.+)', re.IGNORECASE), False),
+            # Receipt from / Payment to
+            (re.compile(r'(?:Receipt|Received|Rcvd|Collection)\s+(?:from\s+)?(.+)', re.IGNORECASE), True),
+            (re.compile(r'(?:Payment|Paid)\s+(?:to\s+)?(.+)', re.IGNORECASE), False),
+            # Transfer from/to
+            (re.compile(r'Transfer\s+from\s+(.+)', re.IGNORECASE), True),
+            (re.compile(r'Transfer\s+to\s+(.+)', re.IGNORECASE), False),
+            # BY / TO (common in Indian bank statements)
+            (re.compile(r'^BY\s+(.+)', re.IGNORECASE), True),
+            (re.compile(r'^TO\s+(.+)', re.IGNORECASE), False),
+        ]
+
+        # Words that indicate the description is not a counterparty name
+        IGNORED = {
+            'salary', 'self', 'cash', 'atm', 'interest', 'charges', 'tax',
+            'tds', 'gst', 'cheque return', 'insufficient', 'bounce', 'bank',
+        }
+
+        transactions: List[Dict[str, Any]] = []
+
+        for _, row in df.iterrows():
+            desc = str(row.get(desc_col, '')).strip()
+            if not desc:
+                continue
+
+            desc_lower = desc.lower()
+            # Skip non-counterparty rows
+            if any(kw in desc_lower for kw in IGNORED):
+                continue
+
+            credit_val = float(row.get(credit_col, 0) or 0)
+            debit_val = float(row.get(debit_col, 0) or 0)
+            amount = max(credit_val, debit_val) / divisor
+            if amount <= 0:
+                continue
+
+            # Determine if this is an inflow or outflow
+            is_inflow = credit_val > debit_val
+
+            counterparty = None
+            for pattern, pattern_is_inflow in PATTERNS:
+                match = pattern.search(desc)
+                if match:
+                    counterparty = match.group(1).strip()
+                    is_inflow = pattern_is_inflow
+                    break
+
+            if not counterparty:
+                continue
+
+            # Clean up counterparty name: remove trailing date, ref numbers
+            counterparty = re.sub(r'\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[-\s]*\d*.*$', '', counterparty, flags=re.IGNORECASE).strip()
+            counterparty = re.sub(r'\s*[-/]\s*\d+\s*$', '', counterparty).strip()
+
+            if len(counterparty) < 3:
+                continue
+
+            date_val = str(row.get(date_col, '')) if date_col else ''
+
+            transactions.append({
+                'from_entity': counterparty if is_inflow else '__APPLICANT__',
+                'to_entity': '__APPLICANT__' if is_inflow else counterparty,
+                'amount': round(amount, 4),
+                'date': date_val,
+                'description': desc[:200],
+            })
+
+        return transactions
     
     def detect_bounced_checks(self, df: pd.DataFrame, desc_col: str) -> int:
         """
@@ -261,5 +374,6 @@ class BankStatementParser:
                 'inflow_regularity': 'Unknown',
                 'payment_discipline': 'Unknown',
                 'monthly_variability': 0.0
-            }
+            },
+            'counterparty_transactions': [],
         }

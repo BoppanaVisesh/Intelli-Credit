@@ -60,15 +60,18 @@ class AnnualReportParser:
     
     def parse_annual_report(self, pdf_path: str) -> Dict[str, Any]:
         """
-        Main parsing function using TEXT extraction + Gemini LLM.
-        1. Extract text from ALL pages locally (free via PyMuPDF)
-        2. Find and group key financial sections
-        3. Send condensed text to Gemini for structured JSON extraction
+        Main parsing function.
+        - JSON files: load directly as pre-parsed structured data
+        - PDF files: TEXT extraction + Gemini LLM
         """
         
         if not os.path.exists(pdf_path):
-            print(f"ERROR: PDF file not found: {pdf_path}")
+            print(f"ERROR: File not found: {pdf_path}")
             return self._get_default_data()
+        
+        # Handle JSON files (pre-parsed structured data)
+        if pdf_path.lower().endswith('.json'):
+            return self._parse_json_report(pdf_path)
         
         if not self.api_key:
             print("WARNING: GEMINI_API_KEY not set, returning default data")
@@ -278,6 +281,20 @@ RULES:
             print(f"ERROR calling Gemini API: {e}")
             return self._get_default_data()
     
+    def _parse_json_report(self, json_path: str) -> Dict[str, Any]:
+        """Load pre-parsed annual report data from a JSON file."""
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            print(f"   ✓ Loaded annual report JSON: {json_path}")
+            # Merge with defaults so all expected keys exist
+            defaults = self._get_default_data()
+            defaults.update(data)
+            return defaults
+        except Exception as e:
+            print(f"ERROR loading JSON annual report: {e}")
+            return self._get_default_data()
+
     def _get_default_data(self) -> Dict[str, Any]:
         """Return default structure when parsing fails"""
         return {

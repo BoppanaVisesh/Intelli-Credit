@@ -94,11 +94,11 @@ const ResearchAgent = () => {
       {articles.map((a, i) => (
         <div key={i} className="bg-white border rounded p-2 text-sm">
           <div className="flex justify-between items-start">
-            <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">{a.title}</a>
+            <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-sienna hover:underline font-medium">{a.title}</a>
             <span className={`ml-2 text-xs px-1.5 py-0.5 rounded ${a.sentiment === 'NEGATIVE' ? 'bg-red-100 text-red-700' : a.sentiment === 'POSITIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>{a.sentiment}</span>
           </div>
-          <p className="text-gray-500 text-xs mt-1">{a.source}</p>
-          {a.snippet && <p className="text-gray-600 text-xs mt-1">{a.snippet.slice(0, 150)}...</p>}
+          <p className="text-muted text-xs mt-1">{a.source}</p>
+          {a.snippet && <p className="text-muted text-xs mt-1">{a.snippet.slice(0, 150)}...</p>}
         </div>
       ))}
     </div>
@@ -109,22 +109,22 @@ const ResearchAgent = () => {
       <div className="grid grid-cols-3 gap-3 text-sm">
         <div className="bg-white border rounded p-2 text-center">
           <div className="text-2xl font-bold">{data.case_count}</div>
-          <div className="text-gray-500 text-xs">Cases Found</div>
+          <div className="text-muted text-xs">Cases Found</div>
         </div>
-        <div className="bg-white border rounded p-2 text-center">
+        <div className="bg-warm-white border border-warm-border rounded p-2 text-center">
           <div className="text-2xl font-bold">{(data.nclt_cases || []).length}</div>
-          <div className="text-gray-500 text-xs">NCLT Cases</div>
+          <div className="text-muted text-xs">NCLT Cases</div>
         </div>
-        <div className="bg-white border rounded p-2 text-center">
+        <div className="bg-warm-white border border-warm-border rounded p-2 text-center">
           <div className="text-2xl font-bold text-red-600">{data.total_penalty}</div>
-          <div className="text-gray-500 text-xs">Score Penalty</div>
+          <div className="text-muted text-xs">Score Penalty</div>
         </div>
       </div>
-      {data.recommendation && <p className="text-sm text-gray-700 bg-white border rounded p-2">{data.recommendation}</p>}
+      {data.recommendation && <p className="text-sm text-ink bg-warm-white border border-warm-border rounded p-2">{data.recommendation}</p>}
       {(data.records || []).map((r, i) => (
-        <div key={i} className="bg-white border rounded p-2 text-sm">
-          <p className="text-gray-700">{r.summary}</p>
-          {r.url && <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-xs hover:underline">Source</a>}
+        <div className="bg-warm-white border border-warm-border rounded p-2 text-sm">
+          <p className="text-ink">{r.summary}</p>
+          {r.url && <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-sienna text-xs hover:underline">Source</a>}
         </div>
       ))}
     </div>
@@ -133,17 +133,17 @@ const ResearchAgent = () => {
   const renderSector = data => (
     <div className="space-y-3 mt-2">
       <div className="grid grid-cols-3 gap-3 text-sm">
-        <div className="bg-white border rounded p-3 text-center">
+        <div className="bg-warm-white border border-warm-border rounded p-3 text-center">
           <div className="text-lg font-bold">{data.outlook}</div>
-          <div className="text-gray-500 text-xs">Outlook</div>
+          <div className="text-muted text-xs">Outlook</div>
         </div>
-        <div className="bg-white border rounded p-3 text-center">
+        <div className="bg-warm-white border border-warm-border rounded p-3 text-center">
           <div className="text-lg font-bold">{data.growth_rate}%</div>
-          <div className="text-gray-500 text-xs">Growth Rate</div>
+          <div className="text-muted text-xs">Growth Rate</div>
         </div>
-        <div className="bg-white border rounded p-3 text-center">
+        <div className="bg-warm-white border border-warm-border rounded p-3 text-center">
           <div className="text-lg font-bold">{data.risk_score}</div>
-          <div className="text-gray-500 text-xs">Risk Score</div>
+          <div className="text-muted text-xs">Risk Score</div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm">
@@ -160,7 +160,7 @@ const ResearchAgent = () => {
           </ul>
         </div>
       </div>
-      {data.recommendation && <p className="text-sm bg-white border rounded p-2">{data.recommendation}</p>}
+      {data.recommendation && <p className="text-sm bg-warm-white border border-warm-border rounded p-2">{data.recommendation}</p>}
     </div>
   );
 
@@ -168,14 +168,14 @@ const ResearchAgent = () => {
     <div className="mt-2 space-y-2 text-sm">
       <div className="flex items-center gap-2">
         <span>Sentiment: {SENTIMENT_ICONS[data.sentiment] || '?'} {data.sentiment}</span>
-        <span className="text-gray-400">|</span>
+        <span className="text-muted">|</span>
         <span>Risk Score: <span className={data.risk_score < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}>{data.risk_score}</span></span>
       </div>
-      {data.finding && <p className="text-gray-700 bg-white border rounded p-2 text-xs max-h-40 overflow-y-auto">{data.finding}</p>}
+      {data.finding && <p className="text-ink bg-warm-white border border-warm-border rounded p-2 text-xs max-h-40 overflow-y-auto">{data.finding}</p>}
       {(data.sources || []).length > 0 && (
         <div className="text-xs text-gray-500">
           Sources: {data.sources.map((s, i) => {
-            try { return <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mr-2">{new URL(s).hostname}</a>; }
+            try { return <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="text-sienna hover:underline mr-2">{new URL(s).hostname}</a>; }
             catch { return <span key={i} className="mr-2">{s}</span>; }
           })}
         </div>
@@ -185,14 +185,14 @@ const ResearchAgent = () => {
 
   const renderRegulatory = data => (
     <div className="mt-2 space-y-2">
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-muted">
         Checked {data.total_results_checked} sources. Found {data.concerns_found} concern(s).
       </div>
       {(data.findings || []).map((f, i) => (
         <div key={i} className="bg-white border border-red-200 rounded p-2 text-sm">
           <div className="font-medium text-red-800">{f.title}</div>
-          <p className="text-gray-600 text-xs mt-1">{f.content}</p>
-          {f.url && <a href={f.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-xs hover:underline">Read more</a>}
+          <p className="text-muted text-xs mt-1">{f.content}</p>
+          {f.url && <a href={f.url} target="_blank" rel="noopener noreferrer" className="text-sienna text-xs hover:underline">Read more</a>}
         </div>
       ))}
       {data.concerns_found === 0 && <p className="text-green-700 text-sm">No regulatory concerns found</p>}
@@ -214,22 +214,22 @@ const ResearchAgent = () => {
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="card">
         <h1 className="text-2xl font-bold mb-1">External Intelligence Portal</h1>
-        <p className="text-gray-500 text-sm">Application: {id}</p>
+        <p className="text-muted text-sm">Application: {id}</p>
       </div>
 
       <div className="card">
         <h2 className="text-lg font-semibold mb-4">Configure Research</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+            <label className="block text-sm font-medium text-ink mb-1">Company Name *</label>
             <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)}
               placeholder="e.g. SpiceJet Limited"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              className="w-full px-3 py-2 border border-warm-border rounded-lg focus:ring-2 focus:ring-sienna focus:border-sienna" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Industry / Sector</label>
+            <label className="block text-sm font-medium text-ink mb-1">Industry / Sector</label>
             <select value={sector} onChange={e => setSector(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              className="w-full px-3 py-2 border border-warm-border rounded-lg focus:ring-2 focus:ring-sienna focus:border-sienna">
               <option value="">Auto-detect</option>
               <option value="Aviation">Aviation</option>
               <option value="IT Services">IT Services</option>
@@ -242,17 +242,17 @@ const ResearchAgent = () => {
             </select>
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Promoter Names (comma-separated)</label>
+            <label className="block text-sm font-medium text-ink mb-1">Promoter Names (comma-separated)</label>
             <input type="text" value={promoterInput} onChange={e => setPromoterInput(e.target.value)}
               placeholder="e.g. Ajay Singh, Shilpa Singh"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              className="w-full px-3 py-2 border border-warm-border rounded-lg focus:ring-2 focus:ring-sienna focus:border-sienna" />
           </div>
         </div>
 
         {error && <div className="mt-3 bg-red-50 text-red-700 px-4 py-2 rounded">{error}</div>}
 
         <button onClick={handleTrigger} disabled={loading}
-          className="mt-4 w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors">
+          className="mt-4 w-full px-4 py-3 bg-sienna text-white rounded-lg hover:bg-terracotta disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors">
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
@@ -267,10 +267,10 @@ const ResearchAgent = () => {
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-bold">Research Complete for {triggerResponse.company_name}</h3>
-              <p className="text-sm text-gray-600">{triggerResponse.completed_tasks} tasks completed, {triggerResponse.failed_tasks} failed</p>
+              <p className="text-sm text-muted">{triggerResponse.completed_tasks} tasks completed, {triggerResponse.failed_tasks} failed</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">Overall Risk</div>
+              <div className="text-sm text-muted">Overall Risk</div>
               <RiskBadge level={triggerResponse.overall_risk} />
             </div>
           </div>
@@ -282,13 +282,13 @@ const ResearchAgent = () => {
         </div>
       )}
 
-      {fetchingResults && <div className="card text-center text-gray-500">Loading research results...</div>}
+      {fetchingResults && <div className="card text-center text-muted">Loading research results...</div>}
 
       {researchData && researchData.research_completed && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">Research Findings</h2>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted">
               Total Score Penalty: <span className="font-bold text-red-600">{researchData.total_penalty}</span>
             </div>
           </div>
@@ -302,12 +302,12 @@ const ResearchAgent = () => {
                     <span className="text-2xl">{meta.icon}</span>
                     <div>
                       <h3 className="font-semibold text-lg">{meta.label}</h3>
-                      <p className="text-gray-500 text-xs">{meta.desc}</p>
+                      <p className="text-muted text-xs">{meta.desc}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     {items.map((item, idx) => <RiskBadge key={idx} level={item.risk_level} />)}
-                    <span className="text-gray-400">{expandedCards[type] ? '\u25B2' : '\u25BC'}</span>
+                    <span className="text-muted">{expandedCards[type] ? '\u25B2' : '\u25BC'}</span>
                   </div>
                 </div>
 
@@ -320,13 +320,13 @@ const ResearchAgent = () => {
                         {item.sentiment && <span className="text-sm">{SENTIMENT_ICONS[item.sentiment]} {item.sentiment}</span>}
                       </div>
                     )}
-                    <p className="text-sm text-gray-700 mb-2">{item.findings_summary}</p>
+                    <p className="text-sm text-ink mb-2">{item.findings_summary}</p>
                     {item.findings_data && renderCardContent(type, item.findings_data)}
                   </div>
                 ))}
 
                 {!expandedCards[type] && (
-                  <p className="text-sm text-gray-500 mt-2">{items[0]?.findings_summary?.slice(0, 100)}...</p>
+                  <p className="text-sm text-muted mt-2">{items[0]?.findings_summary?.slice(0, 100)}...</p>
                 )}
               </div>
             );

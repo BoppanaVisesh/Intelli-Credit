@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { uploadDocuments, parseDocuments, getDocuments } from '../utils/api';
+import { getDocuments, parseDocuments, uploadDocuments } from '../utils/api';
 
 const DataIngestion = () => {
   const { id } = useParams();
@@ -164,7 +164,7 @@ const DataIngestion = () => {
     <div className="space-y-6">
       <div className="card">
         <h1 className="text-2xl font-bold mb-2">Document Upload & Parsing</h1>
-        <p className="text-gray-600 mb-6">Application ID: {id}</p>
+        <p className="text-muted mb-6">Application ID: {id}</p>
 
         {/* Error/Success Messages */}
         {error && (
@@ -187,17 +187,17 @@ const DataIngestion = () => {
           onDrop={handleDrop}
           className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
             dragActive 
-              ? 'border-blue-500 bg-blue-50' 
-              : 'border-gray-300 hover:border-gray-400'
+              ? 'border-sienna bg-cream' 
+              : 'border-warm-border hover:border-muted'
           }`}
         >
           <div className="space-y-4">
             <div className="text-4xl">📁</div>
             <div>
-              <p className="text-lg font-medium text-gray-700">
+              <p className="text-lg font-medium text-ink">
                 Drag & drop files here
               </p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted mt-1">
                 or click to browse
               </p>
             </div>
@@ -211,11 +211,11 @@ const DataIngestion = () => {
             />
             <label
               htmlFor="file-upload"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-colors"
+              className="inline-block px-4 py-2 bg-sienna text-white rounded-md hover:bg-terracotta cursor-pointer transition-colors"
             >
               Select Files
             </label>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Supported: PDF, Excel (.xlsx, .xls), CSV
             </p>
           </div>
@@ -227,12 +227,12 @@ const DataIngestion = () => {
             <h3 className="text-lg font-semibold mb-3">Selected Files ({files.length})</h3>
             <div className="space-y-2">
               {files.map(({ id, name, size }) => (
-                <div key={id} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                <div key={id} className="flex items-center justify-between p-3 bg-cream rounded-md">
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">📄</span>
                     <div>
-                      <p className="font-medium text-gray-900">{name}</p>
-                      <p className="text-sm text-gray-500">{formatFileSize(size)}</p>
+                      <p className="font-medium text-charcoal">{name}</p>
+                      <p className="text-sm text-muted">{formatFileSize(size)}</p>
                     </div>
                   </div>
                   <button
@@ -249,13 +249,13 @@ const DataIngestion = () => {
               <button
                 onClick={handleUpload}
                 disabled={uploading}
-                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-2 bg-sienna text-white rounded-md hover:bg-terracotta disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 {uploading ? 'Uploading...' : `Upload ${files.length} File(s)`}
               </button>
               <button
                 onClick={() => setFiles([])}
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                className="px-6 py-2 bg-parchment text-ink rounded-md hover:bg-warm-border transition-colors"
               >
                 Clear All
               </button>
@@ -280,17 +280,17 @@ const DataIngestion = () => {
 
           <div className="space-y-3">
             {uploadedDocs.map((doc) => (
-              <div key={doc.file_id} className="border rounded-lg p-4 hover:border-blue-300 transition-colors">
+              <div key={doc.file_id} className="border border-warm-border rounded-lg p-4 hover:border-sienna transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
                     <span className="text-3xl">{getDocTypeIcon(doc.document_type)}</span>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-semibold text-gray-900">{doc.filename}</h3>
+                        <h3 className="font-semibold text-charcoal">{doc.filename}</h3>
                         {getStatusBadge(doc.parse_status)}
                       </div>
                       
-                      <div className="text-sm text-gray-600 space-y-1">
+                      <div className="text-sm text-muted space-y-1">
                         <p>Type: <span className="font-medium">{doc.document_type.replace('_', ' ')}</span></p>
                         <p>Classification Confidence: <span className="font-medium">{(doc.classification_confidence * 100).toFixed(0)}%</span></p>
                         {doc.uploaded_at && (
@@ -304,10 +304,10 @@ const DataIngestion = () => {
                       {/* Parsed Data Preview */}
                       {doc.parse_status === 'COMPLETED' && doc.parsed_data && (
                         <details className="mt-3">
-                          <summary className="cursor-pointer text-blue-600 hover:text-blue-800 font-medium">
+                          <summary className="cursor-pointer text-sienna hover:text-terracotta font-medium">
                             View Extracted Data
                           </summary>
-                          <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                          <div className="mt-2 p-3 bg-cream rounded-md">
                             <pre className="text-xs overflow-auto max-h-64">
                               {JSON.stringify(doc.parsed_data, null, 2)}
                             </pre>
@@ -334,8 +334,8 @@ const DataIngestion = () => {
       {uploadedDocs.length === 0 && files.length === 0 && (
         <div className="card text-center py-12">
           <div className="text-6xl mb-4">📤</div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No Documents Uploaded</h3>
-          <p className="text-gray-500">Upload your first document to get started</p>
+          <h3 className="text-xl font-semibold text-ink mb-2">No Documents Uploaded</h3>
+          <p className="text-muted">Upload your first document to get started</p>
         </div>
       )}
     </div>

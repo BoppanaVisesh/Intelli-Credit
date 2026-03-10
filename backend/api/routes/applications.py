@@ -264,6 +264,11 @@ async def get_application_summary(
                 "total_adjustment": sum(n.score_adjustment or 0 for n in dd_notes),
                 "status": "completed" if len(dd_notes) > 0 else "not_started",
             },
+            "fraud": {
+                "risk_level": app.circular_trading_risk or "NOT_RUN",
+                "red_flag": app.red_flag_triggered or False,
+                "status": "completed" if app.circular_trading_risk and app.circular_trading_risk != "NOT_RUN" else "not_started",
+            },
             "scoring": {
                 "score": app.final_credit_score,
                 "decision": app.decision,

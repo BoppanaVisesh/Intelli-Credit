@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../utils/api';
 
 const GRADE_COLORS = {
@@ -43,23 +43,23 @@ const ScoringResult = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border p-6">
+      <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Credit Scoring</h1>
-            <p className="text-gray-500 text-sm mt-1">5-Cs Framework &mdash; Application {id}</p>
+            <h1 className="text-2xl font-bold text-charcoal">Credit Scoring</h1>
+            <p className="text-muted text-sm mt-1">5-Cs Framework &mdash; Application {id}</p>
           </div>
           <div className="flex gap-3">
             <button onClick={calculate} disabled={loading}
-              className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 transition">
+              className="px-5 py-2.5 bg-sienna text-white rounded-lg font-medium hover:bg-terracotta disabled:opacity-50 transition">
               {loading ? 'Calculating...' : 'Calculate Score'}
             </button>
             <button onClick={() => navigate(`/application/${id}/fraud`)}
-              className="px-4 py-2.5 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">
+              className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition">
               Fraud Detection
             </button>
             <button onClick={() => navigate(`/application/${id}/cam`)}
-              className="px-4 py-2.5 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">
+              className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition">
               View CAM
             </button>
           </div>
@@ -69,8 +69,8 @@ const ScoringResult = () => {
 
       {loading && (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-          <span className="ml-4 text-gray-500 text-lg">Running 5-Cs credit assessment...</span>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta" />
+          <span className="ml-4 text-muted text-lg">Running 5-Cs credit assessment...</span>
         </div>
       )}
 
@@ -100,8 +100,8 @@ const ScoringResult = () => {
 
           {/* Sub-Scores */}
           {sub && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">5-Cs Sub-Scores</h2>
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-4">5-Cs Sub-Scores</h2>
               <div className="space-y-4">
                 {Object.entries(sub).map(([key, val]) => {
                   const pct = val.score;
@@ -111,14 +111,14 @@ const ScoringResult = () => {
                   return (
                     <div key={key}>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="font-medium text-gray-700 capitalize">{key} ({(val.weight * 100).toFixed(0)}%)</span>
+                        <span className="font-medium text-ink capitalize">{key} ({(val.weight * 100).toFixed(0)}%)</span>
                         <span className="font-bold">{val.score}/100</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div className="w-full bg-parchment rounded-full h-3">
                         <div className={`${color} h-3 rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
                       </div>
                       {expl?.[key] && (
-                        <p className="text-xs text-gray-500 mt-1">{expl[key]}</p>
+                        <p className="text-xs text-muted mt-1">{expl[key]}</p>
                       )}
                     </div>
                   );
@@ -129,27 +129,27 @@ const ScoringResult = () => {
 
           {/* Loan Recommendation */}
           {result.loan_recommendation && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Loan Recommendation</h2>
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-4">Loan Recommendation</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-indigo-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-indigo-600 font-medium">Recommended</p>
-                  <p className="text-2xl font-bold text-indigo-800">₹{result.loan_recommendation.recommended_limit_cr} Cr</p>
+                <div className="bg-parchment rounded-lg p-4 text-center">
+                  <p className="text-xs text-sienna font-medium">Recommended</p>
+                  <p className="text-2xl font-bold text-charcoal">₹{result.loan_recommendation.recommended_limit_cr} Cr</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Revenue Method</p>
-                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.revenue_limit_cr} Cr</p>
-                  <p className="text-xs text-gray-400">Revenue × 0.25</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Revenue Method</p>
+                  <p className="text-lg font-bold text-charcoal">₹{result.loan_recommendation.revenue_limit_cr} Cr</p>
+                  <p className="text-xs text-muted">Revenue × 0.25</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Cash Flow Method</p>
-                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.cashflow_limit_cr} Cr</p>
-                  <p className="text-xs text-gray-400">Cash Flow × 4</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Cash Flow Method</p>
+                  <p className="text-lg font-bold text-charcoal">₹{result.loan_recommendation.cashflow_limit_cr} Cr</p>
+                  <p className="text-xs text-muted">Cash Flow × 4</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Collateral Method</p>
-                  <p className="text-lg font-bold text-gray-800">₹{result.loan_recommendation.collateral_limit_cr} Cr</p>
-                  <p className="text-xs text-gray-400">Collateral × 0.7</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Collateral Method</p>
+                  <p className="text-lg font-bold text-charcoal">₹{result.loan_recommendation.collateral_limit_cr} Cr</p>
+                  <p className="text-xs text-muted">Collateral × 0.7</p>
                 </div>
               </div>
             </div>
@@ -157,29 +157,29 @@ const ScoringResult = () => {
 
           {/* Interest Rate */}
           {result.interest_rate && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Interest Rate Assessment</h2>
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-4">Interest Rate Assessment</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-green-50 rounded-lg p-4 text-center">
                   <p className="text-xs text-green-600 font-medium">Final Rate</p>
                   <p className="text-3xl font-bold text-green-800">{result.interest_rate.final_interest_rate}%</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Base Rate</p>
-                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.base_rate}%</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Base Rate</p>
+                  <p className="text-lg font-bold text-charcoal">{result.interest_rate.base_rate}%</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Risk Premium</p>
-                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.risk_premium}%</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Risk Premium</p>
+                  <p className="text-lg font-bold text-charcoal">{result.interest_rate.risk_premium}%</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <p className="text-xs text-gray-500 font-medium">Category</p>
-                  <p className="text-lg font-bold text-gray-800">{result.interest_rate.risk_category}</p>
+                <div className="bg-cream rounded-lg p-4 text-center">
+                  <p className="text-xs text-muted font-medium">Category</p>
+                  <p className="text-lg font-bold text-charcoal">{result.interest_rate.risk_category}</p>
                 </div>
               </div>
               {result.interest_rate.adjustments?.length > 0 && (
                 <div className="mt-3">
-                  <p className="text-xs font-medium text-gray-500 mb-1">Micro-adjustments:</p>
+                  <p className="text-xs font-medium text-muted mb-1">Micro-adjustments:</p>
                   <div className="flex flex-wrap gap-2">
                     {result.interest_rate.adjustments.map((a, i) => (
                       <span key={i} className={`text-xs px-2 py-1 rounded-full ${a.delta > 0 ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
@@ -194,8 +194,8 @@ const ScoringResult = () => {
 
           {/* Decision Reasons */}
           {result.decision_reasons?.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-3">Decision Reasons</h2>
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-3">Decision Reasons</h2>
               <div className="space-y-2">
                 {result.decision_reasons.map((r, i) => (
                   <div key={i} className={`flex items-start gap-3 p-3 rounded-lg ${r.impact === 'POSITIVE' ? 'bg-green-50' : 'bg-red-50'}`}>
@@ -205,7 +205,7 @@ const ScoringResult = () => {
                     <div className="flex-1">
                       <p className={`text-sm font-medium ${r.impact === 'POSITIVE' ? 'text-green-800' : 'text-red-800'}`}>{r.text}</p>
                     </div>
-                    <span className="text-xs font-mono text-gray-400">w:{r.weight}</span>
+                    <span className="text-xs font-mono text-muted">w:{r.weight}</span>
                   </div>
                 ))}
               </div>
@@ -214,17 +214,17 @@ const ScoringResult = () => {
 
           {/* Narrative */}
           {result.narrative && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-3">Credit Officer Narrative</h2>
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{result.narrative}</p>
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-3">Credit Officer Narrative</h2>
+              <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{result.narrative}</p>
             </div>
           )}
 
           {/* Key Factors (legacy) */}
           {result.key_factors?.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-3">Key Decision Factors</h2>
-              <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+            <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-3">Key Decision Factors</h2>
+              <ol className="list-decimal list-inside space-y-1 text-sm text-ink">
                 {result.key_factors.map((f, i) => <li key={i}>{f}</li>)}
               </ol>
             </div>
@@ -233,10 +233,10 @@ const ScoringResult = () => {
       )}
 
       {!result && !loading && (
-        <div className="bg-white rounded-xl shadow-sm border p-12 text-center">
+        <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-12 text-center">
           <div className="text-6xl mb-4">&#x1F4CA;</div>
-          <h3 className="text-xl font-bold text-gray-800">Ready to Score</h3>
-          <p className="text-gray-500 mt-2 max-w-md mx-auto">
+          <h3 className="text-xl font-bold text-charcoal">Ready to Score</h3>
+          <p className="text-muted mt-2 max-w-md mx-auto">
             Click "Calculate Score" to run the 5-Cs credit assessment using parsed documents, research findings, and due diligence data.
           </p>
         </div>

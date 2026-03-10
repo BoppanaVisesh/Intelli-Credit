@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../utils/api';
 
 const SECTIONS = [
@@ -57,15 +57,15 @@ const CAMViewer = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border p-6">
+      <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Credit Appraisal Memo</h1>
-            <p className="text-gray-500 text-sm mt-1">Professional CAM Report &mdash; Application {id}</p>
+            <h1 className="text-2xl font-bold text-charcoal">Credit Appraisal Memo</h1>
+            <p className="text-muted text-sm mt-1">Professional CAM Report &mdash; Application {id}</p>
           </div>
           <div className="flex gap-3">
             <button onClick={generate} disabled={loading}
-              className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 transition">
+              className="px-5 py-2.5 bg-sienna text-white rounded-lg font-medium hover:bg-terracotta disabled:opacity-50 transition">
               {loading ? 'Generating...' : 'Generate CAM'}
             </button>
             {result && (
@@ -75,7 +75,7 @@ const CAMViewer = () => {
               </button>
             )}
             <button onClick={() => navigate(`/application/${id}/scoring`)}
-              className="px-4 py-2.5 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">
+              className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition">
               Back to Scoring
             </button>
           </div>
@@ -85,8 +85,8 @@ const CAMViewer = () => {
 
       {loading && (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-          <span className="ml-4 text-gray-500 text-lg">Generating CAM with LLM narrative...</span>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta" />
+          <span className="ml-4 text-muted text-lg">Generating CAM with LLM narrative...</span>
         </div>
       )}
 
@@ -94,41 +94,41 @@ const CAMViewer = () => {
         <>
           {/* Executive Summary */}
           {result.executive_summary && (
-            <div className="bg-gradient-to-br from-indigo-50 to-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-indigo-900 mb-3">Executive Summary (LLM-Generated)</h2>
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{result.executive_summary}</p>
+            <div className="bg-gradient-to-br from-parchment to-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+              <h2 className="text-lg font-bold text-charcoal mb-3">Executive Summary (LLM-Generated)</h2>
+              <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{result.executive_summary}</p>
             </div>
           )}
 
           {/* Score + Decision Summary */}
           {scoring && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white rounded-xl shadow-sm border p-5 text-center">
-                <p className="text-sm text-gray-500">Credit Score</p>
-                <p className="text-4xl font-extrabold text-gray-900">{scoring.final_credit_score}<span className="text-lg text-gray-400">/100</span></p>
-                <p className="text-sm font-medium mt-1 text-indigo-600">{scoring.risk_grade}</p>
+              <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-5 text-center">
+                <p className="text-sm text-muted">Credit Score</p>
+                <p className="text-4xl font-extrabold text-charcoal">{scoring.final_credit_score}<span className="text-lg text-muted">/100</span></p>
+                <p className="text-sm font-medium mt-1 text-sienna">{scoring.risk_grade}</p>
               </div>
               <div className={`rounded-xl shadow-sm border p-5 text-center text-white ${scoring.decision === 'APPROVE' ? 'bg-green-600' : scoring.decision === 'CONDITIONAL_APPROVE' ? 'bg-yellow-500' : 'bg-red-600'}`}>
                 <p className="text-sm opacity-80">Decision</p>
                 <p className="text-2xl font-bold mt-1">{scoring.decision?.replace('_', ' ')}</p>
                 {scoring.approval_percentage > 0 && <p className="text-sm opacity-80 mt-1">{scoring.approval_percentage}% Approved</p>}
               </div>
-              <div className="bg-white rounded-xl shadow-sm border p-5 text-center">
-                <p className="text-sm text-gray-500">Recommended Loan</p>
+              <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-5 text-center">
+                <p className="text-sm text-muted">Recommended Loan</p>
                 <p className="text-3xl font-bold text-green-700">₹{loan?.recommended_limit_cr || '—'} Cr</p>
-                {rate && <p className="text-sm text-gray-400 mt-1">@ {rate.final_interest_rate}% ({rate.risk_category})</p>}
+                {rate && <p className="text-sm text-muted mt-1">@ {rate.final_interest_rate}% ({rate.risk_category})</p>}
               </div>
             </div>
           )}
 
           {/* Document Sections */}
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">CAM Document Sections</h2>
+          <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+            <h2 className="text-lg font-bold text-charcoal mb-4">CAM Document Sections</h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {SECTIONS.map((s, i) => (
                 <div key={i} className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
                   <span className="text-green-600 text-sm">&#10003;</span>
-                  <span className="text-xs font-medium text-gray-700">{s}</span>
+                  <span className="text-xs font-medium text-ink">{s}</span>
                 </div>
               ))}
             </div>
@@ -136,8 +136,8 @@ const CAMViewer = () => {
 
           {/* Decision Reasons */}
           {reasons?.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-3">Decision Reasons</h2>
+          <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+            <h2 className="text-lg font-bold text-charcoal mb-3">Decision Reasons</h2>
               <div className="space-y-2">
                 {reasons.map((r, i) => (
                   <div key={i} className={`flex items-start gap-3 p-3 rounded-lg ${r.impact === 'POSITIVE' ? 'bg-green-50' : 'bg-red-50'}`}>
@@ -153,16 +153,16 @@ const CAMViewer = () => {
 
           {/* Five Cs Summary */}
           {scoring?.sub_scores && (
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Five Cs Assessment</h2>
+          <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-6">
+            <h2 className="text-lg font-bold text-charcoal mb-4">Five Cs Assessment</h2>
               <div className="space-y-3">
                 {Object.entries(scoring.sub_scores).map(([key, val]) => (
                   <div key={key}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="font-medium text-gray-700 capitalize">{key} ({(val.weight * 100).toFixed(0)}%)</span>
+                      <span className="font-medium text-ink capitalize">{key} ({(val.weight * 100).toFixed(0)}%)</span>
                       <span className="font-bold">{val.score}/100</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="w-full bg-parchment rounded-full h-2.5">
                       <div className={`${val.score >= 60 ? 'bg-green-500' : val.score >= 30 ? 'bg-yellow-500' : 'bg-red-500'} h-2.5 rounded-full`} style={{ width: `${val.score}%` }} />
                     </div>
                   </div>
@@ -174,10 +174,10 @@ const CAMViewer = () => {
       )}
 
       {!result && !loading && (
-        <div className="bg-white rounded-xl shadow-sm border p-12 text-center">
+        <div className="bg-warm-white rounded-xl shadow-warm border border-warm-border p-12 text-center">
           <div className="text-6xl mb-4">&#x1F4DD;</div>
-          <h3 className="text-xl font-bold text-gray-800">Generate Credit Appraisal Memo</h3>
-          <p className="text-gray-500 mt-2 max-w-md mx-auto">
+          <h3 className="text-xl font-bold text-charcoal">Generate Credit Appraisal Memo</h3>
+          <p className="text-muted mt-2 max-w-md mx-auto">
             Click "Generate CAM" to create a professional 10-section Credit Appraisal Memo with LLM-powered executive summary. The document will be available for download as a Word file.
           </p>
         </div>

@@ -61,13 +61,38 @@ async def run_fraud_verification(application_id: str, db: Session = Depends(get_
         # Step 3: Circular trading detection
         gst = normalized.get("gst", {})
         bank = normalized.get("bank", {})
+        
+        # Collect counterparty transactions from bank statements and GST data
+        company_name = application.company_name or "__APPLICANT__"
+        transactions = []
+        
+        # Bank counterparty transactions (extracted from NEFT/RTGS descriptions)
+        for txn in bank.get("counterparty_transactions", []):
+            t = dict(txn)
+            # Replace sentinel with actual company name
+            if t.get("from_entity") == "__APPLICANT__":
+                t["from_entity"] = company_name
+            if t.get("to_entity") == "__APPLICANT__":
+                t["to_entity"] = company_name
+            transactions.append(t)
+        
+        # GST trading partner transactions (extracted from invoice-level data)
+        for txn in gst.get("trading_partners", []):
+            t = dict(txn)
+            if t.get("from_entity") == "__APPLICANT__":
+                t["from_entity"] = company_name
+            if t.get("to_entity") == "__APPLICANT__":
+                t["to_entity"] = company_name
+            transactions.append(t)
+        
         ct_detector = CircularTradingDetector()
         ct_result = ct_detector.full_analysis(
             gst_sales=gst.get("sales_cr", 0) or 0,
             bank_inflows=bank.get("total_inflows_cr", 0) or 0,
             gst_purchases=gst.get("purchases_cr", 0) or 0,
             bank_outflows=bank.get("total_outflows_cr", 0) or 0,
-            transactions=[],  # No individual transaction data yet
+            transactions=transactions,
+            company_name=company_name,
         )
 
         # Step 4: ML prediction

@@ -36,7 +36,7 @@ const STEPS = [
     key: 'scoring',
     icon: '📊',
     label: 'Credit Scoring',
-    desc: 'Risk scoring engine with SHAP explainability',
+    desc: 'Five Cs scoring with explainable decision reasons',
     route: 'scoring',
   },
   {
@@ -85,7 +85,7 @@ const ApplicationDetail = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-terracotta"></div>
       </div>
     );
   }
@@ -93,7 +93,7 @@ const ApplicationDetail = () => {
   if (error || !summary) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 mb-4">{error || 'Application not found'}</p>
+        <p className="text-muted mb-4">{error || 'Application not found'}</p>
         <Link to="/" className="btn-primary inline-block">Back to Dashboard</Link>
       </div>
     );
@@ -118,6 +118,10 @@ const ApplicationDetail = () => {
         return p.count > 0
           ? `${p.count} insights | Score adjustment: ${p.total_adjustment > 0 ? '+' : ''}${p.total_adjustment} pts`
           : null;
+      case 'fraud':
+        return p.risk_level && p.risk_level !== 'NOT_RUN'
+          ? `Risk: ${p.risk_level}${p.red_flag ? ' | RED FLAG' : ''}`
+          : null;
       case 'scoring':
         return p.score
           ? `Score: ${p.score}/100 | Decision: ${p.decision}`
@@ -133,36 +137,36 @@ const ApplicationDetail = () => {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <Link to="/" className="text-blue-600 hover:text-blue-800 flex items-center space-x-2 mb-3">
+        <Link to="/" className="text-sienna hover:text-terracotta flex items-center space-x-2 mb-3">
           <ArrowLeft size={20} />
           <span>Back to Dashboard</span>
         </Link>
         <div className="card">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{summary.company_name}</h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <h1 className="text-2xl font-bold text-charcoal">{summary.company_name}</h1>
+              <p className="text-muted text-sm mt-1">
                 {summary.application_id} &bull; {summary.sector} &bull; Requested: &#8377;{summary.requested_limit_cr} Cr
               </p>
-              <p className="text-xs text-gray-400 mt-1">CIN: {summary.mca_cin}</p>
+              <p className="text-xs text-muted mt-1">CIN: {summary.mca_cin}</p>
             </div>
             <div className="text-right">
               <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
                 summary.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                summary.status === 'PROCESSING' ? 'bg-blue-100 text-blue-800' :
-                'bg-gray-100 text-gray-800'
+                summary.status === 'PROCESSING' ? 'bg-parchment text-sienna' :
+                'bg-cream text-ink'
               }`}>
                 {summary.status}
               </span>
-              <p className="text-xs text-gray-400 mt-1">{completedSteps}/{STEPS.length} steps done</p>
+              <p className="text-xs text-muted mt-1">{completedSteps}/{STEPS.length} steps done</p>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-parchment rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-sienna h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(completedSteps / STEPS.length) * 100}%` }}
               />
             </div>
@@ -172,7 +176,7 @@ const ApplicationDetail = () => {
 
       {/* Pipeline Steps */}
       <div className="space-y-3">
-        <h2 className="text-lg font-bold text-gray-900">Credit Appraisal Pipeline</h2>
+        <h2 className="text-lg font-bold text-charcoal">Credit Appraisal Pipeline</h2>
 
         {STEPS.map((step, idx) => {
           const stepData = pipeline[step.key] || {};
@@ -194,12 +198,12 @@ const ApplicationDetail = () => {
                   <div className="text-2xl w-10 text-center">{step.icon}</div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400 font-mono">Step {idx + 1}</span>
-                      <h3 className="font-semibold text-gray-900">{step.label}</h3>
+                      <span className="text-xs text-muted font-mono">Step {idx + 1}</span>
+                      <h3 className="font-semibold text-charcoal">{step.label}</h3>
                     </div>
-                    <p className="text-sm text-gray-500">{step.desc}</p>
+                    <p className="text-sm text-muted">{step.desc}</p>
                     {detail && (
-                      <p className="text-sm font-medium text-gray-700 mt-1">
+                      <p className="text-sm font-medium text-ink mt-1">
                         {detail}
                         {step.key === 'research' && stepData.overall_risk && (
                           <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${RISK_COLORS[stepData.overall_risk] || ''}`}>
@@ -215,7 +219,7 @@ const ApplicationDetail = () => {
                     <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${style.dot}`} />
                     {style.label}
                   </span>
-                  <span className="text-gray-400 text-lg">&rsaquo;</span>
+                  <span className="text-muted text-lg">&rsaquo;</span>
                 </div>
               </div>
             </Link>

@@ -14,3 +14,9 @@ backend/downloads/cam_reports/*
 !backend/downloads/cam_reports/.gitkeep
 downloads/*
 !downloads/.gitkeep
+
+# Test data (regenerated via generate_test_data.py)
+backend/test_data/company*/
+
+# Docker volumes
+pgdata/

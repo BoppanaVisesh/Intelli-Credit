@@ -38,6 +38,9 @@ selenium==4.16.0
 # Graph Analysis
 networkx>=3.2
 
+# Database (PostgreSQL support)
+psycopg2-binary==2.9.9
+
 # Utilities
 aiofiles==23.2.1
 httpx==0.26.0

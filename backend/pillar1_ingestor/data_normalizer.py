@@ -70,12 +70,13 @@ class DataNormalizer:
             "net_tax_liability_cr": _safe_float(data.get("net_tax_liability_cr", 0)),
             "input_tax_credit_cr": _safe_float(data.get("input_tax_credit_cr", 0)),
             "filing_frequency": data.get("filing_frequency", "Unknown"),
+            "trading_partners": data.get("trading_partners", []),
         }
 
     def _empty_gst(self) -> Dict[str, Any]:
         return {"sales_cr": 0, "sales_3b_cr": 0, "purchases_cr": 0,
                 "net_tax_liability_cr": 0, "input_tax_credit_cr": 0,
-                "filing_frequency": "Unknown"}
+                "filing_frequency": "Unknown", "trading_partners": []}
 
     # ── Bank ─────────────────────────────────────────────────────────────
     def _normalize_bank(self, data: Dict) -> Dict[str, Any]:
@@ -92,6 +93,7 @@ class DataNormalizer:
             "monthly_variability": _safe_float(cash_flow.get("monthly_variability", 0)),
             "inflow_regularity": cash_flow.get("inflow_regularity", "Unknown"),
             "payment_discipline": cash_flow.get("payment_discipline", "Unknown"),
+            "counterparty_transactions": data.get("counterparty_transactions", []),
         }
 
     def _empty_bank(self) -> Dict[str, Any]:
@@ -99,7 +101,7 @@ class DataNormalizer:
                 "num_transactions": 0, "bounced_checks": 0, "overdraft_instances": 0,
                 "largest_inflow_cr": 0, "largest_outflow_cr": 0,
                 "monthly_variability": 0, "inflow_regularity": "Unknown",
-                "payment_discipline": "Unknown"}
+                "payment_discipline": "Unknown", "counterparty_transactions": []}
 
     # ── ITR ──────────────────────────────────────────────────────────────
     def _normalize_itr(self, data: Dict) -> Dict[str, Any]:

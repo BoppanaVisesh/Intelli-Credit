@@ -1,6 +1,7 @@
 import {
     FileText,
     LayoutDashboard,
+    Shield,
     X
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -29,13 +30,21 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full bg-gray-900 text-white w-64 transform transition-transform duration-200 ease-in-out z-30 ${
+        className={`fixed left-0 top-0 h-full bg-charcoal text-white w-64 transform transition-transform duration-200 ease-in-out z-30 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl font-bold">Intelli-Credit</h1>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-sienna to-terracotta rounded-full flex items-center justify-center shadow-lg">
+                <Shield size={18} color="#FAF7F2" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-terracotta leading-none mb-1">Corporate Intelligence</p>
+                <h1 className="font-serif text-xl font-bold leading-none tracking-tight">FraudSentinel</h1>
+              </div>
+            </div>
             <button
               onClick={toggleSidebar}
               className="lg:hidden text-white"
@@ -54,12 +63,12 @@ const Sidebar = () => {
                       to={item.path}
                       className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                         isActive(item.path)
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-300 hover:bg-gray-800'
+                          ? 'bg-sienna text-white'
+                          : 'text-warm-border hover:bg-ink'
                       }`}
                     >
                       <Icon size={20} />
-                      <span>{item.label}</span>
+                      <span className="font-sans text-sm">{item.label}</span>
                     </Link>
                   </li>
                 );
@@ -68,10 +77,10 @@ const Sidebar = () => {
           </nav>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-800">
-          <div className="text-sm text-gray-400">
-            <p className="font-medium text-white">Demo User</p>
-            <p>Credit Officer</p>
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-ink">
+          <div className="text-sm">
+            <p className="font-medium text-warm-border">Demo User</p>
+            <p className="text-muted font-mono text-xs tracking-wider">Credit Officer</p>
           </div>
         </div>
       </aside>
