@@ -179,6 +179,10 @@ const SecondaryAnalysis = () => {
               <p className="text-muted text-sm mt-1">Secondary Research · Triangulation · Reasoning Engine · SWOT — Application {id}</p>
             </div>
             <div className="flex gap-3 flex-wrap">
+              <button onClick={() => navigate(`/application/${id}`)}
+                className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition">
+                Back to Application
+              </button>
               <button onClick={runAnalysis} disabled={loading}
                 className="px-5 py-2.5 bg-sienna text-white rounded-lg font-medium hover:bg-terracotta disabled:opacity-50 transition">
                 {loading ? 'Running Analysis...' : 'Run Full Analysis'}

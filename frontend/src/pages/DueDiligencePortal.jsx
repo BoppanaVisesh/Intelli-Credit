@@ -1,11 +1,22 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../utils/api';
 import {
-  Shield, ArrowLeft, Factory, MessageSquare, Eye, FileText,
-  AlertTriangle, TrendingUp, TrendingDown, Minus, Trash2,
-  ChevronDown, ChevronUp, Sparkles, ClipboardList
+    AlertTriangle,
+    ArrowLeft,
+    ChevronDown, ChevronUp,
+    ClipboardList,
+    Eye,
+    Factory,
+    FileText,
+    MessageSquare,
+    Minus,
+    Shield,
+    Sparkles,
+    Trash2,
+    TrendingDown,
+    TrendingUp
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { api } from '../utils/api';
 
 const SEVERITY_STYLES = {
   HIGH:   { color: '#A03030', bg: 'rgba(160,48,48,0.09)',   border: 'rgba(160,48,48,0.2)'   },
@@ -659,8 +670,8 @@ const DueDiligencePortal = () => {
                 <div className="ddp-brand-name">FraudSentinel</div>
               </div>
             </div>
-            <button className="ddp-back" onClick={() => navigate(-1)}>
-              <ArrowLeft size={13} /> Back
+              <button className="ddp-back" onClick={() => navigate(`/application/${id}`)}>
+                <ArrowLeft size={13} /> Back to Application
             </button>
           </div>
 

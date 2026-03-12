@@ -50,6 +50,10 @@ const ScoringResult = () => {
             <p className="text-muted text-sm mt-1">5-Cs Framework &mdash; Application {id}</p>
           </div>
           <div className="flex gap-3">
+            <button onClick={() => navigate(`/application/${id}`)}
+              className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition">
+              Back to Application
+            </button>
             <button onClick={calculate} disabled={loading}
               className="px-5 py-2.5 bg-sienna text-white rounded-lg font-medium hover:bg-terracotta disabled:opacity-50 transition">
               {loading ? 'Calculating...' : 'Calculate Score'}

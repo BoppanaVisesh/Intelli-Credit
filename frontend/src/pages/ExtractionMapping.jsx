@@ -335,8 +335,8 @@ const ExtractionMapping = () => {
                 <div className="ex-brand-name">FraudSentinel</div>
               </div>
             </div>
-            <button className="ex-back-btn" onClick={() => navigate(`/application/${id}/ingestion`)}>
-              <ArrowLeft size={13} /> Back to Ingestion
+            <button className="ex-back-btn" onClick={() => navigate(`/application/${id}`)}>
+              <ArrowLeft size={13} /> Back to Application
             </button>
           </div>
 

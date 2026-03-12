@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { api } from '../utils/api';
 
 const RISK_COLORS = {
@@ -30,6 +30,7 @@ const RiskBadge = ({ level }) => {
 
 const ResearchAgent = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const companyFromUrl = searchParams.get('company') || '';
 
@@ -213,8 +214,18 @@ const ResearchAgent = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="card">
-        <h1 className="text-2xl font-bold mb-1">External Intelligence Portal</h1>
-        <p className="text-muted text-sm">Application: {id}</p>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold mb-1">External Intelligence Portal</h1>
+            <p className="text-muted text-sm">Application: {id}</p>
+          </div>
+          <button
+            onClick={() => navigate(`/application/${id}`)}
+            className="px-4 py-2.5 bg-parchment rounded-lg text-sm font-medium text-ink hover:bg-warm-border transition"
+          >
+            Back to Application
+          </button>
+        </div>
       </div>
 
       <div className="card">

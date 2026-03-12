@@ -1,17 +1,16 @@
 import {
-    AlertCircle,
-    ArrowLeft,
-    BarChart3, Briefcase,
-    CheckCircle2,
-    ChevronDown, ChevronUp,
-    FileText,
-    Landmark,
-    Layers,
-    Loader2,
-    PieChart,
-    Shield,
-    Upload,
-    X
+  AlertCircle,
+  ArrowLeft,
+  BarChart3,
+  CheckCircle2,
+  ChevronDown, ChevronUp,
+  FileText,
+  Landmark,
+  Loader2,
+  PieChart,
+  Shield,
+  Upload,
+  X
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,30 +19,30 @@ import { api } from '../utils/api';
 /* ── Document categories ── */
 const DOC_CATEGORIES = [
   {
-    key: 'ALM',
-    label: 'ALM',
-    full: 'Asset-Liability Management',
-    desc: 'Maturity buckets, gap analysis, interest rate sensitivity statements.',
-    icon: Layers,
+    key: 'BANK_STATEMENT',
+    label: 'Bank Statements',
+    full: 'Bank Statements',
+    desc: 'Monthly statements showing inflows, outflows, bounced cheques, overdraft usage.',
+    icon: Landmark,
     accept: '.pdf,.xlsx,.xls,.csv',
     color: '#A0522D',
   },
   {
-    key: 'SHAREHOLDING_PATTERN',
-    label: 'Shareholding',
-    full: 'Shareholding Pattern',
-    desc: 'Promoter / institutional / public shareholding as per SEBI disclosures.',
+    key: 'GST_RETURN',
+    label: 'GST Returns',
+    full: 'GST Returns (GSTR-1, GSTR-3B)',
+    desc: 'GSTR-1 sales data and GSTR-3B summary returns for cross-verification.',
     icon: PieChart,
     accept: '.pdf,.xlsx,.xls,.csv',
     color: '#B8860B',
   },
   {
-    key: 'BORROWING_PROFILE',
-    label: 'Borrowing Profile',
-    full: 'Borrowing Profile',
-    desc: 'Existing debt facilities, consortium details, repayment schedules.',
-    icon: Landmark,
-    accept: '.pdf,.xlsx,.xls,.csv',
+    key: 'ITR',
+    label: 'Income Tax Returns',
+    full: 'Income Tax Returns (ITR)',
+    desc: 'Filed ITR with PAN, assessment year, income sources, and tax computation.',
+    icon: Shield,
+    accept: '.pdf,.json',
     color: '#CB6E45',
   },
   {
@@ -56,12 +55,12 @@ const DOC_CATEGORIES = [
     color: '#4D7C3A',
   },
   {
-    key: 'PORTFOLIO_DATA',
-    label: 'Portfolio Data',
-    full: 'Portfolio Cuts / Performance Data',
-    desc: 'Segment-wise portfolio quality, NPA trends, provision coverage ratios.',
-    icon: Briefcase,
-    accept: '.pdf,.xlsx,.xls,.csv',
+    key: 'BALANCE_SHEET',
+    label: 'Balance Sheet',
+    full: 'Balance Sheet',
+    desc: 'Assets, liabilities, equity breakdown with key financial ratios.',
+    icon: FileText,
+    accept: '.pdf,.xlsx,.xls,.csv,.json',
     color: '#6B5B3E',
   },
 ];
@@ -768,7 +767,7 @@ const DataIngestion = () => {
                 <div className="di-brand-name">FraudSentinel</div>
               </div>
             </div>
-            <button className="di-back-btn" onClick={() => navigate(`/applications/${id}`)}>
+            <button className="di-back-btn" onClick={() => navigate(`/application/${id}`)}>
               <ArrowLeft size={13} /> Back to Application
             </button>
           </div>

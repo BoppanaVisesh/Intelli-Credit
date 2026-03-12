@@ -1,9 +1,9 @@
-import { AlertCircle, CheckCircle, FileText, TrendingUp, Shield, Plus, ArrowUpRight, Flame } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, CheckCircle, FileText, Flame, Plus, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../utils/api';
 import { DECISION_LABELS } from '../utils/constants';
-import { formatCurrency, formatDate, getDecisionBadgeClass } from '../utils/formatters';
+import { formatCurrency, formatDate } from '../utils/formatters';
 
 const Dashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -291,11 +291,11 @@ const Dashboard = () => {
         }
 
         .scard-value {
-          font-family: 'Playfair Display', serif;
-          font-size: 3.2rem;
-          font-weight: 700;
+          font-family: 'DM Mono', monospace;
+          font-size: 3rem;
+          font-weight: 500;
           line-height: 1;
-          letter-spacing: -0.03em;
+          letter-spacing: -0.04em;
           color: var(--charcoal);
         }
 
@@ -616,7 +616,7 @@ const Dashboard = () => {
 
           {/* Headline */}
           <div className="dash-headline-row">
-            <h1 className="dash-h1">Risk <em>Overview</em></h1>
+            <h1 className="dash-h1">Risk Overview</h1>
             <p className="dash-subtitle">Real-time monitoring of credit applications and fraud detection signals.</p>
           </div>
 
@@ -660,7 +660,7 @@ const Dashboard = () => {
           <div className="tpanel">
             <div className="tpanel-head">
               <div className="tpanel-title-group">
-                <span className="tpanel-title">Recent <span className="tpanel-title-it">Applications</span></span>
+                <span className="tpanel-title">Recent Applications</span>
                 <span className="tpanel-count">{applications.length} records</span>
               </div>
               <div className="tpanel-live">
