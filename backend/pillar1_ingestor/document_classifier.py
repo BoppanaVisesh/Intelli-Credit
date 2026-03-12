@@ -28,7 +28,11 @@ class DocumentClassifier:
         'GST_RETURN': ['gst', 'gstr', 'goods and services tax'],
         'ANNUAL_REPORT': ['annual', 'report', 'financial statement', 'audit', '-ar-', '_ar_', 'ar-20', 'ar_20'],
         'ITR': ['itr', 'income tax', 'tax return'],
-        'BALANCE_SHEET': ['balance sheet', 'b/s', 'financial position']
+        'BALANCE_SHEET': ['balance sheet', 'balance_sheet', 'b/s', 'financial position'],
+        'ALM': ['alm', 'asset liability', 'maturity', 'gap analysis'],
+        'SHAREHOLDING_PATTERN': ['shareholding', 'shareholder', 'promoter holding'],
+        'BORROWING_PROFILE': ['borrowing', 'debt profile', 'loan schedule', 'consortium'],
+        'PORTFOLIO_DATA': ['portfolio', 'npa', 'provision coverage', 'segment'],
     }
     
     def __init__(self, gemini_api_key: str = None):

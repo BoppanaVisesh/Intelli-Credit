@@ -46,6 +46,13 @@ const STEPS = [
     desc: 'Credit Appraisal Memo with full analysis report',
     route: 'cam',
   },
+  {
+    key: 'analysis',
+    icon: '🧠',
+    label: 'Pre-Cognitive Analysis',
+    desc: 'Secondary research, triangulation, reasoning engine & SWOT report',
+    route: 'analysis',
+  },
 ];
 
 const STATUS_STYLES = {
@@ -128,6 +135,8 @@ const ApplicationDetail = () => {
           : null;
       case 'cam':
         return p.url ? 'Report generated' : null;
+      case 'analysis':
+        return p.status === 'completed' ? 'Analysis complete' : null;
       default:
         return null;
     }

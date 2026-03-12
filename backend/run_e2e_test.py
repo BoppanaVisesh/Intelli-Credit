@@ -106,6 +106,8 @@ def run_pipeline(company: dict, index: int):
         ("files", ("annual_report.json", open(f"{data_dir}/annual_report.json", "rb"), "application/json")),
         ("files", ("bank_statement.xlsx", open(f"{data_dir}/bank_statement.xlsx", "rb"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")),
         ("files", ("gst_returns.xlsx", open(f"{data_dir}/gst_returns.xlsx", "rb"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")),
+        ("files", ("itr_returns.json", open(f"{data_dir}/itr_returns.json", "rb"), "application/json")),
+        ("files", ("balance_sheet.json", open(f"{data_dir}/balance_sheet.json", "rb"), "application/json")),
     ]
     
     r = requests.post(
@@ -148,6 +150,10 @@ def run_pipeline(company: dict, index: int):
                 print(f"        GSTR-1 Sales: ₹{pd_data.get('gstr_1_sales_cr', 0):.2f} Cr")
             elif doc["document_type"] == "ANNUAL_REPORT":
                 print(f"        Revenue: ₹{pd_data.get('revenue_cr', 0):.2f} Cr, Auditor: {pd_data.get('auditor_opinion', 'N/A')}")
+            elif doc["document_type"] == "ITR":
+                print(f"        PAN: {pd_data.get('pan', 'N/A')}, AY: {pd_data.get('assessment_year', 'N/A')}")
+            elif doc["document_type"] == "BALANCE_SHEET":
+                print(f"        Total Assets: ₹{pd_data.get('total_assets_cr', 0):.2f} Cr")
     
     # ── Step 4: Run Research ──
     step(4, "Run External Research (Tavily API)")

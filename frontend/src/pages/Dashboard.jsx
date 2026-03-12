@@ -600,7 +600,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <div className="dash-brand-eyebrow">Corporate Intelligence</div>
-                <div className="dash-brand-name">FraudSentinel</div>
+                <div className="dash-brand-name">FinIntel</div>
               </div>
             </div>
             <div className="dash-topbar-right">

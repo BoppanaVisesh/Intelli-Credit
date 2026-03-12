@@ -1,5 +1,15 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 
+/** Extract the best human-readable error message from a failed response. */
+async function extractError(response, fallback) {
+  try {
+    const body = await response.json();
+    return new Error(body.detail || body.message || fallback);
+  } catch {
+    return new Error(fallback);
+  }
+}
+
 export const api = {
   // Applications
   async analyzeCreditApplication(formData) {
@@ -7,7 +17,7 @@ export const api = {
       method: 'POST',
       body: formData,
     });
-    if (!response.ok) throw new Error('Failed to analyze application');
+    if (!response.ok) throw await extractError(response, 'Failed to analyze application');
     return response.json();
   },
 
@@ -17,25 +27,25 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to create application');
+    if (!response.ok) throw await extractError(response, 'Failed to create application');
     return response.json();
   },
 
   async getApplications() {
     const response = await fetch(`${API_BASE_URL}/applications`);
-    if (!response.ok) throw new Error('Failed to fetch applications');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch applications');
     return response.json();
   },
 
   async getApplication(id) {
     const response = await fetch(`${API_BASE_URL}/applications/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch application');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch application');
     return response.json();
   },
 
   async getApplicationSummary(id) {
     const response = await fetch(`${API_BASE_URL}/applications/${id}/summary`);
-    if (!response.ok) throw new Error('Failed to fetch application summary');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch application summary');
     return response.json();
   },
 
@@ -46,13 +56,13 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to add notes');
+    if (!response.ok) throw await extractError(response, 'Failed to add notes');
     return response.json();
   },
 
   async getDueDiligenceNotes(applicationId) {
     const response = await fetch(`${API_BASE_URL}/due-diligence/${applicationId}/notes`);
-    if (!response.ok) throw new Error('Failed to fetch notes');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch notes');
     return response.json();
   },
 
@@ -60,7 +70,7 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/due-diligence/${applicationId}/notes/${noteId}`, {
       method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete note');
+    if (!response.ok) throw await extractError(response, 'Failed to delete note');
     return response.json();
   },
 
@@ -71,13 +81,13 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ application_id: applicationId }),
     });
-    if (!response.ok) throw new Error('Failed to generate CAM');
+    if (!response.ok) throw await extractError(response, 'Failed to generate CAM');
     return response.json();
   },
 
   async downloadCAM(applicationId) {
     const response = await fetch(`${API_BASE_URL}/cam/${applicationId}/download`);
-    if (!response.ok) throw new Error('Failed to download CAM');
+    if (!response.ok) throw await extractError(response, 'Failed to download CAM');
     return response.blob();
   },
 
@@ -127,7 +137,7 @@ export const api = {
 
   async getResearchResults(applicationId) {
     const response = await fetch(`${API_BASE_URL}/research/${applicationId}/results`);
-    if (!response.ok) throw new Error('Failed to fetch research results');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch research results');
     return response.json();
   },
 
@@ -145,7 +155,7 @@ export const api = {
 
   async getFraudResults(applicationId) {
     const response = await fetch(`${API_BASE_URL}/fraud/${applicationId}/results`);
-    if (!response.ok) throw new Error('Failed to fetch fraud results');
+    if (!response.ok) throw await extractError(response, 'Failed to fetch fraud results');
     return response.json();
   },
 
@@ -159,6 +169,120 @@ export const api = {
       throw new Error(error.detail || 'Failed to calculate score');
     }
     return response.json();
+  },
+
+  // Extraction & Schema Mapping
+  async getExtractionDocuments(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/extraction/documents/${applicationId}`);
+    if (!response.ok) throw await extractError(response, 'Failed to fetch extraction documents');
+    return response.json();
+  },
+
+  async reviewClassification(documentId, data) {
+    const response = await fetch(`${API_BASE_URL}/extraction/documents/${documentId}/review`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to review classification');
+    return response.json();
+  },
+
+  async getDefaultSchemas() {
+    const response = await fetch(`${API_BASE_URL}/extraction/schemas/defaults`);
+    if (!response.ok) throw await extractError(response, 'Failed to fetch default schemas');
+    return response.json();
+  },
+
+  async getExtractionSchemas(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/extraction/schemas/${applicationId}`);
+    if (!response.ok) throw await extractError(response, 'Failed to fetch schemas');
+    return response.json();
+  },
+
+  async createExtractionSchema(applicationId, data) {
+    const response = await fetch(`${API_BASE_URL}/extraction/schemas/${applicationId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to create schema');
+    return response.json();
+  },
+
+  async updateExtractionSchema(schemaId, data) {
+    const response = await fetch(`${API_BASE_URL}/extraction/schemas/${schemaId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to update schema');
+    return response.json();
+  },
+
+  async deleteExtractionSchema(schemaId) {
+    const response = await fetch(`${API_BASE_URL}/extraction/schemas/${schemaId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to delete schema');
+    return response.json();
+  },
+
+  async extractDocument(documentId, data) {
+    const response = await fetch(`${API_BASE_URL}/extraction/extract/${documentId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to extract document');
+    return response.json();
+  },
+
+  async updateExtractedFields(documentId, data) {
+    const response = await fetch(`${API_BASE_URL}/extraction/extract/${documentId}/fields`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw await extractError(response, 'Failed to update extracted fields');
+    return response.json();
+  },
+
+  // Analysis
+  async runAnalysis(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/analysis/run/${applicationId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ use_llm: true }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to run analysis');
+    }
+    return response.json();
+  },
+
+  async getAnalysis(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/analysis/${applicationId}`);
+    if (!response.ok) throw await extractError(response, 'Failed to fetch analysis');
+    return response.json();
+  },
+
+  async generateInvestmentReport(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/analysis/${applicationId}/report`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to generate report');
+    }
+    return response.json();
+  },
+
+  async downloadInvestmentReport(applicationId) {
+    const response = await fetch(`${API_BASE_URL}/analysis/${applicationId}/report/download`);
+    if (!response.ok) throw await extractError(response, 'Failed to download report');
+    return response.blob();
   },
 };
 
@@ -182,4 +306,13 @@ export const {
   runFraudVerification,
   getFraudResults,
   calculateScore,
+  getExtractionDocuments,
+  reviewClassification,
+  getDefaultSchemas,
+  getExtractionSchemas,
+  createExtractionSchema,
+  updateExtractionSchema,
+  deleteExtractionSchema,
+  extractDocument,
+  updateExtractedFields,
 } = api;

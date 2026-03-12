@@ -23,17 +23,17 @@ class ITRParser:
     
     def parse(self, pdf_path: str) -> Dict[str, Any]:
         """
-        Parse ITR PDF and extract structured data
-        
-        Returns:
-            - pan: PAN number
-            - assessment_year: e.g., "2023-24"
-            - gross_total_income: Total income
-            - total_tax_paid: Tax paid
-            - refund_due: Refund amount if any
-            - income_sources: List of income sources
+        Parse ITR document and extract structured data.
+        Supports JSON (pre-parsed) and PDF (Gemini Vision).
         """
-        
+        if not os.path.exists(pdf_path):
+            print(f"ERROR: File not found: {pdf_path}")
+            return self._get_empty_structure()
+
+        # Handle JSON files (pre-parsed structured data)
+        if pdf_path.lower().endswith('.json'):
+            return self._parse_json_itr(pdf_path)
+
         if not self.api_key:
             print("⚠️ GEMINI_API_KEY not configured")
             return self._get_empty_structure()
@@ -108,3 +108,14 @@ class ITRParser:
             "tds_deducted": 0.0,
             "note": "ITR parsing requires GEMINI_API_KEY"
         }
+
+    def _parse_json_itr(self, json_path: str) -> Dict[str, Any]:
+        """Load pre-parsed ITR data from a JSON file."""
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            print(f"✅ Loaded ITR from JSON: PAN={data.get('pan')}, AY={data.get('assessment_year')}")
+            return data
+        except Exception as e:
+            print(f"❌ Failed to load ITR JSON: {e}")
+            return self._get_empty_structure()

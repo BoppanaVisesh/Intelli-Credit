@@ -12,8 +12,11 @@ backend/uploads/*
 !backend/uploads/.gitkeep
 backend/downloads/cam_reports/*
 !backend/downloads/cam_reports/.gitkeep
+backend/downloads/investment_reports/*
+!backend/downloads/investment_reports/.gitkeep
 downloads/*
 !downloads/.gitkeep
+backend/test_output.txt
 
 # Test data (regenerated via generate_test_data.py)
 backend/test_data/company*/

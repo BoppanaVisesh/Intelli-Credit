@@ -42,7 +42,7 @@ const Sidebar = () => {
               </div>
               <div>
                 <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-terracotta leading-none mb-1">Corporate Intelligence</p>
-                <h1 className="font-serif text-xl font-bold leading-none tracking-tight">FraudSentinel</h1>
+                <h1 className="font-serif text-xl font-bold leading-none tracking-tight">FinIntel</h1>
               </div>
             </div>
             <button
@@ -77,12 +77,7 @@ const Sidebar = () => {
           </nav>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-ink">
-          <div className="text-sm">
-            <p className="font-medium text-warm-border">Demo User</p>
-            <p className="text-muted font-mono text-xs tracking-wider">Credit Officer</p>
-          </div>
-        </div>
+
       </aside>
     </>
   );

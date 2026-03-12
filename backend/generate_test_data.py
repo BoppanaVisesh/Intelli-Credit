@@ -411,15 +411,268 @@ for i, month in enumerate(months):
     })
 
 
+# ─────────────────────────────────────────────────────────────────────
+# ITR Data — Income Tax Returns for all 3 companies
+# ─────────────────────────────────────────────────────────────────────
+
+APEX_ITR = {
+    "pan": "AABCA1234Z",
+    "company_name": "Apex Manufacturing Pvt Ltd",
+    "assessment_year": "2025-26",
+    "filing_date": "2025-09-15",
+    "itr_form": "ITR-6",
+    "gross_total_income": 52000000,
+    "total_deductions": 5000000,
+    "taxable_income": 47000000,
+    "total_tax_liability": 14100000,
+    "total_tax_paid": 14100000,
+    "tds_deducted": 9500000,
+    "advance_tax_paid": 4600000,
+    "refund_due": 0,
+    "income_sources": [
+        {"type": "Business Income", "amount": 48000000},
+        {"type": "Capital Gains", "amount": 2000000},
+        {"type": "Other Sources (Interest)", "amount": 2000000},
+    ],
+    "turnover_reported": 450000000,
+    "depreciation_claimed": 8000000,
+    "brought_forward_losses": 0,
+    "audit_status": "Tax audit completed u/s 44AB",
+    "previous_year_income": 42000000,
+}
+
+GREENFIELD_ITR = {
+    "pan": "AADCG2345H",
+    "company_name": "GreenField Logistics Ltd",
+    "assessment_year": "2025-26",
+    "filing_date": "2025-11-28",
+    "itr_form": "ITR-6",
+    "gross_total_income": 20000000,
+    "total_deductions": 3000000,
+    "taxable_income": 17000000,
+    "total_tax_liability": 5100000,
+    "total_tax_paid": 3200000,
+    "tds_deducted": 2800000,
+    "advance_tax_paid": 400000,
+    "refund_due": 0,
+    "self_assessment_tax_due": 1900000,
+    "income_sources": [
+        {"type": "Business Income", "amount": 18000000},
+        {"type": "Other Sources (Interest)", "amount": 2000000},
+    ],
+    "turnover_reported": 600000000,
+    "depreciation_claimed": 12000000,
+    "brought_forward_losses": 5000000,
+    "audit_status": "Tax audit completed u/s 44AB — qualifications noted",
+    "previous_year_income": 15000000,
+    "notes": "Turnover in ITR (60 Cr) far exceeds bank inflows (20 Cr). Advance tax shortfall. Late filing.",
+}
+
+ORION_ITR = {
+    "pan": "AAACO4567D",
+    "company_name": "Orion Retail Pvt Ltd",
+    "assessment_year": "2025-26",
+    "filing_date": "2025-10-30",
+    "itr_form": "ITR-6",
+    "gross_total_income": 5000000,
+    "total_deductions": 1500000,
+    "taxable_income": 3500000,
+    "total_tax_liability": 1050000,
+    "total_tax_paid": 1050000,
+    "tds_deducted": 800000,
+    "advance_tax_paid": 250000,
+    "refund_due": 0,
+    "income_sources": [
+        {"type": "Business Income", "amount": 4500000},
+        {"type": "Other Sources", "amount": 500000},
+    ],
+    "turnover_reported": 300000000,
+    "depreciation_claimed": 5000000,
+    "brought_forward_losses": 2000000,
+    "audit_status": "Tax audit completed u/s 44AB",
+    "previous_year_income": 4000000,
+    "notes": "Very thin profit margin (0.5 Cr on 30 Cr revenue) — consistent with round-tripping.",
+}
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Balance Sheet Data for all 3 companies
+# ─────────────────────────────────────────────────────────────────────
+
+APEX_BALANCE_SHEET = {
+    "company_name": "Apex Manufacturing Pvt Ltd",
+    "financial_year": "2025-26",
+    "as_of_date": "2026-03-31",
+    "assets": {
+        "non_current_assets": {
+            "property_plant_equipment_cr": 28.0,
+            "intangible_assets_cr": 2.0,
+            "capital_wip_cr": 3.0,
+            "long_term_investments_cr": 5.0,
+            "deferred_tax_asset_cr": 1.5,
+            "total_non_current_cr": 39.5,
+        },
+        "current_assets": {
+            "inventories_cr": 8.0,
+            "trade_receivables_cr": 7.5,
+            "cash_and_equivalents_cr": 3.0,
+            "short_term_loans_cr": 2.0,
+            "other_current_assets_cr": 1.5,
+            "total_current_cr": 22.0,
+        },
+        "total_assets_cr": 61.5,
+    },
+    "liabilities": {
+        "shareholders_equity": {
+            "share_capital_cr": 10.0,
+            "reserves_surplus_cr": 15.0,
+            "total_equity_cr": 25.0,
+        },
+        "non_current_liabilities": {
+            "long_term_borrowings_cr": 8.0,
+            "deferred_tax_liability_cr": 1.0,
+            "long_term_provisions_cr": 1.0,
+            "total_non_current_cr": 10.0,
+        },
+        "current_liabilities": {
+            "short_term_borrowings_cr": 2.0,
+            "trade_payables_cr": 6.5,
+            "other_current_liabilities_cr": 2.0,
+            "short_term_provisions_cr": 1.5,
+            "total_current_cr": 12.0,
+        },
+        "total_liabilities_cr": 47.0,
+    },
+    "total_equity_and_liabilities_cr": 61.5,
+    "key_ratios": {
+        "current_ratio": 1.83,
+        "debt_to_equity": 0.40,
+        "return_on_equity_pct": 20.8,
+        "return_on_assets_pct": 8.5,
+        "working_capital_cr": 10.0,
+    },
+}
+
+GREENFIELD_BALANCE_SHEET = {
+    "company_name": "GreenField Logistics Ltd",
+    "financial_year": "2025-26",
+    "as_of_date": "2026-03-31",
+    "assets": {
+        "non_current_assets": {
+            "property_plant_equipment_cr": 25.0,
+            "intangible_assets_cr": 1.0,
+            "capital_wip_cr": 6.0,
+            "long_term_investments_cr": 2.0,
+            "deferred_tax_asset_cr": 0.5,
+            "total_non_current_cr": 34.5,
+        },
+        "current_assets": {
+            "inventories_cr": 3.0,
+            "trade_receivables_cr": 8.0,
+            "cash_and_equivalents_cr": 1.5,
+            "short_term_loans_cr": 3.0,
+            "other_current_assets_cr": 2.5,
+            "total_current_cr": 18.0,
+        },
+        "total_assets_cr": 52.5,
+    },
+    "liabilities": {
+        "shareholders_equity": {
+            "share_capital_cr": 3.0,
+            "reserves_surplus_cr": 5.0,
+            "total_equity_cr": 8.0,
+        },
+        "non_current_liabilities": {
+            "long_term_borrowings_cr": 20.0,
+            "deferred_tax_liability_cr": 0.5,
+            "long_term_provisions_cr": 2.0,
+            "total_non_current_cr": 22.5,
+        },
+        "current_liabilities": {
+            "short_term_borrowings_cr": 15.0,
+            "trade_payables_cr": 4.0,
+            "other_current_liabilities_cr": 2.0,
+            "short_term_provisions_cr": 1.0,
+            "total_current_cr": 22.0,
+        },
+        "total_liabilities_cr": 52.5,
+    },
+    "total_equity_and_liabilities_cr": 52.5,
+    "key_ratios": {
+        "current_ratio": 0.82,
+        "debt_to_equity": 4.38,
+        "return_on_equity_pct": 25.0,
+        "return_on_assets_pct": 3.8,
+        "working_capital_cr": -4.0,
+    },
+    "notes": "Negative working capital. Debt-to-equity extremely high at 4.38x. Short-term borrowings exceed current assets.",
+}
+
+ORION_BALANCE_SHEET = {
+    "company_name": "Orion Retail Pvt Ltd",
+    "financial_year": "2025-26",
+    "as_of_date": "2026-03-31",
+    "assets": {
+        "non_current_assets": {
+            "property_plant_equipment_cr": 15.0,
+            "intangible_assets_cr": 1.0,
+            "capital_wip_cr": 4.0,
+            "long_term_investments_cr": 1.0,
+            "deferred_tax_asset_cr": 0.5,
+            "total_non_current_cr": 21.5,
+        },
+        "current_assets": {
+            "inventories_cr": 4.0,
+            "trade_receivables_cr": 6.0,
+            "cash_and_equivalents_cr": 1.0,
+            "short_term_loans_cr": 2.5,
+            "other_current_assets_cr": 1.5,
+            "total_current_cr": 15.0,
+        },
+        "total_assets_cr": 36.5,
+    },
+    "liabilities": {
+        "shareholders_equity": {
+            "share_capital_cr": 5.0,
+            "reserves_surplus_cr": 5.0,
+            "total_equity_cr": 10.0,
+        },
+        "non_current_liabilities": {
+            "long_term_borrowings_cr": 10.0,
+            "deferred_tax_liability_cr": 0.5,
+            "long_term_provisions_cr": 2.0,
+            "total_non_current_cr": 12.5,
+        },
+        "current_liabilities": {
+            "short_term_borrowings_cr": 10.0,
+            "trade_payables_cr": 2.5,
+            "other_current_liabilities_cr": 1.0,
+            "short_term_provisions_cr": 0.5,
+            "total_current_cr": 14.0,
+        },
+        "total_liabilities_cr": 36.5,
+    },
+    "total_equity_and_liabilities_cr": 36.5,
+    "key_ratios": {
+        "current_ratio": 1.07,
+        "debt_to_equity": 2.00,
+        "return_on_equity_pct": 5.0,
+        "return_on_assets_pct": 1.4,
+        "working_capital_cr": 1.0,
+    },
+    "notes": "Very thin working capital. Trade receivables concentrated on related parties. Low ROA/ROE.",
+}
+
+
 def generate_all():
     """Generate all test data files."""
-    for company_dir, annual_report, bank_data, gst_data, gstr1_inv, gstr2a_inv, label in [
+    for company_dir, annual_report, bank_data, gst_data, gstr1_inv, gstr2a_inv, itr_data, bs_data, label in [
         (APEX_DIR, APEX_ANNUAL_REPORT, APEX_BANK_DATA, APEX_GST_DATA,
-         APEX_GSTR1_INVOICES, APEX_GSTR2A_INVOICES, "Apex (Healthy)"),
+         APEX_GSTR1_INVOICES, APEX_GSTR2A_INVOICES, APEX_ITR, APEX_BALANCE_SHEET, "Apex (Healthy)"),
         (GREENFIELD_DIR, GREENFIELD_ANNUAL_REPORT, GREENFIELD_BANK_DATA, GREENFIELD_GST_DATA,
-         GREENFIELD_GSTR1_INVOICES, GREENFIELD_GSTR2A_INVOICES, "GreenField (GST Fraud)"),
+         GREENFIELD_GSTR1_INVOICES, GREENFIELD_GSTR2A_INVOICES, GREENFIELD_ITR, GREENFIELD_BALANCE_SHEET, "GreenField (GST Fraud)"),
         (ORION_DIR, ORION_ANNUAL_REPORT, ORION_BANK_DATA, ORION_GST_DATA,
-         ORION_GSTR1_INVOICES, ORION_GSTR2A_INVOICES, "Orion (Circular Trading)"),
+         ORION_GSTR1_INVOICES, ORION_GSTR2A_INVOICES, ORION_ITR, ORION_BALANCE_SHEET, "Orion (Circular Trading)"),
     ]:
         print(f"\n{'='*60}")
         print(f"  Generating test data: {label}")
@@ -446,6 +699,18 @@ def generate_all():
             pd.DataFrame(gstr1_inv).to_excel(writer, index=False, sheet_name="GSTR1_Outward")
             pd.DataFrame(gstr2a_inv).to_excel(writer, index=False, sheet_name="GSTR2A_Inward")
         print(f"  ✓ {gst_path.name}  ({len(gst_data)} summary + {len(gstr1_inv)} outward + {len(gstr2a_inv)} inward rows)")
+
+        # ITR (JSON)
+        itr_path = company_dir / "itr_returns.json"
+        with open(itr_path, "w", encoding="utf-8") as f:
+            json.dump(itr_data, f, indent=2, ensure_ascii=False)
+        print(f"  ✓ {itr_path.name}")
+
+        # Balance Sheet (JSON)
+        bs_path = company_dir / "balance_sheet.json"
+        with open(bs_path, "w", encoding="utf-8") as f:
+            json.dump(bs_data, f, indent=2, ensure_ascii=False)
+        print(f"  ✓ {bs_path.name}")
 
     print(f"\n{'='*60}")
     print("  All test data generated successfully!")

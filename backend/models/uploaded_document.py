@@ -15,6 +15,10 @@ class DocumentType(str, enum.Enum):
     ITR = "ITR"
     ANNUAL_REPORT = "ANNUAL_REPORT"
     BALANCE_SHEET = "BALANCE_SHEET"
+    ALM = "ALM"
+    SHAREHOLDING_PATTERN = "SHAREHOLDING_PATTERN"
+    BORROWING_PROFILE = "BORROWING_PROFILE"
+    PORTFOLIO_DATA = "PORTFOLIO_DATA"
     OTHER = "OTHER"
 
 
@@ -51,6 +55,14 @@ class UploadedDocument(Base):
     parsed_data = Column(Text)  # JSON string of extracted data
     parse_error = Column(Text)  # Error message if parsing failed
     
+# Human-in-the-loop classification review
+    reviewed = Column(String, default="pending")  # pending | approved | edited
+    reviewed_type = Column(String, nullable=True)  # user-corrected type if edited
+
+    # Schema-based extraction
+    extraction_schema_id = Column(String, nullable=True)
+    extracted_fields_json = Column(Text, nullable=True)  # JSON of schema-mapped data
+
     # Timestamps
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     parsed_at = Column(DateTime)

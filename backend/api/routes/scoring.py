@@ -56,6 +56,9 @@ async def calculate_score(application_id: str, db: Session = Depends(get_db)):
         doc_records = [{"document_type": d.document_type, "parsed_data": d.parsed_data} for d in documents]
         normalized = normalizer.normalize(doc_records)
 
+        if not documents:
+            print(f"   ⚠ WARNING: No parsed documents found for {application_id} — scoring will use defaults")
+
         gst    = normalized.get("gst", {})
         bank   = normalized.get("bank", {})
         annual = normalized.get("annual_report", {})

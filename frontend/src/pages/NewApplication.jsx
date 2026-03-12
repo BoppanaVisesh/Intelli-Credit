@@ -1,18 +1,43 @@
-import { AlertCircle, ArrowLeft, ArrowRight, Building2, Hash, LayoutGrid, IndianRupee, Shield, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Briefcase, Building2, Calendar, CheckCircle2, Clock, FileText, Hash, IndianRupee, Landmark, LayoutGrid, MapPin, Percent, Shield, Target, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 
+const STEPS = [
+  { key: 'entity', label: 'Entity Details', icon: Building2 },
+  { key: 'loan',   label: 'Loan Details',   icon: IndianRupee },
+  { key: 'review', label: 'Review & Submit', icon: CheckCircle2 },
+];
+
+const SECTORS = ['Aviation','IT Services','Industrial Manufacturing','Textiles','Pharmaceuticals','Real Estate','Banking','FMCG','Auto Components','Food Processing','Logistics','Chemicals','Infrastructure','Energy','Retail','Healthcare'];
+
+const LOAN_TYPES = ['Working Capital','Term Loan','CC/OD (Cash Credit / Overdraft)','BG/LC (Bank Guarantee / Letter of Credit)','Project Finance','Trade Finance'];
+
 const NewApplication = () => {
   const navigate = useNavigate();
+  const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
+    // Step 1 — Entity
     company_name: '',
     mca_cin: '',
+    pan: '',
     sector: '',
+    incorporation_date: '',
+    registered_address: '',
+    annual_turnover_cr: '',
+    employee_count: '',
+    promoter_names: '',
+    // Step 2 — Loan
     requested_limit_cr: '',
+    loan_type: '',
+    loan_tenure_months: '',
+    interest_type: '',
+    collateral_offered: '',
+    purpose_of_loan: '',
+    existing_banking: '',
   });
 
   const handleInputChange = (e) => {
@@ -20,17 +45,66 @@ const NewApplication = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  /* ---- Step validation ---- */
+  const isStep1Valid = () => formData.company_name.trim() && formData.mca_cin.trim() && formData.sector;
+  const isStep2Valid = () => {
+    const limit = parseFloat(formData.requested_limit_cr);
+    return !isNaN(limit) && limit > 0 && formData.loan_type;
+  };
+
+  const nextStep = () => {
+    if (step === 0 && !isStep1Valid()) { setError('Please fill in Company Name, CIN, and Sector'); return; }
+    if (step === 1 && !isStep2Valid()) { setError('Please fill in Requested Limit and Loan Type'); return; }
     setError(null);
+    setStep(s => Math.min(s + 1, 2));
+  };
+  const prevStep = () => { setError(null); setStep(s => Math.max(s - 1, 0)); };
+
+  const handleSubmit = async () => {
+    setError(null);
+
+    // Validate numeric fields
+    const limitVal = parseFloat(formData.requested_limit_cr);
+    if (isNaN(limitVal) || limitVal <= 0) {
+      setError('Requested limit must be a positive number'); return;
+    }
+    const turnoverVal = formData.annual_turnover_cr ? parseFloat(formData.annual_turnover_cr) : null;
+    if (turnoverVal !== null && (isNaN(turnoverVal) || turnoverVal < 0)) {
+      setError('Annual turnover must be a non-negative number'); return;
+    }
+    const empVal = formData.employee_count ? parseInt(formData.employee_count, 10) : null;
+    if (empVal !== null && (isNaN(empVal) || empVal < 0)) {
+      setError('Employee count must be a non-negative number'); return;
+    }
+    const tenureVal = formData.loan_tenure_months ? parseInt(formData.loan_tenure_months, 10) : null;
+    if (tenureVal !== null && (isNaN(tenureVal) || tenureVal <= 0)) {
+      setError('Loan tenure must be a positive number'); return;
+    }
+
     setLoading(true);
     try {
-      const result = await api.createApplication({
-        company_name: formData.company_name,
-        mca_cin: formData.mca_cin,
+      const payload = {
+        company_name: formData.company_name.trim(),
+        mca_cin: formData.mca_cin.trim(),
         sector: formData.sector,
-        requested_limit_cr: parseFloat(formData.requested_limit_cr),
-      });
+        requested_limit_cr: limitVal,
+      };
+      if (formData.pan) payload.pan = formData.pan.trim();
+      if (formData.incorporation_date) payload.incorporation_date = formData.incorporation_date;
+      if (formData.registered_address) payload.registered_address = formData.registered_address.trim();
+      if (turnoverVal !== null) payload.annual_turnover_cr = turnoverVal;
+      if (empVal !== null) payload.employee_count = empVal;
+      if (formData.promoter_names) payload.promoter_names = formData.promoter_names.trim();
+      if (formData.loan_type) payload.loan_type = formData.loan_type;
+      if (tenureVal !== null) payload.loan_tenure_months = tenureVal;
+      if (formData.interest_type) payload.interest_type = formData.interest_type;
+      if (formData.collateral_offered) payload.collateral_offered = formData.collateral_offered.trim();
+      if (formData.purpose_of_loan) payload.purpose_of_loan = formData.purpose_of_loan.trim();
+      if (formData.existing_banking) payload.existing_banking = formData.existing_banking.trim();
+      const result = await api.createApplication(payload);
+      if (!result?.application_id) {
+        setError('Server did not return an application ID'); return;
+      }
       navigate(`/application/${result.application_id}`);
     } catch (err) {
       setError(err.message || 'Failed to create application');
@@ -38,22 +112,6 @@ const NewApplication = () => {
       setLoading(false);
     }
   };
-
-  const pipelineSteps = [
-    { n: '01', label: 'Upload Documents' },
-    { n: '02', label: 'External Intelligence' },
-    { n: '03', label: 'Primary Insights' },
-    { n: '04', label: 'Credit Scoring' },
-    { n: '05', label: 'Generate CAM' },
-  ];
-
-  const fields = [
-    { name: 'company_name', label: 'Company Name', type: 'text', placeholder: 'e.g., SpiceJet Limited', icon: Building2, col: 'full' },
-    { name: 'mca_cin',      label: 'MCA CIN',      type: 'text', placeholder: 'e.g., L51909DL1984PLC018603', icon: Hash,      col: 'half' },
-    { name: 'requested_limit_cr', label: 'Requested Limit (Cr)', type: 'number', placeholder: 'e.g., 500', icon: IndianRupee, col: 'half' },
-  ];
-
-  const sectors = ['Aviation','IT Services','Industrial Manufacturing','Textiles','Pharmaceuticals','Real Estate','Banking','FMCG','Auto Components','Food Processing'];
 
   return (
     <>
@@ -523,6 +581,175 @@ const NewApplication = () => {
         }
 
         @keyframes na-spin { to { transform: rotate(360deg); } }
+
+        /* ── TEXTAREA ── */
+        .na-textarea {
+          resize: vertical;
+          min-height: 58px;
+          padding-top: 0.7rem;
+          line-height: 1.5;
+        }
+
+        /* ── STEPPER ── */
+        .na-stepper {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 0;
+          margin-bottom: 1.4rem;
+        }
+
+        .na-stepper-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          position: relative;
+        }
+
+        .na-stepper-line {
+          position: absolute;
+          top: 18px;
+          right: calc(50% + 22px);
+          width: 80px;
+          height: 2px;
+          background: var(--border);
+          transition: background 0.3s;
+        }
+
+        .na-stepper-line[data-state="done"],
+        .na-stepper-line[data-state="active"] {
+          background: var(--sienna);
+        }
+
+        .na-stepper-circle {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'DM Mono', monospace;
+          font-size: 0.8rem;
+          font-weight: 600;
+          border: 2px solid var(--border);
+          background: var(--warm-white);
+          color: var(--muted);
+          cursor: default;
+          transition: all 0.3s;
+          position: relative;
+          z-index: 1;
+        }
+
+        .na-stepper-circle[data-state="active"] {
+          border-color: var(--sienna);
+          background: linear-gradient(135deg, var(--sienna) 0%, var(--terracotta) 100%);
+          color: var(--warm-white);
+          box-shadow: 0 4px 14px rgba(160,82,45,0.25);
+          cursor: default;
+        }
+
+        .na-stepper-circle[data-state="done"] {
+          border-color: var(--sienna);
+          background: var(--warm-white);
+          color: var(--sienna);
+          cursor: pointer;
+        }
+
+        .na-stepper-circle[data-state="done"]:hover {
+          background: rgba(160,82,45,0.06);
+        }
+
+        .na-stepper-label {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.7rem;
+          font-weight: 500;
+          color: var(--muted);
+          letter-spacing: 0.02em;
+          text-align: center;
+          width: 110px;
+        }
+
+        .na-stepper-item[data-state="active"] .na-stepper-label {
+          color: var(--sienna);
+          font-weight: 600;
+        }
+
+        .na-stepper-item[data-state="done"] .na-stepper-label {
+          color: var(--ink);
+        }
+
+        /* ── REVIEW GRID ── */
+        .na-review-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.85rem 1.6rem;
+        }
+
+        @media (max-width: 640px) { .na-review-grid { grid-template-columns: 1fr; } }
+
+        .na-review-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          padding: 0.65rem 0;
+          border-bottom: 1px solid var(--border-light);
+        }
+
+        .na-review-full {
+          grid-column: 1 / -1;
+        }
+
+        .na-review-label {
+          font-family: 'DM Mono', monospace;
+          font-size: 0.62rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--muted);
+        }
+
+        .na-review-value {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.88rem;
+          font-weight: 500;
+          color: var(--ink);
+          line-height: 1.4;
+          word-break: break-word;
+        }
+
+        .na-review-value.na-mono {
+          font-family: 'DM Mono', monospace;
+          font-size: 0.82rem;
+          letter-spacing: 0.04em;
+        }
+
+        .na-review-value.na-highlight {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--sienna);
+        }
+
+        /* ── EDIT LINK ── */
+        .na-edit-link {
+          margin-left: auto;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 500;
+          color: var(--sienna);
+          background: none;
+          border: 1.5px solid rgba(160,82,45,0.2);
+          padding: 0.3rem 0.7rem;
+          border-radius: 6px;
+          cursor: pointer;
+          letter-spacing: 0.02em;
+          transition: all 0.15s;
+        }
+
+        .na-edit-link:hover {
+          background: rgba(160,82,45,0.06);
+          border-color: rgba(160,82,45,0.35);
+        }
       `}</style>
 
       <div className="na-wrap">
@@ -552,7 +779,24 @@ const NewApplication = () => {
           <div className="na-page-header">
             <div className="na-eyebrow">New Submission</div>
             <h1 className="na-h1">Credit <em>Application</em></h1>
-            <p className="na-sub">Enter company details to initiate the fraud detection & credit appraisal pipeline.</p>
+            <p className="na-sub">Complete the multi-step form to initiate a credit appraisal.</p>
+          </div>
+
+          {/* ── STEP INDICATOR ── */}
+          <div className="na-stepper">
+            {STEPS.map((s, i) => {
+              const Icon = s.icon;
+              const state = i < step ? 'done' : i === step ? 'active' : 'pending';
+              return (
+                <div key={s.key} className="na-stepper-item" data-state={state}>
+                  {i > 0 && <div className="na-stepper-line" data-state={state} />}
+                  <button className="na-stepper-circle" data-state={state} onClick={() => { if (i < step) setStep(i); }}>
+                    {state === 'done' ? <CheckCircle2 size={16} /> : <Icon size={16} />}
+                  </button>
+                  <span className="na-stepper-label">{s.label}</span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="ornament">
@@ -566,141 +810,302 @@ const NewApplication = () => {
             <div className="na-error">
               <AlertCircle size={18} color="#A03030" strokeWidth={1.5} style={{ flexShrink: 0, marginTop: 2 }} />
               <div className="na-error-text">
-                <h3>Submission Error</h3>
+                <h3>Validation Error</h3>
                 <p>{error}</p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            {/* Company Details Card */}
+          {/* ═══════════ STEP 1 — Entity Details ═══════════ */}
+          {step === 0 && (
             <div className="na-card">
               <div className="na-card-head">
-                <div className="na-card-head-icon">
-                  <Building2 size={15} color="var(--sienna)" strokeWidth={1.5} />
-                </div>
-                <span className="na-card-head-title">Company Details</span>
+                <div className="na-card-head-icon"><Building2 size={15} color="var(--sienna)" strokeWidth={1.5} /></div>
+                <span className="na-card-head-title">Entity Details</span>
               </div>
               <div className="na-card-body">
                 <div className="na-grid">
 
-                  {/* Company Name — full width */}
+                  {/* Company Name */}
                   <div className="na-field na-field-full">
                     <label className="na-label">Company Name <span style={{ color: 'var(--terracotta)' }}>*</span></label>
                     <div className="na-input-wrap">
-                      <input
-                        type="text" name="company_name"
-                        value={formData.company_name}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="e.g., SpiceJet Limited"
-                        className="na-input"
-                      />
+                      <input type="text" name="company_name" value={formData.company_name} onChange={handleInputChange} required placeholder="e.g., SpiceJet Limited" className="na-input" />
                       <Building2 size={14} strokeWidth={1.5} className="na-input-icon" />
                     </div>
                   </div>
 
-                  {/* MCA CIN */}
+                  {/* CIN */}
                   <div className="na-field">
                     <label className="na-label">MCA CIN <span style={{ color: 'var(--terracotta)' }}>*</span></label>
                     <div className="na-input-wrap">
-                      <input
-                        type="text" name="mca_cin"
-                        value={formData.mca_cin}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="e.g., L51909DL1984PLC018603"
-                        className="na-input"
-                        style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.82rem', letterSpacing: '0.04em' }}
-                      />
+                      <input type="text" name="mca_cin" value={formData.mca_cin} onChange={handleInputChange} required placeholder="L51909DL1984PLC018603" className="na-input" style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.82rem', letterSpacing: '0.04em' }} />
                       <Hash size={14} strokeWidth={1.5} className="na-input-icon" />
                     </div>
                   </div>
 
-                  {/* Requested Limit */}
+                  {/* PAN */}
                   <div className="na-field">
-                    <label className="na-label">Requested Limit (Cr) <span style={{ color: 'var(--terracotta)' }}>*</span></label>
+                    <label className="na-label">PAN</label>
                     <div className="na-input-wrap">
-                      <input
-                        type="number" step="0.01" name="requested_limit_cr"
-                        value={formData.requested_limit_cr}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="e.g., 500"
-                        className="na-input"
-                      />
-                      <IndianRupee size={14} strokeWidth={1.5} className="na-input-icon" />
+                      <input type="text" name="pan" value={formData.pan} onChange={handleInputChange} placeholder="AAACX1234X" className="na-input" style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.82rem', letterSpacing: '0.04em', textTransform: 'uppercase' }} maxLength={10} />
+                      <Hash size={14} strokeWidth={1.5} className="na-input-icon" />
                     </div>
                   </div>
 
-                  {/* Sector — full width */}
-                  <div className="na-field na-field-full">
+                  {/* Sector */}
+                  <div className="na-field">
                     <label className="na-label">Sector <span style={{ color: 'var(--terracotta)' }}>*</span></label>
                     <div className="na-input-wrap na-select-wrap">
-                      <select
-                        name="sector"
-                        value={formData.sector}
-                        onChange={handleInputChange}
-                        required
-                        className="na-select"
-                      >
+                      <select name="sector" value={formData.sector} onChange={handleInputChange} required className="na-select">
                         <option value="">Select industry sector…</option>
-                        {['Aviation','IT Services','Industrial Manufacturing','Textiles','Pharmaceuticals','Real Estate','Banking','FMCG','Auto Components','Food Processing'].map(s => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
+                        {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                       <LayoutGrid size={14} strokeWidth={1.5} className="na-input-icon" />
                     </div>
                   </div>
 
-                </div>
-              </div>
-            </div>
-
-            {/* Pipeline Info */}
-            <div className="na-pipeline">
-              <div className="na-pipeline-head">
-                <div className="na-card-head-icon">
-                  <CheckCircle2 size={15} color="var(--sienna)" strokeWidth={1.5} />
-                </div>
-                <span className="na-pipeline-title">What happens next?</span>
-                <span className="na-pipeline-sub">— 5 automated stages</span>
-              </div>
-              <div className="na-pipeline-body">
-                {[
-                  { n: '01', label: 'Upload Documents' },
-                  { n: '02', label: 'External Intelligence' },
-                  { n: '03', label: 'Primary Insights' },
-                  { n: '04', label: 'Credit Scoring' },
-                  { n: '05', label: 'Generate CAM' },
-                ].map((step) => (
-                  <div className="na-step" key={step.n}>
-                    <div className="na-step-num">{step.n}</div>
-                    <span className="na-step-label">{step.label}</span>
+                  {/* Incorporation Date */}
+                  <div className="na-field">
+                    <label className="na-label">Incorporation Date</label>
+                    <div className="na-input-wrap">
+                      <input type="date" name="incorporation_date" value={formData.incorporation_date} onChange={handleInputChange} className="na-input" />
+                      <Calendar size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
                   </div>
-                ))}
+
+                  {/* Turnover */}
+                  <div className="na-field">
+                    <label className="na-label">Annual Turnover (Cr)</label>
+                    <div className="na-input-wrap">
+                      <input type="number" step="0.01" name="annual_turnover_cr" value={formData.annual_turnover_cr} onChange={handleInputChange} placeholder="e.g., 1200" className="na-input" />
+                      <IndianRupee size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Employees */}
+                  <div className="na-field">
+                    <label className="na-label">Employee Count</label>
+                    <div className="na-input-wrap">
+                      <input type="number" name="employee_count" value={formData.employee_count} onChange={handleInputChange} placeholder="e.g., 500" className="na-input" />
+                      <Users size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Promoter Names */}
+                  <div className="na-field">
+                    <label className="na-label">Promoter Names</label>
+                    <div className="na-input-wrap">
+                      <input type="text" name="promoter_names" value={formData.promoter_names} onChange={handleInputChange} placeholder="Ajay Singh, Shilpa Singh" className="na-input" />
+                      <Users size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Registered Address */}
+                  <div className="na-field na-field-full">
+                    <label className="na-label">Registered Address</label>
+                    <div className="na-input-wrap">
+                      <textarea name="registered_address" value={formData.registered_address} onChange={handleInputChange} placeholder="Registered office address" className="na-input na-textarea" rows={2} />
+                      <MapPin size={14} strokeWidth={1.5} className="na-input-icon" style={{ top: '1rem' }} />
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
+          )}
 
-            {/* Actions */}
-            <div className="na-actions">
+          {/* ═══════════ STEP 2 — Loan Details ═══════════ */}
+          {step === 1 && (
+            <div className="na-card">
+              <div className="na-card-head">
+                <div className="na-card-head-icon"><IndianRupee size={15} color="var(--sienna)" strokeWidth={1.5} /></div>
+                <span className="na-card-head-title">Loan Details</span>
+              </div>
+              <div className="na-card-body">
+                <div className="na-grid">
+
+                  {/* Requested Limit */}
+                  <div className="na-field">
+                    <label className="na-label">Requested Limit (Cr) <span style={{ color: 'var(--terracotta)' }}>*</span></label>
+                    <div className="na-input-wrap">
+                      <input type="number" step="0.01" name="requested_limit_cr" value={formData.requested_limit_cr} onChange={handleInputChange} required placeholder="e.g., 500" className="na-input" />
+                      <IndianRupee size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Loan Type */}
+                  <div className="na-field">
+                    <label className="na-label">Loan Type <span style={{ color: 'var(--terracotta)' }}>*</span></label>
+                    <div className="na-input-wrap na-select-wrap">
+                      <select name="loan_type" value={formData.loan_type} onChange={handleInputChange} required className="na-select">
+                        <option value="">Select loan type…</option>
+                        {LOAN_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      <Briefcase size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Tenure */}
+                  <div className="na-field">
+                    <label className="na-label">Tenure (Months)</label>
+                    <div className="na-input-wrap">
+                      <input type="number" name="loan_tenure_months" value={formData.loan_tenure_months} onChange={handleInputChange} placeholder="e.g., 60" className="na-input" />
+                      <Clock size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Interest Type */}
+                  <div className="na-field">
+                    <label className="na-label">Interest Type</label>
+                    <div className="na-input-wrap na-select-wrap">
+                      <select name="interest_type" value={formData.interest_type} onChange={handleInputChange} className="na-select">
+                        <option value="">Select…</option>
+                        <option value="Fixed">Fixed</option>
+                        <option value="Floating">Floating</option>
+                      </select>
+                      <Percent size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                  {/* Purpose */}
+                  <div className="na-field na-field-full">
+                    <label className="na-label">Purpose of Loan</label>
+                    <div className="na-input-wrap">
+                      <textarea name="purpose_of_loan" value={formData.purpose_of_loan} onChange={handleInputChange} placeholder="Working capital for raw material procurement…" className="na-input na-textarea" rows={2} />
+                      <Target size={14} strokeWidth={1.5} className="na-input-icon" style={{ top: '1rem' }} />
+                    </div>
+                  </div>
+
+                  {/* Collateral */}
+                  <div className="na-field na-field-full">
+                    <label className="na-label">Collateral Offered</label>
+                    <div className="na-input-wrap">
+                      <textarea name="collateral_offered" value={formData.collateral_offered} onChange={handleInputChange} placeholder="Land & building at sector-12, Noida valued at Rs. 250 Cr…" className="na-input na-textarea" rows={2} />
+                      <Landmark size={14} strokeWidth={1.5} className="na-input-icon" style={{ top: '1rem' }} />
+                    </div>
+                  </div>
+
+                  {/* Existing Banking */}
+                  <div className="na-field na-field-full">
+                    <label className="na-label">Existing Banking Relationships</label>
+                    <div className="na-input-wrap">
+                      <input type="text" name="existing_banking" value={formData.existing_banking} onChange={handleInputChange} placeholder="SBI, HDFC Bank, ICICI Bank" className="na-input" />
+                      <Landmark size={14} strokeWidth={1.5} className="na-input-icon" />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ═══════════ STEP 3 — Review & Submit ═══════════ */}
+          {step === 2 && (
+            <>
+              <div className="na-card">
+                <div className="na-card-head">
+                  <div className="na-card-head-icon"><FileText size={15} color="var(--sienna)" strokeWidth={1.5} /></div>
+                  <span className="na-card-head-title">Review — Entity Details</span>
+                  <button className="na-edit-link" onClick={() => setStep(0)}>Edit</button>
+                </div>
+                <div className="na-card-body">
+                  <div className="na-review-grid">
+                    <ReviewItem label="Company Name" value={formData.company_name} />
+                    <ReviewItem label="MCA CIN" value={formData.mca_cin} mono />
+                    <ReviewItem label="PAN" value={formData.pan} mono />
+                    <ReviewItem label="Sector" value={formData.sector} />
+                    <ReviewItem label="Incorporation Date" value={formData.incorporation_date || '—'} />
+                    <ReviewItem label="Annual Turnover" value={formData.annual_turnover_cr ? `₹${formData.annual_turnover_cr} Cr` : '—'} />
+                    <ReviewItem label="Employee Count" value={formData.employee_count || '—'} />
+                    <ReviewItem label="Promoter Names" value={formData.promoter_names || '—'} />
+                    <ReviewItem label="Registered Address" value={formData.registered_address || '—'} full />
+                  </div>
+                </div>
+              </div>
+
+              <div className="na-card">
+                <div className="na-card-head">
+                  <div className="na-card-head-icon"><IndianRupee size={15} color="var(--sienna)" strokeWidth={1.5} /></div>
+                  <span className="na-card-head-title">Review — Loan Details</span>
+                  <button className="na-edit-link" onClick={() => setStep(1)}>Edit</button>
+                </div>
+                <div className="na-card-body">
+                  <div className="na-review-grid">
+                    <ReviewItem label="Requested Limit" value={`₹${formData.requested_limit_cr} Cr`} highlight />
+                    <ReviewItem label="Loan Type" value={formData.loan_type} />
+                    <ReviewItem label="Tenure" value={formData.loan_tenure_months ? `${formData.loan_tenure_months} months` : '—'} />
+                    <ReviewItem label="Interest Type" value={formData.interest_type || '—'} />
+                    <ReviewItem label="Purpose" value={formData.purpose_of_loan || '—'} full />
+                    <ReviewItem label="Collateral" value={formData.collateral_offered || '—'} full />
+                    <ReviewItem label="Existing Banking" value={formData.existing_banking || '—'} full />
+                  </div>
+                </div>
+              </div>
+
+              {/* Pipeline Info */}
+              <div className="na-pipeline">
+                <div className="na-pipeline-head">
+                  <div className="na-card-head-icon"><CheckCircle2 size={15} color="var(--sienna)" strokeWidth={1.5} /></div>
+                  <span className="na-pipeline-title">What happens next?</span>
+                  <span className="na-pipeline-sub">— 5 automated stages</span>
+                </div>
+                <div className="na-pipeline-body">
+                  {[
+                    { n: '01', label: 'Upload Documents' },
+                    { n: '02', label: 'External Intelligence' },
+                    { n: '03', label: 'Primary Insights' },
+                    { n: '04', label: 'Credit Scoring' },
+                    { n: '05', label: 'Generate CAM' },
+                  ].map((s) => (
+                    <div className="na-step" key={s.n}>
+                      <div className="na-step-num">{s.n}</div>
+                      <span className="na-step-label">{s.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── Actions ── */}
+          <div className="na-actions">
+            {step === 0 ? (
               <button type="button" className="na-cancel-btn" onClick={() => navigate('/')} disabled={loading}>
                 <ArrowLeft size={13} /> Cancel
               </button>
-              <button type="submit" className="na-submit-btn" disabled={loading}>
+            ) : (
+              <button type="button" className="na-cancel-btn" onClick={prevStep} disabled={loading}>
+                <ArrowLeft size={13} /> Previous
+              </button>
+            )}
+
+            {step < 2 ? (
+              <button type="button" className="na-submit-btn" onClick={nextStep}>
+                <span>Next Step</span><ArrowRight size={14} />
+              </button>
+            ) : (
+              <button type="button" className="na-submit-btn" onClick={handleSubmit} disabled={loading}>
                 {loading ? (
                   <><div className="na-spinner" /><span>Creating…</span></>
                 ) : (
                   <><span>Create Application</span><ArrowRight size={14} /></>
                 )}
               </button>
-            </div>
-          </form>
-
+            )}
+          </div>
         </div>
       </div>
     </>
   );
 };
+
+/* ── Review helper ── */
+const ReviewItem = ({ label, value, mono, highlight, full }) => (
+  <div className={`na-review-item${full ? ' na-review-full' : ''}`}>
+    <span className="na-review-label">{label}</span>
+    <span className={`na-review-value${mono ? ' na-mono' : ''}${highlight ? ' na-highlight' : ''}`}>{value || '—'}</span>
+  </div>
+);
 
 export default NewApplication;

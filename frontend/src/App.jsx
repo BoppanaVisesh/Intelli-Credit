@@ -5,10 +5,12 @@ import CAMViewer from './pages/CAMViewer';
 import Dashboard from './pages/Dashboard';
 import DataIngestion from './pages/DataIngestion';
 import DueDiligencePortal from './pages/DueDiligencePortal';
+import ExtractionMapping from './pages/ExtractionMapping';
 import FraudDetection from './pages/FraudDetection';
 import NewApplication from './pages/NewApplication';
 import ResearchAgent from './pages/ResearchAgent';
 import ScoringResult from './pages/ScoringResult';
+import SecondaryAnalysis from './pages/SecondaryAnalysis';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/application/:id/scoring" element={<ScoringResult />} />
           <Route path="/application/:id/cam" element={<CAMViewer />} />
           <Route path="/application/:id/due-diligence" element={<DueDiligencePortal />} />
+          <Route path="/application/:id/extraction" element={<ExtractionMapping />} />
+          <Route path="/application/:id/analysis" element={<SecondaryAnalysis />} />
         </Routes>
       </Layout>
     </Router>

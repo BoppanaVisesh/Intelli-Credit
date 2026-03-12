@@ -167,8 +167,20 @@ async def create_application(
         id=application_id,
         company_name=request.company_name,
         mca_cin=request.mca_cin,
+        pan=request.pan,
         sector=request.sector,
+        incorporation_date=request.incorporation_date,
+        registered_address=request.registered_address,
+        annual_turnover_cr=request.annual_turnover_cr,
+        employee_count=request.employee_count,
+        promoter_names=request.promoter_names,
         requested_limit_cr=request.requested_limit_cr,
+        loan_type=request.loan_type,
+        loan_tenure_months=request.loan_tenure_months,
+        interest_type=request.interest_type,
+        collateral_offered=request.collateral_offered,
+        purpose_of_loan=request.purpose_of_loan,
+        existing_banking=request.existing_banking,
         status=ApplicationStatus.PENDING
     )
     db.add(app)
@@ -277,6 +289,9 @@ async def get_application_summary(
             "cam": {
                 "url": app.cam_document_url,
                 "status": "completed" if app.cam_document_url else "not_started",
+            },
+            "analysis": {
+                "status": "completed" if app.executive_summary else "not_started",
             },
         },
     }

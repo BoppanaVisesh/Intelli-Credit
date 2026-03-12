@@ -31,8 +31,20 @@ class ImpactType(str, Enum):
 class ApplicationCreateRequest(BaseModel):
     company_name: str = Field(..., description="Name of the company")
     mca_cin: str = Field(..., description="MCA CIN number")
+    pan: Optional[str] = Field(None, description="Company PAN")
     sector: str = Field(..., description="Business sector")
+    incorporation_date: Optional[str] = Field(None, description="Date of incorporation (YYYY-MM-DD)")
+    registered_address: Optional[str] = Field(None, description="Registered office address")
+    annual_turnover_cr: Optional[float] = Field(None, description="Annual turnover in Crores")
+    employee_count: Optional[int] = Field(None, description="Number of employees")
+    promoter_names: Optional[str] = Field(None, description="Comma-separated promoter names")
     requested_limit_cr: float = Field(..., description="Requested loan limit in Crores")
+    loan_type: Optional[str] = Field(None, description="Type of loan facility")
+    loan_tenure_months: Optional[int] = Field(None, description="Loan tenure in months")
+    interest_type: Optional[str] = Field(None, description="Fixed or Floating")
+    collateral_offered: Optional[str] = Field(None, description="Description of collateral")
+    purpose_of_loan: Optional[str] = Field(None, description="Purpose of the loan")
+    existing_banking: Optional[str] = Field(None, description="Existing banking relationships")
 
 
 class DueDiligenceNoteRequest(BaseModel):

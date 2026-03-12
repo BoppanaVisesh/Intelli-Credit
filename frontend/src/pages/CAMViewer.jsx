@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../utils/api';
 
@@ -16,6 +16,16 @@ const CAMViewer = () => {
   const [downloading, setDownloading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [hasExistingReport, setHasExistingReport] = useState(false);
+
+  // On mount, check if a CAM report already exists for download
+  useEffect(() => {
+    if (id) {
+      api.getApplicationSummary(id).then(data => {
+        if (data?.pipeline?.cam?.url) setHasExistingReport(true);
+      }).catch(() => {});
+    }
+  }, [id]);
 
   const generate = async () => {
     setLoading(true);
@@ -68,7 +78,7 @@ const CAMViewer = () => {
               className="px-5 py-2.5 bg-sienna text-white rounded-lg font-medium hover:bg-terracotta disabled:opacity-50 transition">
               {loading ? 'Generating...' : 'Generate CAM'}
             </button>
-            {result && (
+            {(result || hasExistingReport) && (
               <button onClick={download} disabled={downloading}
                 className="px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 transition">
                 {downloading ? 'Downloading...' : 'Download .docx'}

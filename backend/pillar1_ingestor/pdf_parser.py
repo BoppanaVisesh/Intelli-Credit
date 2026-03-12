@@ -39,10 +39,19 @@ class PDFParser:
     
     def parse_pdf(self, pdf_path: str) -> Dict[str, Any]:
         """Parse PDF and return both text and tables"""
+        text = self.extract_text(pdf_path)
+        tables = self.extract_tables(pdf_path)
+        metadata = self._extract_metadata(pdf_path)
+
+        # Warn about likely scanned PDFs
+        if metadata.get('pages', 0) > 0 and len(text.strip()) < 100:
+            print(f"   ⚠ WARNING: PDF has {metadata.get('pages')} pages but extracted only {len(text.strip())} chars — likely a scanned/image PDF. OCR is not available.")
+            metadata['likely_scanned'] = True
+
         return {
-            'text': self.extract_text(pdf_path),
-            'tables': self.extract_tables(pdf_path),
-            'metadata': self._extract_metadata(pdf_path)
+            'text': text,
+            'tables': tables,
+            'metadata': metadata
         }
     
     def _extract_metadata(self, pdf_path: str) -> Dict[str, Any]:

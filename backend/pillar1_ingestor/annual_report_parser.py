@@ -188,9 +188,10 @@ class AnnualReportParser:
         
         condensed = "\n".join(parts)
         
-        # Hard cap at 30K chars (~7.5K tokens) to be safe
-        if len(condensed) > 30000:
-            condensed = condensed[:30000] + "\n\n[TEXT TRUNCATED - key sections included above]"
+        # Hard cap at 50K chars (~12.5K tokens) to capture more financial sections
+        if len(condensed) > 50000:
+            print(f"   ⚠ Condensed text truncated from {len(condensed)} to 50000 chars — late sections may be missed")
+            condensed = condensed[:50000] + "\n\n[TEXT TRUNCATED - key sections included above]"
         
         return condensed
     

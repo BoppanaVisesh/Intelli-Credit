@@ -84,21 +84,21 @@ class GSTParser:
                 # Look for GSTR-1 Sales specifically
                 gstr1_col = None
                 for col in df.columns:
-                    if 'gstr-1' in col and 'sales' in col:
+                    if any(kw in col for kw in ['gstr-1', 'gstr_1', 'gstr1', 'outward']) and any(kw in col for kw in ['sales', 'value', 'amount', 'turnover']):
                         gstr1_col = col
                         break
                 
                 # Look for GSTR-3B Sales specifically  
                 gstr3b_col = None
                 for col in df.columns:
-                    if 'gstr-3b' in col and 'sales' in col:
+                    if any(kw in col for kw in ['gstr-3b', 'gstr_3b', 'gstr3b', '3b']) and any(kw in col for kw in ['sales', 'value', 'amount', 'turnover']):
                         gstr3b_col = col
                         break
                 
                 # Look for purchases/GSTR-2A
                 purchase_col = None
                 for col in df.columns:
-                    if any(keyword in col for keyword in ['purchase', 'gstr-2a', 'input']):
+                    if any(keyword in col for keyword in ['purchase', 'gstr-2a', 'gstr_2a', 'gstr2a', 'gstr-2b', 'gstr_2b', 'input', 'inward']):
                         purchase_col = col
                         break
                 
@@ -178,6 +178,10 @@ class GSTParser:
             if total_sales == 0 and total_purchases == 0:
                 print("   WARNING: No sales/purchase data found in GST file")
                 return self._get_default_gst_data()
+            
+            # Reject obviously invalid negative values
+            total_sales = max(total_sales, 0)
+            total_purchases = max(total_purchases, 0)
             
             # Determine divisor for final output
             final_divisor = divisor if 'divisor' in locals() else 1.0

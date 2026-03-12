@@ -1,4 +1,4 @@
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 
 const Header = () => {
@@ -19,12 +19,6 @@ const Header = () => {
         <span className="hidden lg:block font-mono text-xs text-muted tracking-wider">
           {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </span>
-        <button className="relative text-muted hover:text-sienna transition-colors">
-          <Bell size={20} />
-          <span className="absolute -top-1 -right-1 bg-terracotta text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-            3
-          </span>
-        </button>
       </div>
     </header>
   );

@@ -9,7 +9,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from core.database import engine, Base
-from api.routes import applications, ingestion, research, scoring, cam, due_diligence, fraud_detection
+from api.routes import applications, ingestion, research, scoring, cam, due_diligence, fraud_detection, extraction, analysis
+from seed_data import seed_demo_applications
+from seed_pipeline import start_seed_pipeline_thread
 import uvicorn
 
 
@@ -18,6 +20,8 @@ async def lifespan(app: FastAPI):
     # Startup
     Base.metadata.create_all(bind=engine)
     print("✅ Database tables created")
+    seed_demo_applications()
+    start_seed_pipeline_thread()
     yield
     # Shutdown
     print("👋 Shutting down...")
@@ -47,6 +51,8 @@ app.include_router(scoring.router, prefix="/api/v1/scoring", tags=["Scoring"])
 app.include_router(cam.router, prefix="/api/v1/cam", tags=["CAM"])
 app.include_router(due_diligence.router, prefix="/api/v1/due-diligence", tags=["Due Diligence"])
 app.include_router(fraud_detection.router, prefix="/api/v1/fraud", tags=["Fraud Detection"])
+app.include_router(extraction.router, prefix="/api/v1/extraction", tags=["Extraction & Schema"])
+app.include_router(analysis.router, prefix="/api/v1/analysis", tags=["Analysis"])
 
 
 @app.get("/")

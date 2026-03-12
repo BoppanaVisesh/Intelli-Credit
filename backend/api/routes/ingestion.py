@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import uuid
 import os
 import shutil
@@ -29,6 +29,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 async def upload_documents(
     application_id: str = Form(...),
     files: List[UploadFile] = File(...),
+    document_type: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -63,10 +64,15 @@ async def upload_documents(
             
             file_size = os.path.getsize(file_path)
             
-            # Classify document type
-            print(f"📄 Classifying: {file.filename}")
-            doc_type, confidence = classifier.classify(str(file_path), original_filename=file.filename)
-            print(f"   → Type: {doc_type} (confidence: {confidence:.0%})")
+            # Use explicit document_type if provided, otherwise classify
+            if document_type and document_type in DocumentType.__members__:
+                doc_type = document_type
+                confidence = 1.0
+                print(f"📄 Tagged: {file.filename} → {doc_type} (explicit)")
+            else:
+                print(f"📄 Classifying: {file.filename}")
+                doc_type, confidence = classifier.classify(str(file_path), original_filename=file.filename)
+                print(f"   → Type: {doc_type} (confidence: {confidence:.0%})")
             
             # Create database record
             upload_record = UploadedDocument(
@@ -162,6 +168,16 @@ async def parse_documents(
             elif doc.document_type == DocumentType.ANNUAL_REPORT:
                 parsed_data = annual_report_parser.parse_annual_report(str(file_path))
             
+            elif doc.document_type == DocumentType.BALANCE_SHEET:
+                # JSON files: load directly; otherwise treat as generic
+                fpath = str(file_path)
+                if fpath.lower().endswith('.json'):
+                    with open(fpath, 'r', encoding='utf-8') as f:
+                        parsed_data = json.load(f)
+                    print(f"✅ Loaded balance sheet from JSON")
+                else:
+                    parsed_data = {"note": "Balance sheet parsed — PDF support via Gemini Vision"}
+
             else:
                 print(f"⚠️ No parser available for {doc.document_type}")
                 parsed_data = {"note": f"No parser for {doc.document_type}"}

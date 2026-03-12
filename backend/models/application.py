@@ -18,8 +18,22 @@ class Application(Base):
     id = Column(String, primary_key=True, index=True)
     company_name = Column(String, nullable=False)
     mca_cin = Column(String, nullable=False, index=True)
+    pan = Column(String)
     sector = Column(String, nullable=False)
+    incorporation_date = Column(String)
+    registered_address = Column(Text)
+    annual_turnover_cr = Column(Float)
+    employee_count = Column(Integer)
+    promoter_names = Column(Text)  # comma-separated
     requested_limit_cr = Column(Float, nullable=False)
+    
+    # Loan details
+    loan_type = Column(String)  # Working Capital / Term Loan / CC/OD / BG/LC
+    loan_tenure_months = Column(Integer)
+    interest_type = Column(String)  # Fixed / Floating
+    collateral_offered = Column(Text)
+    purpose_of_loan = Column(Text)
+    existing_banking = Column(Text)
     
     status = Column(SQLEnum(ApplicationStatus), default=ApplicationStatus.PENDING)
     
