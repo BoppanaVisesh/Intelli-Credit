@@ -108,6 +108,9 @@ const ApplicationDetail = () => {
 
   const { pipeline } = summary;
   const completedSteps = STEPS.filter(s => pipeline[s.key]?.status === 'completed').length;
+  const derivedStatus = (completedSteps === STEPS.length || pipeline?.cam?.status === 'completed' || pipeline?.analysis?.status === 'completed')
+    ? 'COMPLETED'
+    : summary.status;
 
   const getStepDetail = (key) => {
     const p = pipeline[key];
@@ -161,11 +164,11 @@ const ApplicationDetail = () => {
             </div>
             <div className="text-right">
               <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                summary.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                summary.status === 'PROCESSING' ? 'bg-parchment text-sienna' :
+                derivedStatus === 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                derivedStatus === 'PROCESSING' ? 'bg-parchment text-sienna' :
                 'bg-cream text-ink'
               }`}>
-                {summary.status}
+                {derivedStatus}
               </span>
               <p className="text-xs text-muted mt-1">{completedSteps}/{STEPS.length} steps done</p>
             </div>

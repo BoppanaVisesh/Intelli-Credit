@@ -209,7 +209,7 @@ async def list_applications(
             company_name=app.company_name,
             sector=app.sector,
             requested_limit_cr=app.requested_limit_cr,
-            status=app.status.value,
+            status=_effective_status(app),
             created_at=app.created_at,
             final_score=app.final_credit_score,
             decision=app.decision
@@ -257,7 +257,7 @@ async def get_application_summary(
         "mca_cin": app.mca_cin,
         "sector": app.sector,
         "requested_limit_cr": app.requested_limit_cr,
-        "status": app.status.value if app.status else "PENDING",
+        "status": _effective_status(app),
         "created_at": str(app.created_at) if app.created_at else None,
         "pipeline": {
             "ingestion": {
@@ -307,6 +307,13 @@ def _compute_risk(levels):
     if high >= 1 or med >= 2:
         return "MEDIUM"
     return "LOW"
+
+
+def _effective_status(app):
+    # Legacy rows may keep PENDING while downstream outputs are already completed.
+    if app.cam_document_url or app.executive_summary or app.final_credit_score is not None:
+        return "COMPLETED"
+    return app.status.value if app.status else "PENDING"
 
 
 @router.get("/{application_id}", response_model=CreditAnalysisResponse)

@@ -36,11 +36,11 @@ class CreditScorerFixed:
         sector_info     = data.get("sector", {})
         collateral_info = data.get("collateral", {})
 
-        char_score,  char_reasons  = self._score_character(research)
+        char_score,  char_reasons  = self._score_character(research, financials)
         cap_score,   cap_reasons   = self._score_capacity(financials)
         capit_score, capit_reasons = self._score_capital(financials)
         coll_score,  coll_reasons  = self._score_collateral(financials, collateral_info)
-        cond_score,  cond_reasons  = self._score_conditions(sector_info, research)
+        cond_score,  cond_reasons  = self._score_conditions(sector_info, research, financials)
 
         raw_score = (
             char_score  * self.WEIGHTS["character"]  +
@@ -91,7 +91,7 @@ class CreditScorerFixed:
     # ------------------------------------------------------------------
     # 1. CHARACTER (20%)
     # ------------------------------------------------------------------
-    def _score_character(self, research: Dict) -> Tuple[float, List[str]]:
+    def _score_character(self, research: Dict, fin: Dict) -> Tuple[float, List[str]]:
         score = 70
         reasons: List[str] = []
 
@@ -124,6 +124,29 @@ class CreditScorerFixed:
         else:
             score += 5
             reasons.append("✅ Clean transaction patterns")
+
+        promoter_holding = fin.get("promoter_holding_pct", 0)
+        pledged = fin.get("pledged_holding_pct", 0)
+        if promoter_holding:
+            if promoter_holding >= 50:
+                score += 8
+                reasons.append(f"✅ Strong promoter skin in the game ({promoter_holding:.1f}%)")
+            elif promoter_holding >= 30:
+                score += 3
+                reasons.append(f"⚠️ Moderate promoter holding ({promoter_holding:.1f}%)")
+            else:
+                score -= 10
+                reasons.append(f"❌ Low promoter holding ({promoter_holding:.1f}%)")
+
+        if pledged > 50:
+            score -= 20
+            reasons.append(f"❌ Promoter pledge very high ({pledged:.1f}%)")
+        elif pledged > 10:
+            score -= 10
+            reasons.append(f"⚠️ Promoter shares pledged ({pledged:.1f}%)")
+        elif promoter_holding and pledged == 0:
+            score += 3
+            reasons.append("✅ No promoter pledge disclosed")
 
         return max(0, min(100, score)), reasons
 
@@ -244,7 +267,7 @@ class CreditScorerFixed:
     # ------------------------------------------------------------------
     # 5. CONDITIONS (10%)
     # ------------------------------------------------------------------
-    def _score_conditions(self, sector: Dict, research: Dict) -> Tuple[float, List[str]]:
+    def _score_conditions(self, sector: Dict, research: Dict, fin: Dict) -> Tuple[float, List[str]]:
         score = 70
         reasons: List[str] = []
 
@@ -269,6 +292,27 @@ class CreditScorerFixed:
         elif sent in ("Positive", "POSITIVE"):
             score += 5
             reasons.append("✅ Positive sector outlook")
+
+        top10_borrowings_pct = fin.get("top10_borrowings_pct", 0)
+        if top10_borrowings_pct >= 70:
+            score -= 15
+            reasons.append(f"❌ Funding concentrated in top borrowings ({top10_borrowings_pct:.1f}%)")
+        elif top10_borrowings_pct >= 50:
+            score -= 8
+            reasons.append(f"⚠️ Borrowing concentration elevated ({top10_borrowings_pct:.1f}%)")
+
+        short_term_liabilities_pct = fin.get("short_term_liabilities_pct_total_liabilities", 0)
+        if short_term_liabilities_pct >= 50:
+            score -= 15
+            reasons.append(f"❌ Short-term liabilities are high ({short_term_liabilities_pct:.1f}% of liabilities)")
+        elif short_term_liabilities_pct >= 35:
+            score -= 8
+            reasons.append(f"⚠️ Short-term liabilities need monitoring ({short_term_liabilities_pct:.1f}%)")
+
+        significant_counterparty_pct = fin.get("significant_counterparty_liabilities_pct", 0)
+        if significant_counterparty_pct >= 25:
+            score -= 6
+            reasons.append(f"⚠️ Significant counterparty concentration ({significant_counterparty_pct:.1f}% of liabilities)")
 
         return max(0, min(100, score)), reasons
 

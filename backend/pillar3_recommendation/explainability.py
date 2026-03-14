@@ -71,6 +71,25 @@ class Explainability:
         elif sent in ("Positive", "POSITIVE"):
             reasons.append({"text": "Positive promoter reputation in market", "impact": "POSITIVE", "weight": 1})
 
+        promoter_holding = fin.get("promoter_holding_pct", 0)
+        if promoter_holding:
+            if promoter_holding >= 50:
+                reasons.append({"text": f"Strong promoter ownership ({promoter_holding:.1f}%) supports alignment", "impact": "POSITIVE", "weight": 2})
+            elif promoter_holding < 20:
+                reasons.append({"text": f"Low promoter ownership ({promoter_holding:.1f}%) weakens sponsor alignment", "impact": "NEGATIVE", "weight": 2})
+
+        pledged = fin.get("pledged_holding_pct", 0)
+        if pledged > 10:
+            reasons.append({"text": f"Promoter shares pledged ({pledged:.1f}%)", "impact": "NEGATIVE", "weight": 3})
+
+        top10_borrowings_pct = fin.get("top10_borrowings_pct", 0)
+        if top10_borrowings_pct >= 50:
+            reasons.append({"text": f"Borrowing book concentrated in top facilities ({top10_borrowings_pct:.1f}%)", "impact": "NEGATIVE", "weight": 2})
+
+        short_term_liabilities_pct = fin.get("short_term_liabilities_pct_total_liabilities", 0)
+        if short_term_liabilities_pct >= 35:
+            reasons.append({"text": f"Elevated short-term liabilities ({short_term_liabilities_pct:.1f}% of total liabilities)", "impact": "NEGATIVE", "weight": 2})
+
         # Sort by weight descending
         reasons.sort(key=lambda r: r["weight"], reverse=True)
         return reasons

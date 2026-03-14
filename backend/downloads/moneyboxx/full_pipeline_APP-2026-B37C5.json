@@ -1,0 +1,1485 @@
+{
+  "application_id": "APP-2026-B37C5",
+  "steps": {
+    "extraction_documents": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "documents": [
+          {
+            "file_id": "089fb0a5-449a-412b-b9b5-2efda5784da8",
+            "filename": "shareholding_pattern_010_1769083116.pdf",
+            "document_type": "SHAREHOLDING_PATTERN",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "SHAREHOLDING_PATTERN",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "quarter": null,
+              "promoter_holding_pct": 43.7,
+              "promoter_pledge_pct": null,
+              "fii_holding_pct": null,
+              "dii_holding_pct": null,
+              "public_holding_pct": 56.3,
+              "total_shares": null,
+              "top_10_shareholders": null
+            },
+            "parsed_data": {
+              "filing_period": "Dec 2025",
+              "promoter_holding_pct": 43.7,
+              "public_holding_pct": 56.3,
+              "pledged_holding_pct": 0.0,
+              "non_promoter_non_public_pct": 0.0,
+              "governance_flags": [
+                "Issued Warrants",
+                "Outstanding ESOPs"
+              ],
+              "remarks": "Promoter holding is 43.70%, public holding is 56.30%. No promoter shares are pledged. The company has issued warrants and has outstanding ESOPs."
+            },
+            "uploaded_at": "2026-03-14T17:05:11.249754"
+          },
+          {
+            "file_id": "c8529781-455f-4cd0-95fa-a4d044d08c1d",
+            "filename": "alm_liquidity_disclosure_009_1754051517.pdf",
+            "document_type": "ALM",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "ALM",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "reporting_date": null,
+              "total_assets": 36.65,
+              "total_liabilities": 50.25,
+              "net_mismatch": null,
+              "bucket_1_30": null,
+              "bucket_31_90": null,
+              "bucket_91_180": null,
+              "bucket_181_365": null,
+              "bucket_above_365": null,
+              "interest_rate_sensitivity": null,
+              "cumulative_gap_ratio": null
+            },
+            "parsed_data": {
+              "disclosure_period": "Unknown",
+              "top10_borrowings_cr": 370.72,
+              "top10_borrowings_pct": 55.22,
+              "significant_counterparty_amount_cr": 148.7,
+              "significant_counterparty_liabilities_pct": 21.08,
+              "short_term_liabilities_pct_public_funds": 52.79,
+              "short_term_liabilities_pct_total_liabilities": 50.25,
+              "short_term_liabilities_pct_total_assets": 36.65,
+              "liquidity_management_note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.232118"
+          },
+          {
+            "file_id": "41132b04-a2b4-4c34-a88c-c652a2e11f94",
+            "filename": "alm_liquidity_disclosure_008_1762339316.pdf",
+            "document_type": "ALM",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "ALM",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "reporting_date": null,
+              "total_assets": 0.0,
+              "total_liabilities": 0.0,
+              "net_mismatch": null,
+              "bucket_1_30": null,
+              "bucket_31_90": null,
+              "bucket_91_180": null,
+              "bucket_181_365": null,
+              "bucket_above_365": null,
+              "interest_rate_sensitivity": null,
+              "cumulative_gap_ratio": null
+            },
+            "parsed_data": {
+              "disclosure_period": "September 30, 2025",
+              "top10_borrowings_cr": 354.33,
+              "top10_borrowings_pct": 56.29,
+              "significant_counterparty_amount_cr": 0.0,
+              "significant_counterparty_liabilities_pct": 0.0,
+              "short_term_liabilities_pct_public_funds": 0.0,
+              "short_term_liabilities_pct_total_liabilities": 0.0,
+              "short_term_liabilities_pct_total_assets": 0.0,
+              "liquidity_management_note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.218997"
+          },
+          {
+            "file_id": "2380feb9-86ef-4825-b761-d60e6d04efc7",
+            "filename": "balance_sheet_financial_results_007_1739352866.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 0.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "July 2023",
+              "revenue_cr": 0.0,
+              "net_profit_cr": 0.0,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 0.0,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 0.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Financial statement parsing fallback used: 400 API key expired. Please renew the API key. [reason: \"API_KEY_INVALID\"\ndomain: \"googleapis.com\"\nmetadata {\n  key: \"service\"\n  value: \"generativelanguage.googleapis.com\"\n}\n, locale: \"en-US\"\nmessage: \"API key expired. Please renew the API key.\"\n]"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.197756"
+          },
+          {
+            "file_id": "c6f50b3f-aab1-46b0-9211-60941c038962",
+            "filename": "balance_sheet_financial_results_006_1739353411.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 4.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "Year 2024",
+              "revenue_cr": 4.0,
+              "net_profit_cr": 4.44,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 1.78,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 4.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.062933"
+          },
+          {
+            "file_id": "9df8e073-16b4-40cc-aab0-ad7cac611134",
+            "filename": "balance_sheet_financial_results_005_1748436574.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 94.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "DL 1994",
+              "revenue_cr": 520779.0,
+              "net_profit_cr": 0.0,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 41.0,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 94.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.036328"
+          },
+          {
+            "file_id": "12cea690-c05e-4510-b5dc-0c184bb330e0",
+            "filename": "balance_sheet_financial_results_004_1753539558.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 3.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "INE 2025",
+              "revenue_cr": 5.0,
+              "net_profit_cr": 0.41,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 2.58,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 3.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:11.005418"
+          },
+          {
+            "file_id": "8a239984-458b-431b-b1c2-a4aca5729e2a",
+            "filename": "balance_sheet_financial_results_003_1761828852.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 92.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "September 2025",
+              "revenue_cr": 4987.43,
+              "net_profit_cr": 0.0,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 35.0,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 92.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:10.970552"
+          },
+          {
+            "file_id": "bab79230-7318-4b27-8505-b52638e830b1",
+            "filename": "balance_sheet_financial_results_002_1770898482.pdf",
+            "document_type": "BALANCE_SHEET",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BALANCE_SHEET",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "as_at_date": null,
+              "total_assets_cr": 4.0,
+              "total_equity_cr": 0.0,
+              "total_liabilities_cr": null,
+              "current_assets_cr": 0.0,
+              "non_current_assets_cr": null,
+              "current_liabilities_cr": 0.0,
+              "reserves_surplus_cr": null
+            },
+            "parsed_data": {
+              "period": "el 0114",
+              "revenue_cr": 1.0,
+              "net_profit_cr": 0.52,
+              "ebitda_cr": 0.0,
+              "total_debt_cr": 2.48,
+              "total_equity_cr": 0.0,
+              "total_assets_cr": 4.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "fixed_assets_cr": 0.0,
+              "note": "Extracted using local text fallback"
+            },
+            "uploaded_at": "2026-03-14T17:05:10.936431"
+          },
+          {
+            "file_id": "db4cf8de-3ce6-4831-9f2a-d43de9b96487",
+            "filename": "annual_report_primary_001_1756892129.pdf",
+            "document_type": "ANNUAL_REPORT",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "ANNUAL_REPORT",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "financial_year": "FY 2024-25",
+              "revenue_cr": 198.94,
+              "operating_profit_cr": null,
+              "pat_cr": null,
+              "total_assets_cr": 0.0,
+              "net_worth_cr": null,
+              "total_debt_cr": 636.16,
+              "cash_from_operations_cr": null,
+              "eps": null,
+              "auditor_opinion": "Unqualified",
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions": 0.0
+            },
+            "parsed_data": {
+              "company_name": "Moneyboxx Finance Limited",
+              "financial_year": "FY 2024-25",
+              "auditor_name": "M/s. Gaur & Associates, Chartered Accountants",
+              "auditor_opinion": "Unqualified",
+              "total_debt_cr": 636.16,
+              "total_equity_cr": 260.72,
+              "revenue_cr": 198.94,
+              "net_profit_cr": 1.25,
+              "ebitda_cr": 73.97,
+              "total_assets_cr": 0.0,
+              "current_assets_cr": 0.0,
+              "current_liabilities_cr": 0.0,
+              "pending_litigations": [],
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions_cr": 0.0,
+              "management_commentary": "Moneyboxx Finance Limited achieved 27% AUM growth, reaching \u20b9927 crore, with disbursements of \u20b9595 crore. Total income grew by 55.69% to \u20b9199.23 crore. However, net profit declined to \u20b91.25 crore from \u20b99.14 crore in FY24, primarily due to increased credit costs. The company expanded its operations to 163 branches across 12 states and strengthened its 70+ member collections team. Financial position remained robust with a Capital Adequacy Ratio of 29.3% and a debt-to-equity ratio of 2.44x. Asset quality was managed prudently with GNPA at 6.6% and NNPA at 3.4%. The company leveraged co-lending partnerships and digital platforms like the Sikka app and an AI-led ecosystem for scalability and reach.",
+              "key_risks": [
+                "Challenging credit environment for the MSME segment, leading to a rise in delinquencies due to subdued rural growth, erratic weather patterns, and high indebtedness in certain borrower segments.",
+                "Increased credit costs impacting net profit.",
+                "Economic conditions, government policies, and other incidental factors beyond the control of the Company."
+              ],
+              "expansion_plans": "The company plans to scale AUM beyond \u20b91,400 crore in FY 2025-26 and increase the share of secured lending to 65% by March 2026. Key priorities include strengthening collections and legal recovery frameworks, accelerating technology-led initiatives such as Cattle AI and digital underwriting, and expanding co-lending partnerships and the lender ecosystem for greater balance-sheet strength. The company also targets achieving sub-10% opex within the next two years and a single-digit cost of funds in the next 2-3 years."
+            },
+            "uploaded_at": "2026-03-14T17:05:10.912713"
+          }
+        ]
+      }
+    },
+    "external_research": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "status": "research_completed",
+        "company_name": "Moneyboxx Finance Limited",
+        "overall_risk": "HIGH",
+        "completed_tasks": 5,
+        "failed_tasks": 0,
+        "results": [
+          {
+            "type": "news",
+            "status": "completed",
+            "risk": "LOW"
+          },
+          {
+            "type": "litigation",
+            "status": "completed",
+            "risk": "HIGH"
+          },
+          {
+            "type": "promoter",
+            "name": "Promoter of Moneyboxx Finance Limited",
+            "status": "completed",
+            "risk": "HIGH"
+          },
+          {
+            "type": "sector",
+            "status": "completed",
+            "risk": "MEDIUM"
+          },
+          {
+            "type": "regulatory",
+            "status": "completed",
+            "risk": "HIGH"
+          }
+        ],
+        "risk_summary": {
+          "HIGH": 3,
+          "MEDIUM": 1,
+          "LOW": 1
+        }
+      }
+    },
+    "due_diligence": {
+      "status_code": 200,
+      "data": {
+        "id": 14,
+        "application_id": "APP-2026-B37C5",
+        "status": "analyzed",
+        "insight_type": "site_visit",
+        "ai_analysis": {
+          "summary": "Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing concentration need monitoring. Recommend tighter monthly covenant tracking and len",
+          "risk_category": "Operational",
+          "severity": "MEDIUM",
+          "sentiment": "NEUTRAL",
+          "score_adjustment": -3,
+          "confidence": 0.3,
+          "risk_flags": [],
+          "entities": []
+        }
+      }
+    },
+    "fraud_detection": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "company_name": "Moneyboxx Finance Limited",
+        "status": "verification_complete",
+        "combined_fraud_score": 0.2,
+        "overall_risk_level": "LOW",
+        "red_flag_triggered": false,
+        "total_flags": 0,
+        "all_flags": [],
+        "normalized_data_summary": {
+          "sources_available": [
+            "annual_report",
+            "balance_sheet",
+            "balance_sheet",
+            "balance_sheet",
+            "balance_sheet",
+            "balance_sheet",
+            "balance_sheet",
+            "liquidity",
+            "liquidity",
+            "shareholding"
+          ],
+          "gst_sales_cr": 0,
+          "bank_inflows_cr": 0,
+          "annual_revenue_cr": 198.94
+        },
+        "cross_verification": {
+          "rule_score": 0,
+          "risk_level": "LOW",
+          "anomalies_count": 0,
+          "anomalies": [],
+          "category_scores": {},
+          "summary": "No anomalies detected across 10 data sources. Financial data appears consistent."
+        },
+        "circular_trading": {
+          "combined_score": 0,
+          "risk_level": "LOW",
+          "flags": [],
+          "ratio_analysis": {
+            "circular_trading_risk": "LOW",
+            "risk_score": 0,
+            "gst_vs_bank_variance_percent": 0,
+            "red_flag_triggered": false,
+            "flags": [],
+            "recommendation": "Transaction patterns appear normal. Standard monitoring recommended."
+          },
+          "graph_analysis": {
+            "cycles_detected": [],
+            "cycle_count": 0,
+            "graph_risk_score": 0,
+            "risk_level": "LOW",
+            "entities": 0,
+            "edges": 0,
+            "flags": [],
+            "entity_list": [],
+            "edge_list": [],
+            "reciprocal_pairs": [],
+            "strongly_connected_components": [],
+            "concentration_analysis": {}
+          }
+        },
+        "ml_prediction": {
+          "fraud_probability": 0.005,
+          "prediction": "LEGITIMATE",
+          "ml_risk_level": "LOW",
+          "ml_score": 0.5,
+          "top_features": [
+            {
+              "feature": "gst_bank_ratio",
+              "value": 1.0,
+              "importance": 0.3026
+            },
+            {
+              "feature": "purchase_sales_ratio",
+              "value": 0.5,
+              "importance": 0.2062
+            },
+            {
+              "feature": "outflow_inflow_ratio",
+              "value": 0.75,
+              "importance": 0.1912
+            },
+            {
+              "feature": "cash_retention_pct",
+              "value": 0.25,
+              "importance": 0.1656
+            },
+            {
+              "feature": "monthly_variability",
+              "value": 0.2,
+              "importance": 0.0745
+            }
+          ]
+        },
+        "weight_breakdown": {
+          "rules_weight": "40%",
+          "ml_weight": "35%",
+          "circular_trading_weight": "25%",
+          "rules_contribution": 0.0,
+          "ml_contribution": 0.2,
+          "ct_contribution": 0.0
+        }
+      }
+    },
+    "credit_scoring": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "company_name": "Moneyboxx Finance Limited",
+        "status": "scoring_complete",
+        "model_version": "five-cs-v3.0",
+        "final_credit_score": 52,
+        "max_score": 100,
+        "decision": "REJECT",
+        "risk_grade": "BB",
+        "requested_limit_cr": 25.0,
+        "recommended_limit_cr": 0.0,
+        "approval_percentage": 0,
+        "sub_scores": {
+          "character": {
+            "score": 51,
+            "weight": 0.2
+          },
+          "capacity": {
+            "score": 50,
+            "weight": 0.3
+          },
+          "capital": {
+            "score": 65,
+            "weight": 0.2
+          },
+          "collateral": {
+            "score": 60,
+            "weight": 0.2
+          },
+          "conditions": {
+            "score": 72,
+            "weight": 0.1
+          }
+        },
+        "explanations": {
+          "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns | \u26a0\ufe0f Moderate promoter holding (43.7%) | \u2705 No promoter pledge disclosed",
+          "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+          "capital": "\u26a0\ufe0f Moderate leverage D/E 2.44 | \u2705 Strong net worth \u20b9260.7 Cr",
+          "collateral": "Total assets \u20b94.0 Cr (detailed collateral data unavailable)",
+          "conditions": "\u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabilities are high (50.2% of liabilities)",
+          "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+        },
+        "key_factors": [
+          "Repayment Capacity (DSCR, Cash Flow)",
+          "Capital Structure (D/E, Net Worth)",
+          "Collateral Coverage (LTV)"
+        ],
+        "loan_recommendation": {
+          "revenue_limit_cr": 49.73,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 49.73,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 19.89,
+          "requested_limit_cr": 25.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        },
+        "decision_reasons": [
+          {
+            "text": "Adverse news about promoter/management found in web research",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "Borrowing book concentrated in top facilities (55.2%)",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "Elevated short-term liabilities (50.2% of total liabilities)",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "1 litigation case(s) on record",
+            "impact": "NEGATIVE",
+            "weight": 1
+          },
+          {
+            "text": "GST and bank records well-aligned",
+            "impact": "POSITIVE",
+            "weight": 1
+          }
+        ],
+        "narrative": "With a credit score of 52/100 the application is REJECTED due to significant risk factors. Positive factors: GST and bank records well-aligned. Risk factors: Adverse news about promoter/management found in web research; Borrowing book concentrated in top facilities (55.2%); Elevated short-term liabilities (50.2% of total liabilities)."
+      }
+    },
+    "pre_cognitive_analysis": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "company_name": "Moneyboxx Finance Limited",
+        "sector": "NBFC",
+        "status": "analysis_complete",
+        "research_bundle": {
+          "timestamp": "2026-03-14T17:28:19.488977",
+          "company": "Moneyboxx Finance Limited",
+          "sector": "NBFC",
+          "news": {
+            "articles": [
+              {
+                "title": "Moneyboxx Finance News - The Economic Times",
+                "url": "https://economictimes.indiatimes.com/moneyboxx-finance-ltd/stocksupdate/companyid-53921.cms",
+                "content": "Moneyboxx Finance Ltdhas informed BSE that the meeting of the Board of Directors of the Company is scheduled on 12/02/2026 ,inter alia, to consider and approve",
+                "source": "economictimes.indiatimes.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance Ltd. - Moneycontrol.com",
+                "url": "https://www.moneycontrol.com/india/stockpricequote/finance-general/moneyboxxfinance/DC08",
+                "content": "... latest news on Moneyboxx ... Moneyboxx Finance Limited. Moneyboxx Finance Limited has informed the Exchange about General Updates on collection efficiency.",
+                "source": "www.moneycontrol.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance Ltd - Business Standard",
+                "url": "https://www.business-standard.com/markets/moneyboxx-finance-ltd-share-price-44424/announcements/bse-exchange-51342912",
+                "content": "Update On EGM Notice. 03:43 PM, 18th Feb 2026. Please find attached herewith the revised announcement.",
+                "source": "www.business-standard.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance raised Rs 176 crore in capital to support its ...",
+                "url": "https://bfsi.economictimes.indiatimes.com/news/nbfc/moneyboxx-finance-raised-rs-176-crore-in-capital-to-support-its-growth-plans/113325535",
+                "content": "Moneyboxx Finance, a BSE-listed NBFC, announced on Friday that it has raised Rs 176 crore through equity shares and convertible warrants.",
+                "source": "bfsi.economictimes.indiatimes.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance to raise \u20b943.3 crore through preferential equity ...",
+                "url": "https://bfsi.economictimes.indiatimes.com/articles/moneyboxx-finance-to-secure-433-crore-via-preferential-equity-issue/126672906",
+                "content": "Moneyboxx Finance has approved a preferential equity issue of about \u20b943.3 crore, subject to shareholder and regulatory approvals. The NBFC plans",
+                "source": "bfsi.economictimes.indiatimes.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance Announcements/Notices - Moneycontrol.com",
+                "url": "https://www.moneycontrol.com/company-notices/moneyboxxfinance/notices/DC08/",
+                "content": "Moneyboxx Finance Ltdhas informed BSE that the meeting of the Board of Directors of the Company is scheduled on 12/02/2026 ,inter alia, to consider and... 05",
+                "source": "www.moneycontrol.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance Share Price Today 12 Mar 2026 - Mint",
+                "url": "https://www.livemint.com/market/market-stats/stocks-moneyboxx-finance-share-price-nse-bse-s0001141",
+                "content": "Moneyboxx Finance is trading at 66.00 as on Thu Mar 12 2026 09:54:35. This is -2.68% lower as compared to its previous closing price of 67.82. What is the",
+                "source": "www.livemint.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Moneyboxx Finance Ltd. - Moneycontrol.com",
+                "url": "https://www.moneycontrol.com/financials/moneyboxxfinance/capital-structure/DC08",
+                "content": "Get Moneyboxx Finance latest Consolidated Cash Flow, Financial Statements and Moneyboxx Finance detailed profit and loss accounts.",
+                "source": "www.moneycontrol.com",
+                "sentiment": "NEUTRAL"
+              }
+            ],
+            "positive": 0,
+            "negative": 0,
+            "neutral": 8,
+            "overall_sentiment": "NEUTRAL",
+            "risk_alerts": []
+          },
+          "legal": {
+            "cases": [
+              {
+                "title": "MONEYBOXX FINANCE LIMITED Company, Legal Audit, Directors ...",
+                "url": "https://lextechsuite.com/MONEYBOXX-FINANCE-LIMITED--L30007DL1994PLC260191--73001325",
+                "content": "## MONEYBOXX FINANCE LIMITED\n\n|  |  |  |  |  |\n ---  --- \n| Basic Info | Contact Info | Compliance | Financials | Directors |\n| Judgments / Past Court Orders | | TradeMarks | On Going, Current Litigation | |\n\n|  |  |\n --- |\n| Listing Info | |\n| Not Listed or Listing Info, not found! | |\n\n#### Listing Info\n\n|  |\n\n| Compliance |\n| Active Compliance  ACTIVE compliant |\n| Last AGM Date  25-09-2023 |\n| Last Balance Sheet Date  31-03-2023 |\n\n#### Compliance\n\n|  |\n\n| Financials |\n| Authorized Capital  ",
+                "source": "lextechsuite.com"
+              },
+              {
+                "title": "Shivanshu Jha - Legal Associate at Moneyboxx finance - LinkedIn",
+                "url": "https://in.linkedin.com/in/shivanshu-jha-1a747b325",
+                "content": "- \u26a1 RBI\u2019s New ECL (Expected Credit Loss) Norms: What Bankers Must Note \u26a1 \ud83d\udd39 100% Provisioning: For unsecured loans after one year in Stage-3; for\u2026  \nLiked by Shivanshu Jha  \nView Post  \nActivity Image\n\n- The Supreme Court has clarified that complaints under Section 138 of the Negotiable Instruments Act, 1881 can be filed even against companies\u2026  \nPosted by Shivanshu Jha  \nView Post  \nActivity Image\n\n- Just read the SC judgment in Central Bank of India v. Prabha Jain (Civil appeal No. 1876 of 2016",
+                "source": "in.linkedin.com"
+              }
+            ],
+            "nclt_cases": [
+              {
+                "title": "Defining Financial Debt: NCLT Judgment Confirms IBC Cannot Be ...",
+                "url": "https://www.mondaq.com/india/insolvencybankruptcy/1713440/defining-financial-debt-nclt-judgment-confirms-ibc-cannot-be-invoked-for-recovery-of-profit-linked-investments",
+                "content": "In a ruling that reinforces the strict contours of what qualifies as a financial debt under the Insolvency & Bankruptcy Code, 2016 (IBC), the National Company Law Tribunal (NCLT), New Delhi Bench... In a ruling that reinforces the strict contours of what qualifies as a financial debt under the Insolvency & Bankruptcy Code, 2016 (IBC), the National Company Law Tribunal (NCLT), New Delhi Bench, has dismissed a Section 7 application filed by Modern Solar Private Limited against Claro Energy Private",
+                "source": "www.mondaq.com"
+              },
+              {
+                "title": "IBC & Insolvency Disputes: How Litigation Funding Changes the ...",
+                "url": "https://legalfund.in/ibc-insolvency-disputes/",
+                "content": "These challenges require immediate NCLT filings and expert legal counsel \u2014 costs that litigation funding can cover when the recovery potential justifies it. Litigation funding is when a specialist finance company pays all your legal costs \u2014 upfront, in full \u2014 in exchange for a pre-agreed percentage of the final recovery. | **\ud83d\udcbc\u00a0 Need funding for your NCLT or insolvency case?** LegalFund finances strong IBC claims with zero upfront cost. Litigation funding allows RPs to pursue fraud and avoidance ",
+                "source": "legalfund.in"
+              }
+            ],
+            "case_count": 2,
+            "nclt_count": 2,
+            "risk_level": "MEDIUM",
+            "penalty": -20
+          },
+          "market_sentiment": {
+            "articles": [
+              {
+                "title": "NBFC Moneyboxx Finance has raised Rs 33.4 crore through a preferential ...",
+                "url": "https://www.facebook.com/theceo.in/posts/nbfc-moneyboxx-finance-has-raised-rs-334-crore-through-a-preferential-allotment-/1375341651288055/",
+                "content": "NBFC Moneyboxx Finance has raised Rs 33.4 crore through a preferential allotment of equity shares to strengthen its capital base and support",
+                "source": "www.facebook.com"
+              },
+              {
+                "title": "Moneyboxx Finance Ltd.",
+                "url": "https://www.moneycontrol.com/india/stockpricequote/finance-general/moneyboxxfinance/DC08",
+                "content": "Low Financial Strength, Average Growth Trend Stock at Reasonable Valuations. Get detailed analysis with Moneycontrol Stock Insights. Get detailed analysis with Moneycontrol Stock Insights. Resistance level for the week, calculated based on price range of the. Make an informed investment decision with advanced AI-based features like SWOT analysis, investment checklist, technical ratings and know how fairly the company is valued. An analysis of stocks based on price performance, financials, the Pi",
+                "source": "www.moneycontrol.com"
+              },
+              {
+                "title": "Moneyboxx Finance Raises \u20b933.4 Cr Equity to Bolster Growth",
+                "url": "https://www.whalesbook.com/news/English/bankingfinance/Moneyboxx-Finance-Raises-indian-rupee334-Cr-Equity-to-Bolster-Growth/69a833a03d2913aa7c29f8f7",
+                "content": "# Moneyboxx Finance Raises \u20b933.4 Cr Equity to Bolster Growth. Moneyboxx Finance Raises \u20b933.4 Cr Equity to Bolster Growth. Moneyboxx Finance Limited has successfully raised \u20b933.4 crore through a preferential allotment of equity shares, priced at \u20b976 per share. This capital infusion strengthens the company's balance sheet, aiming to accelerate its growth strategy by expanding its branch network, increasing Assets Under Management (AUM), and enhancing its technology-driven lending platform. # Money",
+                "source": "www.whalesbook.com"
+              },
+              {
+                "title": "Moneyboxx Finance Share Price Target and Forecast",
+                "url": "https://in.investing.com/equities/moneyboxx-finance-consensus-estimates",
+                "content": "Review the share price forecast to analyze key indicators and market sentiment. Access our Moneyboxx Finance stock forecast for various scenarios",
+                "source": "in.investing.com"
+              },
+              {
+                "title": "Moneyboxx Finance Boosts Capital Base with \u20b943.3 Crore Equity Raise",
+                "url": "https://www.cxodigitalpulse.com/moneyboxx-finance-boosts-capital-base-with-%E2%82%B943-3-crore-equity-raise/",
+                "content": "# Moneyboxx Finance Boosts Capital Base with \u20b943.3 Crore Equity Raise. New Delhi:**\u00a0Moneyboxx Finance Ltd, a leading NBFC focused on empowering underserved, rural and semi-urban markets, has approved a preferential issue of equity shares aggregating to approximately **\u20b943.3 crore**, subject to shareholder and regulatory approvals. The Board of Directors has approved the issuance of up to 57 lakh equity shares of face value \u20b910 each on a preferential basis at an issue price of \u20b976 per share, incl",
+                "source": "www.cxodigitalpulse.com"
+              }
+            ],
+            "overall_sentiment": "POSITIVE",
+            "positive": 2,
+            "negative": 0
+          },
+          "macro_trends": {
+            "articles": [
+              {
+                "title": "[PDF] India NBFC Sector Roundup \u2013 FY25 - Boston Consulting Group",
+                "url": "https://web-assets.bcg.com/b2/80/e347b44a4e78bc2053b68f53099b/nbfc-sector-update-fy25.pdf",
+                "content": "Economic growth: GDP growth for FY25 at 6.4% YoY vs. projected growth rate of 6.2-7%; RBI and other agencies project GDP growth at 6.4-6.5%",
+                "source": "web-assets.bcg.com"
+              },
+              {
+                "title": "NBFC Growth Outlook | Moody's & ICRA Decode India's Credit Trends",
+                "url": "https://www.youtube.com/watch?v=e9iKrSR-6ss",
+                "content": "NBFC Growth Outlook | Moody's & ICRA Decode India's Credit Trends | What's Next for NBFC Sector? Experts from Moody's and ICRA share their",
+                "source": "www.youtube.com"
+              },
+              {
+                "title": "[PDF] Analysis of NBFC Sector in India - Tata Capital",
+                "url": "https://www.tatacapital.com/content/dam/tata-capital/pdf/investors-and-financial-reports/offer-documents/Offer_Documents/Tata%20Capital%20Limited_Industry%20Report.pdf",
+                "content": "Country CY 2024 CY 2029P Gross domestic product based on purchasing-power-parity (PPP) share of world total (%) Ranking Gross domestic product based on purchasing-power-parity (PPP) share of world total (%) Ranking China 19.1 1 19.6 1 United States 15.0 2 14.3 2 India 8.2 3 9.7 3 Russia 3.6 4 3.2 4 Japan 3.4 5 3.0 5 Germany 3.1 6 2.8 6 Brazil 2.4 7 2.3 8 Indonesia 2.4 8 2.6 7 France 2.2 9 2.1 9 United Kingdom 2.2 10 2.0 10 Note: P- Projected, Source: IMF World Economic Outlook- July 2025, Oct Da",
+                "source": "www.tatacapital.com"
+              },
+              {
+                "title": "[PDF] NBFCs in India: Growth and stability",
+                "url": "https://assets.kpmg.com/content/dam/kpmg/in/pdf/2024/02/nbfcs-in-india-growth-and-stability.pdf",
+                "content": "3 00 tittle Table of contents NBFC landscape 4 10 16 19 25 30 33 Evolving business landscape and scope of penetration Role of technology, data and analytics across the value chain Liquidity and fund management Competition faced from the banking industry Evolving regulatory landscape Conclusion \u00a9 2024 KPMG Assurance and Consulting Services LLP, an Indian Limited Liability Partnership and a member firm of the KPMG global organization of independent member firms affiliated with KPMG International L",
+                "source": "assets.kpmg.com"
+              },
+              {
+                "title": "India's NBFCs show resilience, growth in 2024, positive outlook for ...",
+                "url": "https://www.linkedin.com/posts/irfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU",
+                "content": "[Sign in](https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fposts%2Firfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU&fromSignIn=true&trk=public_post_nav-header-signin)[Join now](https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fposts%2Firfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU&trk=public_post_nav-header-joi",
+                "source": "www.linkedin.com"
+              }
+            ],
+            "themes": [
+              "Interest Rate Risk",
+              "GDP Growth"
+            ],
+            "overall_sentiment": "POSITIVE"
+          },
+          "regulatory": {
+            "articles": [
+              {
+                "title": "RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non ...",
+                "url": "https://www.financialexpress.com/business/banking-finance-rbi-imposes-rs-76-6-lakh-penalty-on-4-nbfcs-for-regulatory-non-compliance-3770836/",
+                "content": "# RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non-compliance. FE Google Preferred Button  Follow Us. CPI inflation, inflation, food inflation, vegetable prices, gold prices, RBI, RBI MPC, rate cut, repo rate, GDP growth, core inflation, crop output, heatwave, industrial production. The Reserve Bank of India (RBI) announced on Friday that it has imposed a total penalty of Rs 76.6 lakh on four non-banking financial companies (NBFCs) for failing to comply with certain provisions of i",
+                "source": "www.financialexpress.com"
+              },
+              {
+                "title": "Moneyboxx Finance Forfeits \u20b928.24 Crore as Warrant Holders Fail ...",
+                "url": "https://scanx.trade/stock-market-news/companies/moneyboxx-finance-forfeits-28-24-crore-as-warrant-holders-fail-to-exercise-conversion-rights/34954272",
+                "content": "# Moneyboxx Finance Forfeits \u20b928.24 Crore as Warrant Holders Fail to Exercise Conversion Rights. Moneyboxx Finance Limited forfeited \u20b928,23,86,634 crores from 37,37,745 convertible warrants after all 14 allottees failed to exercise conversion rights by the March 12, 2026 deadline. Moneyboxx Finance  Limited has forfeited \u20b928,23,86,634 crores from warrant holders who failed to exercise their conversion rights within the regulatory deadline. Under the terms of allotment and SEBI ICDR Regulations 2",
+                "source": "scanx.trade"
+              },
+              {
+                "title": "RBI Imposes Rs76.60 Lakh Penalty on 4 NBFCs for Violating P2P ...",
+                "url": "https://www.moneylife.in/article/rbi-imposes-rs7660-lakh-penalty-on-4-nbfcs-for-violating-p2p-lending-regulations/76601.html",
+                "content": "# Bank Mis-selling in India: RBI Draft Mandates a Turning Point? # Video Shows VSR Owner Asleep in Pilot's Seat: Jay Ajit Pawar Demands Arrest,... # IDFC FIRST Bank Hit by \u20b9590 Crore Fraud at Chandigarh Branch \u2014 A Bank... # IDFC First Bank Pays \u20b9645 Crore To Close Chandigarh Fraud Claims \u2014 \u20b955 Crore... # LPG Prices Surge \u20b960 for Households, \u20b9115 for Commercial Users: Iran War... 1-year online access to the magazine articles published during the subscription period. Access is given for all articl",
+                "source": "www.moneylife.in"
+              },
+              {
+                "title": "RBI levies penalties totalling Rs 1.35 crore on three banks and two ...",
+                "url": "https://bfsi.economictimes.indiatimes.com/articles/rbi-imposes-rs-135-crore-penalty-on-banks-and-nbfcs-for-regulation-violations/128308096",
+                "content": "RBI levies penalties totalling Rs 1.35 crore on three banks and two NBFCs. The RBI has levied penalties on five financial entities, including",
+                "source": "bfsi.economictimes.indiatimes.com"
+              }
+            ],
+            "flags": [
+              "RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non ..."
+            ],
+            "has_issues": true
+          },
+          "management": {
+            "articles": [
+              {
+                "title": "Moneyboxx Finance - Iran war impact and business information",
+                "url": "https://trendlyne.com/equity/about/4046/MONEYBOXX/moneyboxx-finance-ltd/",
+                "content": "Moneyboxx Finance company information, history, management and director details and CEO salary. Moneyboxx Finance - Iran war impact and business information. Based on the review of the company's annual reports, quarterly results, and investor presentations, the impact of the Iran-Israel war on **Moneyboxx Finance Ltd.** is analyzed below:. The overall impact of the Iran-Israel conflict on Moneyboxx Finance Ltd. is **neutral**. The company operates as a domestic Non-Banking Financial Company (NBF",
+                "source": "trendlyne.com"
+              },
+              {
+                "title": "Moneyboxx Finance Management - Simply Wall St",
+                "url": "https://simplywall.st/stocks/in/diversified-financials/nse-moneyboxx/moneyboxx-finance-shares/management",
+                "content": "Moneyboxx Finance's CEO is Deepak Aggarwal, appointed in Sep 2020, has a tenure of 5.5 years. | Lalit Sharma | Company Secretary & Compliance Officer | 1.3yrs | \u20b91.53m | no data |. | Uma Paliwal | Independent Chairman of the Board | 7.2yrs | \u20b9950.00k | no data |. | Govind Gupta | Non-Executive Non-Independent Director | 7.4yrs | no data | 0.20%  \u20b9 9.6m |. | Ratna Vishwanathan | Non-Executive Independent Director | 7.2yrs | \u20b91.00m | no data |. | Atul Garg | Non-Executive Non-Independent Director ",
+                "source": "simplywall.st"
+              },
+              {
+                "title": "MONEYBOXX FINANCE LIMITED | ZaubaCorp",
+                "url": "https://www.zaubacorp.com/MONEYBOXX-FINANCE-LIMITED-L30007DL1994PLC260191",
+                "content": "| MONEYBOXX CAPITAL PRIVATE LIMITED | U65999DL2018PTC328819 | Director | 2018-01-19 | Ongoing |. | BARWALA LEASING & FINANCE PRIVATE LIMITED | U74899DL1993PTC056645 | Director | 2005-02-18 | Ongoing |. | RIDHI FINANCE PRIVATE LIMITED | U74899DL1995PTC070479 | Director | - | 2018-05-18 |. | RAINBOW TECHNOSOFT PRIVATE LIMITED | U72200WB2010PTC155683 | Additional Director | 2023-12-23 | Ongoing |. | MONEYBOXX CAPITAL PRIVATE LIMITED | U65999DL2018PTC328819 | Director | 2018-01-19 | Ongoing |. | SAM",
+                "source": "www.zaubacorp.com"
+              }
+            ],
+            "overall_sentiment": "NEUTRAL",
+            "positive": 0,
+            "negative": 0
+          },
+          "overall_signals": {
+            "signals": [
+              {
+                "source": "Legal",
+                "signal": "MEDIUM",
+                "detail": "2 cases found"
+              },
+              {
+                "source": "Legal",
+                "signal": "HIGH",
+                "detail": "2 NCLT/insolvency cases"
+              },
+              {
+                "source": "Market",
+                "signal": "POSITIVE",
+                "detail": "Positive investor sentiment"
+              },
+              {
+                "source": "Macro",
+                "signal": "POSITIVE",
+                "detail": "Favorable macro conditions"
+              },
+              {
+                "source": "Regulatory",
+                "signal": "NEGATIVE",
+                "detail": "1 regulatory flag(s)"
+              }
+            ],
+            "risk_signal_count": 2,
+            "positive_signal_count": 2,
+            "overall_risk": "MEDIUM"
+          }
+        },
+        "triangulation": {
+          "findings": [
+            {
+              "metric": "Revenue Cross-Check",
+              "status": "GAP",
+              "detail": "Missing GST or bank data \u2014 cannot cross-verify revenue",
+              "confidence": 0.0,
+              "sources": []
+            },
+            {
+              "metric": "Leverage + Litigation",
+              "status": "CONTRADICTION",
+              "detail": "High leverage (D/E 2.44) compounded by 2 legal case(s) \u2014 elevated default risk",
+              "confidence": 0.85,
+              "sources": [
+                "Financial Statements",
+                "Legal Database"
+              ]
+            },
+            {
+              "metric": "Market & Macro Alignment",
+              "status": "CONFIRMED",
+              "detail": "Market sentiment and macro conditions are both favorable",
+              "confidence": 0.8,
+              "sources": [
+                "Market News",
+                "Macro Data"
+              ]
+            },
+            {
+              "metric": "Regulatory Compliance",
+              "status": "CONTRADICTION",
+              "detail": "1 regulatory concern(s): RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non ...",
+              "confidence": 0.8,
+              "sources": [
+                "Regulatory Sources"
+              ]
+            }
+          ],
+          "summary": {
+            "confirmed": 1,
+            "contradictions": 2,
+            "warnings": 0,
+            "gaps": 1,
+            "total": 4,
+            "confidence_grade": "MODERATE"
+          }
+        },
+        "recommendation": {
+          "timestamp": "2026-03-14T17:28:26.915046",
+          "decision": "REJECT",
+          "credit_score": 52,
+          "confidence_pct": 80,
+          "gates": [
+            {
+              "gate": 1,
+              "name": "Primary Financial Score",
+              "score": 52,
+              "threshold": 60,
+              "passed": false,
+              "verdict": "FAIL"
+            },
+            {
+              "gate": 2,
+              "name": "Secondary Research Validation",
+              "score": 80,
+              "threshold": 40,
+              "passed": true,
+              "verdict": "PASS"
+            },
+            {
+              "gate": 3,
+              "name": "Triangulation Consistency",
+              "score": 25,
+              "threshold": 40,
+              "passed": true,
+              "verdict": "PASS"
+            }
+          ],
+          "reason_chain": [
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 NCLT/insolvency cases",
+              "source": "Legal"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Regulatory",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "1 regulatory flag(s)",
+              "source": "Regulatory"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Leverage + Litigation",
+              "score": 85,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "High leverage (D/E 2.44) compounded by 2 legal case(s) \u2014 elevated default risk",
+              "source": "Financial Statements, Legal Database"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Regulatory Compliance",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "1 regulatory concern(s): RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non ...",
+              "source": "Regulatory Sources"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Capacity",
+              "score": 50,
+              "weight": 0.3,
+              "impact": "NEUTRAL",
+              "detail": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Character",
+              "score": 51,
+              "weight": 0.2,
+              "impact": "NEUTRAL",
+              "detail": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns | \u26a0\ufe0f Moderate promoter holding (43.7%) | \u2705 No promoter pledge disclosed",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Capital",
+              "score": 65,
+              "weight": 0.2,
+              "impact": "NEUTRAL",
+              "detail": "\u26a0\ufe0f Moderate leverage D/E 2.44 | \u2705 Strong net worth \u20b9260.7 Cr",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Collateral",
+              "score": 60,
+              "weight": 0.2,
+              "impact": "NEUTRAL",
+              "detail": "Total assets \u20b94.0 Cr (detailed collateral data unavailable)",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "2 cases found",
+              "source": "Legal"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Revenue Cross-Check",
+              "score": 0,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "Missing GST or bank data \u2014 cannot cross-verify revenue",
+              "source": "Cross-reference"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Conditions",
+              "score": 72,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabilities are high (50.2% of liabilities)",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Market",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Positive investor sentiment",
+              "source": "Market"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Macro",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Favorable macro conditions",
+              "source": "Macro"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Market & Macro Alignment",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Market sentiment and macro conditions are both favorable",
+              "source": "Market News, Macro Data"
+            }
+          ],
+          "narrative": "This application is **REJECTED** with a credit score of 52/100. Multiple gates have failed with 80% confidence in this assessment.\n\nGate 1 (Primary Financial Score): FAIL (Score 52, threshold 60)\n\nGate 2 (Secondary Research Validation): PASS (Score 80, threshold 40)\n\nGate 3 (Triangulation Consistency): PASS (Score 25, threshold 40)\n\nStrengths: \u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabili; Positive investor sentiment; Favorable macro conditions\n\nRisks: 2 NCLT/insolvency cases; 1 regulatory flag(s); High leverage (D/E 2.44) compounded by 2 legal case(s) \u2014 elevated default risk",
+          "loan_recommendation": {
+            "revenue_limit_cr": 49.73,
+            "cashflow_limit_cr": 0,
+            "collateral_limit_cr": 0.0,
+            "base_limit_cr": 49.73,
+            "risk_adjustment_factor": 0.4,
+            "recommended_limit_cr": 19.89,
+            "requested_limit_cr": 25.0,
+            "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+          },
+          "interest_rate": {
+            "base_rate": 9.5,
+            "risk_premium": null,
+            "final_interest_rate": null,
+            "rate_category": "Rejected",
+            "offered": false
+          },
+          "key_risks": [
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 NCLT/insolvency cases",
+              "source": "Legal"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Regulatory",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "1 regulatory flag(s)",
+              "source": "Regulatory"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Leverage + Litigation",
+              "score": 85,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "High leverage (D/E 2.44) compounded by 2 legal case(s) \u2014 elevated default risk",
+              "source": "Financial Statements, Legal Database"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Regulatory Compliance",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "1 regulatory concern(s): RBI imposes Rs 76.6 lakh penalty on 4 NBFCs for regulatory non ...",
+              "source": "Regulatory Sources"
+            }
+          ],
+          "key_strengths": [
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Conditions",
+              "score": 72,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabilities are high (50.2% of liabilities)",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Market",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Positive investor sentiment",
+              "source": "Market"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Macro",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Favorable macro conditions",
+              "source": "Macro"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Market & Macro Alignment",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Market sentiment and macro conditions are both favorable",
+              "source": "Market News, Macro Data"
+            }
+          ]
+        },
+        "swot": {
+          "strengths": [
+            "Application submitted for review \u2014 standard assessment in progress"
+          ],
+          "weaknesses": [
+            "Credit score of 52/100 is below the approval threshold",
+            "High leverage with D/E ratio of 2.44",
+            "2 legal case(s) found \u2014 litigation exposure"
+          ],
+          "opportunities": [
+            "Favorable macro conditions for the NBFC sector",
+            "Macro theme: Interest Rate Risk could provide tailwinds",
+            "Macro theme: GDP Growth could provide tailwinds",
+            "Positive market sentiment supports business growth outlook",
+            "Continued investment in NBFC sector driven by policy support"
+          ],
+          "threats": [
+            "Regulatory compliance concerns identified",
+            "Global economic uncertainty and interest rate movements"
+          ],
+          "executive_summary": "Moneyboxx Finance Limited in the NBFC sector scores 52/100. The analysis identifies 1 strength(s) and 3 weakness(es), with 5 opportunities and 2 threats in the operating environment."
+        },
+        "scoring": {
+          "model_version": "five-cs-v3.0",
+          "final_credit_score": 52,
+          "max_score": 100,
+          "decision": "REJECT",
+          "risk_grade": "BB",
+          "requested_limit_cr": 25.0,
+          "recommended_limit_cr": 0.0,
+          "approval_percentage": 0,
+          "sub_scores": {
+            "character": {
+              "score": 51,
+              "weight": 0.2
+            },
+            "capacity": {
+              "score": 50,
+              "weight": 0.3
+            },
+            "capital": {
+              "score": 65,
+              "weight": 0.2
+            },
+            "collateral": {
+              "score": 60,
+              "weight": 0.2
+            },
+            "conditions": {
+              "score": 72,
+              "weight": 0.1
+            }
+          },
+          "explanations": {
+            "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns | \u26a0\ufe0f Moderate promoter holding (43.7%) | \u2705 No promoter pledge disclosed",
+            "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+            "capital": "\u26a0\ufe0f Moderate leverage D/E 2.44 | \u2705 Strong net worth \u20b9260.7 Cr",
+            "collateral": "Total assets \u20b94.0 Cr (detailed collateral data unavailable)",
+            "conditions": "\u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabilities are high (50.2% of liabilities)",
+            "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+          },
+          "key_factors": [
+            "Repayment Capacity (DSCR, Cash Flow)",
+            "Capital Structure (D/E, Net Worth)",
+            "Collateral Coverage (LTV)"
+          ]
+        },
+        "financials": {
+          "dscr": 1.0,
+          "current_ratio": 1.0,
+          "gst_vs_bank_variance": 0,
+          "debt_to_equity": 2.44,
+          "revenue_cr": 198.94,
+          "gst_sales_cr": 0,
+          "gst_3b_sales_cr": 0,
+          "bank_inflows_cr": 0,
+          "bank_outflows_cr": 0,
+          "operating_cash_flow_cr": 0,
+          "bounced_cheques": 0,
+          "overdraft_instances": 0,
+          "fixed_assets_cr": 0,
+          "total_assets_cr": 4.0,
+          "net_worth_cr": 260.72,
+          "promoter_holding_pct": 43.7,
+          "public_holding_pct": 56.3,
+          "pledged_holding_pct": 0.0,
+          "top10_borrowings_pct": 55.22,
+          "significant_counterparty_liabilities_pct": 21.08,
+          "short_term_liabilities_pct_total_liabilities": 50.25,
+          "liquidity_management_note": "Extracted using local text fallback"
+        },
+        "loan_recommendation": {
+          "revenue_limit_cr": 49.73,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 49.73,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 19.89,
+          "requested_limit_cr": 25.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        }
+      }
+    },
+    "cam_generation": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "status": "cam_generated",
+        "document_url": "/api/v1/cam/APP-2026-B37C5/download",
+        "scoring": {
+          "model_version": "five-cs-v3.0",
+          "final_credit_score": 52,
+          "max_score": 100,
+          "decision": "REJECT",
+          "risk_grade": "BB",
+          "requested_limit_cr": 25.0,
+          "recommended_limit_cr": 0.0,
+          "approval_percentage": 0,
+          "sub_scores": {
+            "character": {
+              "score": 51,
+              "weight": 0.2
+            },
+            "capacity": {
+              "score": 50,
+              "weight": 0.3
+            },
+            "capital": {
+              "score": 65,
+              "weight": 0.2
+            },
+            "collateral": {
+              "score": 60,
+              "weight": 0.2
+            },
+            "conditions": {
+              "score": 72,
+              "weight": 0.1
+            }
+          },
+          "explanations": {
+            "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns | \u26a0\ufe0f Moderate promoter holding (43.7%) | \u2705 No promoter pledge disclosed",
+            "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+            "capital": "\u26a0\ufe0f Moderate leverage D/E 2.44 | \u2705 Strong net worth \u20b9260.7 Cr",
+            "collateral": "Total assets \u20b94.0 Cr (detailed collateral data unavailable)",
+            "conditions": "\u2705 Stable sector, low macro risk | \u26a0\ufe0f Borrowing concentration elevated (55.2%) | \u274c Short-term liabilities are high (50.2% of liabilities)",
+            "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+          },
+          "key_factors": [
+            "Repayment Capacity (DSCR, Cash Flow)",
+            "Capital Structure (D/E, Net Worth)",
+            "Collateral Coverage (LTV)"
+          ]
+        },
+        "loan_recommendation": {
+          "revenue_limit_cr": 49.73,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 49.73,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 19.89,
+          "requested_limit_cr": 25.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        },
+        "decision_reasons": [
+          {
+            "text": "Adverse news about promoter/management found in web research",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "Borrowing book concentrated in top facilities (55.2%)",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "Elevated short-term liabilities (50.2% of total liabilities)",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "1 litigation case(s) on record",
+            "impact": "NEGATIVE",
+            "weight": 1
+          },
+          {
+            "text": "GST and bank records well-aligned",
+            "impact": "POSITIVE",
+            "weight": 1
+          }
+        ],
+        "executive_summary": "See document for details.",
+        "file_path": "./downloads/cam_reports\\APP-2026-B37C5.docx"
+      }
+    },
+    "application_summary": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-B37C5",
+        "company_name": "Moneyboxx Finance Limited",
+        "mca_cin": "L65999DL1994PLC061485",
+        "sector": "NBFC",
+        "requested_limit_cr": 25.0,
+        "status": "PENDING",
+        "created_at": "2026-03-14 17:05:07",
+        "pipeline": {
+          "ingestion": {
+            "docs_uploaded": 10,
+            "docs_parsed": 10,
+            "status": "completed"
+          },
+          "research": {
+            "count": 5,
+            "types": [
+              "litigation",
+              "promoter",
+              "regulatory",
+              "sector",
+              "news"
+            ],
+            "overall_risk": "HIGH",
+            "status": "completed"
+          },
+          "due_diligence": {
+            "count": 2,
+            "total_adjustment": -6,
+            "status": "completed"
+          },
+          "fraud": {
+            "risk_level": "LOW",
+            "red_flag": false,
+            "status": "completed"
+          },
+          "scoring": {
+            "score": 52,
+            "decision": "REJECT",
+            "status": "completed"
+          },
+          "cam": {
+            "url": "/api/v1/cam/APP-2026-B37C5/download",
+            "status": "completed"
+          },
+          "analysis": {
+            "status": "completed"
+          }
+        }
+      }
+    }
+  },
+  "status": "completed"
+}

@@ -63,6 +63,24 @@ const DOC_CATEGORIES = [
     accept: '.pdf,.xlsx,.xls,.csv,.json',
     color: '#6B5B3E',
   },
+  {
+    key: 'SHAREHOLDING_PATTERN',
+    label: 'Shareholding Pattern',
+    full: 'Shareholding Pattern',
+    desc: 'Promoter/public holding, pledged shares, and governance disclosures.',
+    icon: PieChart,
+    accept: '.pdf,.xlsx,.xls,.csv,.json',
+    color: '#7B5D33',
+  },
+  {
+    key: 'ALM',
+    label: 'Liquidity / ALM',
+    full: 'Liquidity Disclosures (ALM)',
+    desc: 'Borrowing concentration, short-term liabilities, and liquidity risk disclosures.',
+    icon: Landmark,
+    accept: '.pdf,.xlsx,.xls,.csv,.json',
+    color: '#5A6D8A',
+  },
 ];
 
 const DataIngestion = () => {
@@ -702,6 +720,33 @@ const DataIngestion = () => {
           padding: 0 1.1rem 0.75rem 1.1rem;
           margin-top: -0.25rem;
         }
+        .di-doc-quality {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.55rem;
+          margin-bottom: 0.55rem;
+          padding: 0.55rem 0.7rem;
+          border-radius: 8px;
+          border: 1px solid var(--border-light);
+          background: #F7F2E8;
+        }
+        .di-doc-quality-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.15rem 0.5rem;
+          border-radius: 999px;
+          font-family: 'DM Mono', monospace;
+          font-size: 0.58rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          flex-shrink: 0;
+        }
+        .di-doc-quality-copy {
+          font-size: 0.72rem;
+          line-height: 1.45;
+          color: var(--ink);
+        }
         .di-doc-parsed pre {
           font-family: 'DM Mono', monospace;
           font-size: 0.65rem;
@@ -776,7 +821,7 @@ const DataIngestion = () => {
           <div className="di-page-header">
             <div className="di-eyebrow">Pillar 1 — Data Ingestion</div>
             <h1 className="di-h1">Intelligent <em>Document Upload</em></h1>
-            <p className="di-sub">Upload critical financial documents across 5 categories. Files are auto-classified, securely stored, and parsed by our ML pipeline.</p>
+            <p className="di-sub">Upload critical financial documents across all required categories. Files are auto-classified, securely stored, and parsed by our ML pipeline.</p>
           </div>
 
           <div className="di-app-chip">
@@ -924,6 +969,15 @@ const DataIngestion = () => {
                   {cat.docs.map(doc => {
                     const Icon = cat.icon;
                     const sc = statusColor[doc.parse_status] || '#7A6850';
+                    const quality = doc.parsed_data?.document_quality;
+                    const qualityStatus = quality?.status || 'unknown';
+                    const qualityTone = qualityStatus === 'usable'
+                      ? { background: '#EAF4E4', color: '#2F5A22' }
+                      : qualityStatus === 'partial'
+                        ? { background: '#FBF1D9', color: '#8A5A00' }
+                        : qualityStatus === 'non_statement'
+                          ? { background: '#F9E3DE', color: '#8F3A2C' }
+                          : { background: '#ECE7DD', color: '#6E6250' };
                     return (
                       <div key={doc.file_id}>
                         <div className="di-doc-row">

@@ -75,7 +75,14 @@ class AnnualReportParser:
         
         if not self.api_key:
             print("WARNING: GEMINI_API_KEY not set, returning default data")
-            return self._get_default_data()
+            try:
+                doc = fitz.open(pdf_path)
+                all_pages_text = self._extract_all_text(doc)
+                doc.close()
+                condensed_text = self._build_condensed_text(all_pages_text)
+                return self._local_text_fallback(condensed_text, pdf_path)
+            except Exception:
+                return self._get_default_data()
         
         try:
             doc = fitz.open(pdf_path)
@@ -93,17 +100,139 @@ class AnnualReportParser:
             
             if text_len < 100:
                 print("ERROR: Very little text extracted from PDF (scanned/image PDF?)")
-                return self._get_default_data()
+                return self._local_text_fallback(condensed_text, pdf_path)
             
             # Step 3: Call Gemini with text prompt (NOT images)
             print(f"   Sending text to Gemini for structured extraction...")
             extracted_data = self._call_text_llm(condensed_text)
-            
+            if extracted_data.get("company_name") == "Unknown Company":
+                fallback_data = self._local_text_fallback(condensed_text, pdf_path)
+                # Keep LLM output as primary, but fill obvious unknowns from local fallback.
+                for k, v in fallback_data.items():
+                    if k not in extracted_data:
+                        extracted_data[k] = v
+                    elif extracted_data[k] in (None, "", 0, 0.0, "Unknown Company", "Unknown Auditor", "Not Available"):
+                        extracted_data[k] = v
+
+            if (
+                extracted_data.get("key_risks") == ["Document parsing failed"]
+                and (
+                    extracted_data.get("company_name") not in (None, "", "Unknown Company")
+                    or float(extracted_data.get("revenue_cr") or 0.0) > 0
+                    or float(extracted_data.get("net_profit_cr") or 0.0) != 0
+                    or float(extracted_data.get("total_debt_cr") or 0.0) > 0
+                    or float(extracted_data.get("total_equity_cr") or 0.0) > 0
+                )
+            ):
+                extracted_data["key_risks"] = ["LLM parsing unavailable; populated via local text fallback"]
             return extracted_data
             
         except Exception as e:
             print(f"ERROR parsing annual report: {e}")
-            return self._get_default_data()
+            try:
+                return self._local_text_fallback(condensed_text if 'condensed_text' in locals() else "", pdf_path)
+            except Exception:
+                return self._get_default_data()
+
+    def _local_text_fallback(self, condensed_text: str, pdf_path: str) -> Dict[str, Any]:
+        """Deterministic fallback when LLM is unavailable (quota/key/runtime)."""
+        data = self._get_default_data()
+        text = condensed_text or ""
+        text_lower = text.lower()
+
+        # Company name: prefer explicit Limited/LLP entities in early text.
+        company_match = re.search(r"\b([A-Z][A-Za-z&.,'\- ]{3,80}(?:LIMITED|LTD|LLP|PRIVATE LIMITED))\b", text)
+        if not company_match:
+            company_match = re.search(r"\b([A-Za-z][A-Za-z&.,'\- ]{3,80}(?:Capital|Finance|Holdings|Technologies)[A-Za-z&.,'\- ]{0,40}(?:Limited|Ltd|LLP|Private Limited))\b", text, re.IGNORECASE)
+        if company_match:
+            data["company_name"] = company_match.group(1).strip()
+        else:
+            stem = Path(pdf_path).stem.replace("_", " ").strip()
+            if stem and not re.fullmatch(r"[0-9a-fA-F\-]{20,}", stem):
+                data["company_name"] = stem[:80]
+
+        # Financial year extraction.
+        fy_match = re.search(r"FY\s*([0-9]{2,4})\s*[-/]\s*([0-9]{2,4})", text, re.IGNORECASE)
+        if fy_match:
+            y1, y2 = fy_match.group(1), fy_match.group(2)
+            if len(y1) == 2:
+                y1 = "20" + y1
+            if len(y2) == 2:
+                y2 = "20" + y2
+            data["financial_year"] = f"{y1}-{y2[-2:]}"
+        else:
+            year_match = re.search(r"(20[0-9]{2})", text)
+            if year_match:
+                y = int(year_match.group(1))
+                data["financial_year"] = f"{y}-{str(y + 1)[-2:]}"
+
+        # Auditor name and opinion.
+        auditor_match = re.search(r"(?:M/s\.?\s*)?([A-Z][A-Za-z&.,'\- ]{2,70}(?:LLP|&\s*Co\.?|Associates|Chartered Accountants))", text)
+        if auditor_match:
+            data["auditor_name"] = auditor_match.group(1).strip()
+
+        if "qualified opinion" in text_lower:
+            data["auditor_opinion"] = "Qualified"
+        elif "adverse opinion" in text_lower:
+            data["auditor_opinion"] = "Adverse"
+        elif "disclaimer of opinion" in text_lower:
+            data["auditor_opinion"] = "Disclaimer"
+        elif "unmodified opinion" in text_lower or "true and fair" in text_lower:
+            data["auditor_opinion"] = "Unqualified"
+
+        # Basic numeric extraction (expects values already reported in crores in many summaries).
+        def capture_amount(patterns):
+            for p in patterns:
+                m = re.search(p, text, re.IGNORECASE)
+                if not m:
+                    continue
+                raw = m.group(1).replace(",", "")
+                try:
+                    v = float(raw)
+                    return v
+                except Exception:
+                    continue
+            return 0.0
+
+        data["revenue_cr"] = capture_amount([
+            r"revenue(?:\s+from\s+operations)?[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+            r"total\s+income[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+        ])
+        data["net_profit_cr"] = capture_amount([
+            r"profit\s+after\s+tax[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+            r"net\s+profit[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+        ])
+        data["total_equity_cr"] = capture_amount([
+            r"total\s+equity[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+            r"shareholders'?\s+funds[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+            r"net\s+worth[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+        ])
+        data["total_debt_cr"] = capture_amount([
+            r"total\s+borrowings[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+            r"borrowings[^0-9\-]{0,30}([0-9]+(?:\.[0-9]+)?)",
+        ])
+
+        # Quick risk hints.
+        risks = []
+        if "contingent liabilities" in text_lower:
+            risks.append("Contingent liabilities disclosed")
+        if "litigation" in text_lower or "legal proceedings" in text_lower:
+            risks.append("Legal/litigation references found")
+        if risks:
+            data["key_risks"] = risks[:3]
+
+        meaningful = any([
+            data.get("company_name") not in ("", "Unknown Company"),
+            data.get("auditor_name") not in ("", "Unknown Auditor"),
+            data.get("revenue_cr", 0.0) > 0,
+            data.get("net_profit_cr", 0.0) != 0,
+            data.get("total_debt_cr", 0.0) > 0,
+            data.get("total_equity_cr", 0.0) > 0,
+        ])
+        if meaningful and data.get("key_risks") == ["Document parsing failed"]:
+            data["key_risks"] = ["LLM parsing unavailable; populated via local text fallback"]
+
+        return data
     
     def _extract_all_text(self, doc) -> List[Tuple[int, str]]:
         """Extract text from every page. Returns list of (page_num, text)."""

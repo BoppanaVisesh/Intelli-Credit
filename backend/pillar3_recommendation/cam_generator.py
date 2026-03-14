@@ -179,6 +179,10 @@ class CAMGenerator:
             ("Current Ratio", f"{fin.get('current_ratio', '-'):.2f}" if isinstance(fin.get("current_ratio"), (int, float)) else "-"),
             ("Debt-to-Equity", f"{fin.get('debt_to_equity', '-'):.2f}" if isinstance(fin.get("debt_to_equity"), (int, float)) else "-"),
             ("Net Worth", f"₹{fin.get('net_worth_cr', '-')} Cr" if fin.get("net_worth_cr") else "N/A"),
+            ("Promoter Holding", f"{fin.get('promoter_holding_pct', 0):.1f}%" if fin.get("promoter_holding_pct") else "N/A"),
+            ("Promoter Pledge", f"{fin.get('pledged_holding_pct', 0):.1f}%" if fin.get("pledged_holding_pct") or fin.get("promoter_holding_pct") else "N/A"),
+            ("Top 10 Borrowings", f"{fin.get('top10_borrowings_pct', 0):.1f}% of borrowings" if fin.get("top10_borrowings_pct") else "N/A"),
+            ("Short-term Liabilities", f"{fin.get('short_term_liabilities_pct_total_liabilities', 0):.1f}% of liabilities" if fin.get("short_term_liabilities_pct_total_liabilities") else "N/A"),
         ])
 
     # ------------------------------------------------------------------
@@ -262,10 +266,24 @@ class CAMGenerator:
         self._add_heading(doc, "9. Risk Assessment")
         reasons = data.get("decision_reasons", [])
         fraud = data.get("fraud", {})
+        fin = data.get("financials", {})
 
         if fraud:
             doc.add_paragraph(f"Fraud Verification Score: {fraud.get('combined_score', '-')}/100 "
                               f"(Risk: {fraud.get('overall_risk', '-')})")
+
+        if fin.get("pledged_holding_pct", 0):
+            doc.add_paragraph(
+                f"Governance signal: promoter pledge at {fin.get('pledged_holding_pct', 0):.1f}%."
+            )
+        if fin.get("top10_borrowings_pct", 0):
+            doc.add_paragraph(
+                f"Liquidity signal: top 10 borrowings account for {fin.get('top10_borrowings_pct', 0):.1f}% of borrowings."
+            )
+        if fin.get("short_term_liabilities_pct_total_liabilities", 0):
+            doc.add_paragraph(
+                f"Liability structure: short-term liabilities are {fin.get('short_term_liabilities_pct_total_liabilities', 0):.1f}% of total liabilities."
+            )
 
         if reasons:
             doc.add_heading("Key Risk Factors", level=2)

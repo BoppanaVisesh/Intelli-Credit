@@ -53,6 +53,8 @@ def _build_financials(app: Application, normalized: dict) -> dict:
     gst = normalized.get("gst", {})
     bank = normalized.get("bank", {})
     annual = normalized.get("annual_report", {})
+    shareholding = normalized.get("shareholding", {})
+    liquidity = normalized.get("liquidity", {})
 
     gst_sales = gst.get("sales_cr", 0) or 0
     bank_inflows = bank.get("total_inflows_cr", 0) or 0
@@ -63,9 +65,15 @@ def _build_financials(app: Application, normalized: dict) -> dict:
     ar_revenue = annual.get("revenue_cr", 0) or 0
     debt_to_equity = ar_debt / ar_equity if ar_equity > 0 else 1.0
 
+    derived_current_ratio = (
+        (annual.get("current_assets_cr", 0) or 0) / (annual.get("current_liabilities_cr", 0) or 1)
+        if (annual.get("current_assets_cr", 0) or 0) > 0 and (annual.get("current_liabilities_cr", 0) or 0) > 0
+        else 1.0
+    )
+
     return {
         "dscr": app.dscr or 1.0,
-        "current_ratio": app.current_ratio or 1.0,
+        "current_ratio": app.current_ratio or derived_current_ratio,
         "gst_vs_bank_variance": round(gst_variance, 2),
         "debt_to_equity": round(debt_to_equity, 2),
         "revenue_cr": ar_revenue or gst_sales,
@@ -79,6 +87,13 @@ def _build_financials(app: Application, normalized: dict) -> dict:
         "fixed_assets_cr": annual.get("fixed_assets_cr", 0),
         "total_assets_cr": annual.get("total_assets_cr", 0),
         "net_worth_cr": ar_equity,
+        "promoter_holding_pct": shareholding.get("promoter_holding_pct", 0),
+        "public_holding_pct": shareholding.get("public_holding_pct", 0),
+        "pledged_holding_pct": shareholding.get("pledged_holding_pct", 0),
+        "top10_borrowings_pct": liquidity.get("top10_borrowings_pct", 0),
+        "significant_counterparty_liabilities_pct": liquidity.get("significant_counterparty_liabilities_pct", 0),
+        "short_term_liabilities_pct_total_liabilities": liquidity.get("short_term_liabilities_pct_total_liabilities", 0),
+        "liquidity_management_note": liquidity.get("liquidity_management_note", ""),
     }
 
 

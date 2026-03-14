@@ -17,6 +17,9 @@ from pillar1_ingestor.bank_statement_parser import BankStatementParser
 from pillar1_ingestor.gst_parser import GSTParser
 from pillar1_ingestor.itr_parser import ITRParser
 from pillar1_ingestor.annual_report_parser import AnnualReportParser
+from pillar1_ingestor.financial_statement_parser import FinancialStatementParser
+from pillar1_ingestor.shareholding_parser import ShareholdingPatternParser
+from pillar1_ingestor.liquidity_disclosure_parser import LiquidityDisclosureParser
 
 router = APIRouter()
 
@@ -140,6 +143,9 @@ async def parse_documents(
     gst_parser = GSTParser()
     itr_parser = ITRParser(gemini_api_key=settings.GEMINI_API_KEY)
     annual_report_parser = AnnualReportParser(api_key=settings.GEMINI_API_KEY)
+    financial_statement_parser = FinancialStatementParser(gemini_api_key=settings.GEMINI_API_KEY)
+    shareholding_parser = ShareholdingPatternParser(gemini_api_key=settings.GEMINI_API_KEY)
+    liquidity_parser = LiquidityDisclosureParser(gemini_api_key=settings.GEMINI_API_KEY)
     
     parsed_count = 0
     results = []
@@ -169,14 +175,13 @@ async def parse_documents(
                 parsed_data = annual_report_parser.parse_annual_report(str(file_path))
             
             elif doc.document_type == DocumentType.BALANCE_SHEET:
-                # JSON files: load directly; otherwise treat as generic
-                fpath = str(file_path)
-                if fpath.lower().endswith('.json'):
-                    with open(fpath, 'r', encoding='utf-8') as f:
-                        parsed_data = json.load(f)
-                    print(f"✅ Loaded balance sheet from JSON")
-                else:
-                    parsed_data = {"note": "Balance sheet parsed — PDF support via Gemini Vision"}
+                parsed_data = financial_statement_parser.parse(str(file_path))
+
+            elif doc.document_type == DocumentType.SHAREHOLDING_PATTERN:
+                parsed_data = shareholding_parser.parse(str(file_path))
+
+            elif doc.document_type == DocumentType.ALM:
+                parsed_data = liquidity_parser.parse(str(file_path))
 
             else:
                 print(f"⚠️ No parser available for {doc.document_type}")

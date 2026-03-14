@@ -19,7 +19,7 @@ const Dashboard = () => {
       setApplications(data.applications);
       setStats({
         total: data.total,
-        pending: data.applications.filter(a => a.status === 'PENDING' || a.status === 'PROCESSING').length,
+        pending: data.applications.filter(a => (a.status === 'PENDING' || a.status === 'PROCESSING') && !a.final_score && !a.decision).length,
         approved: data.applications.filter(a => a.decision === 'APPROVE').length,
         rejected: data.applications.filter(a => a.decision === 'REJECT').length,
       });

@@ -917,7 +917,6 @@ const DueDiligencePortal = () => {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </>

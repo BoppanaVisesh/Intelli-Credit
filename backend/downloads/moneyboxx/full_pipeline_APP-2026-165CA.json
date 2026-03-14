@@ -1,0 +1,1308 @@
+{
+  "application_id": "APP-2026-165CA",
+  "steps": {
+    "extraction_documents": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "documents": [
+          {
+            "file_id": "06dd502f-b718-4999-8568-6a0336dbe2c4",
+            "filename": "04_Annual Return FY 24-25.pdf",
+            "document_type": "ANNUAL_REPORT",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "ANNUAL_REPORT",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "financial_year": "2025-26",
+              "revenue_cr": 0.0,
+              "operating_profit_cr": null,
+              "pat_cr": null,
+              "total_assets_cr": null,
+              "net_worth_cr": null,
+              "total_debt_cr": 0.0,
+              "cash_from_operations_cr": null,
+              "eps": null,
+              "auditor_opinion": "Not Available",
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions": 0.0
+            },
+            "parsed_data": {
+              "company_name": "Unknown Company",
+              "financial_year": "2025-26",
+              "auditor_name": "Unknown Auditor",
+              "auditor_opinion": "Not Available",
+              "total_debt_cr": 0.0,
+              "total_equity_cr": 0.0,
+              "revenue_cr": 0.0,
+              "net_profit_cr": 0.0,
+              "pending_litigations": [],
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions_cr": 0.0,
+              "management_commentary": "Not available",
+              "key_risks": [
+                "Document parsing failed"
+              ],
+              "expansion_plans": "Not available"
+            },
+            "uploaded_at": "2026-03-14T17:07:43.050883"
+          },
+          {
+            "file_id": "bd0d6db5-551e-486d-871e-7edb50f27808",
+            "filename": "03_VCL Consolidated Financial Statements - FY 24-25.pdf",
+            "document_type": "BANK_STATEMENT",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BANK_STATEMENT",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "account_number": null,
+              "bank_name": null,
+              "period_from": null,
+              "period_to": null,
+              "opening_balance": null,
+              "closing_balance": null,
+              "total_credits": null,
+              "total_debits": null,
+              "avg_monthly_balance": null
+            },
+            "parsed_data": {
+              "total_inflows_cr": 0.0,
+              "total_outflows_cr": 0.0,
+              "average_monthly_balance_cr": 0.0,
+              "number_of_transactions": 0,
+              "bounced_checks": 0,
+              "overdraft_instances": 0,
+              "largest_inflow_cr": 0.0,
+              "largest_outflow_cr": 0.0,
+              "statement_period_months": 12,
+              "cash_flow_pattern": {
+                "inflow_regularity": "Unknown",
+                "payment_discipline": "Unknown",
+                "monthly_variability": 0.0
+              },
+              "counterparty_transactions": []
+            },
+            "uploaded_at": "2026-03-14T17:07:43.031699"
+          },
+          {
+            "file_id": "42b8fe13-36ac-4586-a876-1a121aab1960",
+            "filename": "02_VCL Standalone Financial Statements - FY 24-25.pdf",
+            "document_type": "BANK_STATEMENT",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "BANK_STATEMENT",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "account_number": null,
+              "bank_name": null,
+              "period_from": null,
+              "period_to": null,
+              "opening_balance": null,
+              "closing_balance": null,
+              "total_credits": null,
+              "total_debits": null,
+              "avg_monthly_balance": null
+            },
+            "parsed_data": {
+              "total_inflows_cr": 0.0,
+              "total_outflows_cr": 0.0,
+              "average_monthly_balance_cr": 0.0,
+              "number_of_transactions": 0,
+              "bounced_checks": 0,
+              "overdraft_instances": 0,
+              "largest_inflow_cr": 0.0,
+              "largest_outflow_cr": 0.0,
+              "statement_period_months": 12,
+              "cash_flow_pattern": {
+                "inflow_regularity": "Unknown",
+                "payment_discipline": "Unknown",
+                "monthly_variability": 0.0
+              },
+              "counterparty_transactions": []
+            },
+            "uploaded_at": "2026-03-14T17:07:43.007083"
+          },
+          {
+            "file_id": "8856637c-9fc7-428c-8020-239909c58d02",
+            "filename": "01_Annual Report FY 2024-25.pdf",
+            "document_type": "ANNUAL_REPORT",
+            "classification_confidence": 0.8,
+            "reviewed": "approved",
+            "reviewed_type": null,
+            "effective_type": "ANNUAL_REPORT",
+            "parse_status": "COMPLETED",
+            "extraction_schema_id": null,
+            "extracted_fields": {
+              "financial_year": "2025-26",
+              "revenue_cr": 0.0,
+              "operating_profit_cr": null,
+              "pat_cr": null,
+              "total_assets_cr": null,
+              "net_worth_cr": null,
+              "total_debt_cr": 0.0,
+              "cash_from_operations_cr": null,
+              "eps": null,
+              "auditor_opinion": "Not Available",
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions": 0.0
+            },
+            "parsed_data": {
+              "company_name": "Unknown Company",
+              "financial_year": "2025-26",
+              "auditor_name": "Unknown Auditor",
+              "auditor_opinion": "Not Available",
+              "total_debt_cr": 0.0,
+              "total_equity_cr": 0.0,
+              "revenue_cr": 0.0,
+              "net_profit_cr": 0.0,
+              "pending_litigations": [],
+              "contingent_liabilities_cr": 0.0,
+              "related_party_transactions_cr": 0.0,
+              "management_commentary": "Not available",
+              "key_risks": [
+                "Document parsing failed"
+              ],
+              "expansion_plans": "Not available"
+            },
+            "uploaded_at": "2026-03-14T17:07:42.979709"
+          }
+        ]
+      }
+    },
+    "external_research": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "status": "research_completed",
+        "company_name": "Moneyboxx Finance Limited",
+        "overall_risk": "HIGH",
+        "completed_tasks": 5,
+        "failed_tasks": 0,
+        "results": [
+          {
+            "type": "news",
+            "status": "completed",
+            "risk": "MEDIUM"
+          },
+          {
+            "type": "litigation",
+            "status": "completed",
+            "risk": "HIGH"
+          },
+          {
+            "type": "promoter",
+            "name": "Promoter of Moneyboxx Finance Limited",
+            "status": "completed",
+            "risk": "HIGH"
+          },
+          {
+            "type": "sector",
+            "status": "completed",
+            "risk": "MEDIUM"
+          },
+          {
+            "type": "regulatory",
+            "status": "completed",
+            "risk": "HIGH"
+          }
+        ],
+        "risk_summary": {
+          "HIGH": 3,
+          "MEDIUM": 2,
+          "LOW": 0
+        }
+      }
+    },
+    "due_diligence": {
+      "status_code": 200,
+      "data": {
+        "id": 15,
+        "application_id": "APP-2026-165CA",
+        "status": "analyzed",
+        "insight_type": "site_visit",
+        "ai_analysis": {
+          "summary": "Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing concentration need monitoring. Recommend tighter monthly covenant tracking and len",
+          "risk_category": "Operational",
+          "severity": "MEDIUM",
+          "sentiment": "NEUTRAL",
+          "score_adjustment": -3,
+          "confidence": 0.3,
+          "risk_flags": [],
+          "entities": []
+        }
+      }
+    },
+    "fraud_detection": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "company_name": "Vivriti Capital Limited",
+        "status": "verification_complete",
+        "combined_fraud_score": 0,
+        "overall_risk_level": "LOW",
+        "red_flag_triggered": false,
+        "total_flags": 0,
+        "all_flags": [],
+        "normalized_data_summary": {
+          "sources_available": [
+            "annual_report",
+            "bank",
+            "bank",
+            "annual_report"
+          ],
+          "gst_sales_cr": 0,
+          "bank_inflows_cr": 0.0,
+          "annual_revenue_cr": 0.0
+        },
+        "cross_verification": {
+          "rule_score": 0,
+          "risk_level": "LOW",
+          "anomalies_count": 0,
+          "anomalies": [],
+          "category_scores": {},
+          "summary": "No anomalies detected across 4 data sources. Financial data appears consistent."
+        },
+        "circular_trading": {
+          "combined_score": 0,
+          "risk_level": "LOW",
+          "flags": [],
+          "ratio_analysis": {
+            "circular_trading_risk": "LOW",
+            "risk_score": 0,
+            "gst_vs_bank_variance_percent": 0,
+            "red_flag_triggered": false,
+            "flags": [],
+            "recommendation": "Transaction patterns appear normal. Standard monitoring recommended."
+          },
+          "graph_analysis": {
+            "cycles_detected": [],
+            "cycle_count": 0,
+            "graph_risk_score": 0,
+            "risk_level": "LOW",
+            "entities": 0,
+            "edges": 0,
+            "flags": [],
+            "entity_list": [],
+            "edge_list": [],
+            "reciprocal_pairs": [],
+            "strongly_connected_components": [],
+            "concentration_analysis": {}
+          }
+        },
+        "ml_prediction": {
+          "fraud_probability": 0.0,
+          "prediction": "LEGITIMATE",
+          "ml_risk_level": "LOW",
+          "ml_score": 0.0,
+          "top_features": [
+            {
+              "feature": "gst_bank_ratio",
+              "value": 1.0,
+              "importance": 0.3026
+            },
+            {
+              "feature": "purchase_sales_ratio",
+              "value": 0.5,
+              "importance": 0.2062
+            },
+            {
+              "feature": "outflow_inflow_ratio",
+              "value": 0.75,
+              "importance": 0.1912
+            },
+            {
+              "feature": "cash_retention_pct",
+              "value": 0.25,
+              "importance": 0.1656
+            },
+            {
+              "feature": "monthly_variability",
+              "value": 0.2,
+              "importance": 0.0745
+            }
+          ]
+        },
+        "weight_breakdown": {
+          "rules_weight": "40%",
+          "ml_weight": "35%",
+          "circular_trading_weight": "25%",
+          "rules_contribution": 0.0,
+          "ml_contribution": 0.0,
+          "ct_contribution": 0.0
+        }
+      }
+    },
+    "credit_scoring": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "company_name": "Vivriti Capital Limited",
+        "status": "scoring_complete",
+        "model_version": "five-cs-v3.0",
+        "final_credit_score": 58,
+        "max_score": 100,
+        "decision": "REJECT",
+        "risk_grade": "BBB",
+        "requested_limit_cr": 8.0,
+        "recommended_limit_cr": 0.0,
+        "approval_percentage": 0,
+        "sub_scores": {
+          "character": {
+            "score": 45,
+            "weight": 0.2
+          },
+          "capacity": {
+            "score": 50,
+            "weight": 0.3
+          },
+          "capital": {
+            "score": 95,
+            "weight": 0.2
+          },
+          "collateral": {
+            "score": 50,
+            "weight": 0.2
+          },
+          "conditions": {
+            "score": 95,
+            "weight": 0.1
+          }
+        },
+        "explanations": {
+          "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns",
+          "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+          "capital": "\u2705 Excellent D/E 1.00",
+          "collateral": "Collateral data not available \u2014 assessed on financials only",
+          "conditions": "\u2705 Stable sector, low macro risk",
+          "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+        },
+        "key_factors": [
+          "Capital Structure (D/E, Net Worth)",
+          "Repayment Capacity (DSCR, Cash Flow)",
+          "Collateral Coverage (LTV)"
+        ],
+        "loan_recommendation": {
+          "revenue_limit_cr": 0.0,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 4.0,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 1.6,
+          "requested_limit_cr": 8.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        },
+        "decision_reasons": [
+          {
+            "text": "Conservative leverage (D/E 1.00)",
+            "impact": "POSITIVE",
+            "weight": 2
+          },
+          {
+            "text": "Adverse news about promoter/management found in web research",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "1 litigation case(s) on record",
+            "impact": "NEGATIVE",
+            "weight": 1
+          },
+          {
+            "text": "GST and bank records well-aligned",
+            "impact": "POSITIVE",
+            "weight": 1
+          }
+        ],
+        "narrative": "With a credit score of 58/100 the application is REJECTED due to significant risk factors. Positive factors: Conservative leverage (D/E 1.00); GST and bank records well-aligned. Risk factors: Adverse news about promoter/management found in web research; 1 litigation case(s) on record."
+      }
+    },
+    "pre_cognitive_analysis": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "company_name": "Vivriti Capital Limited",
+        "sector": "NBFC",
+        "status": "analysis_complete",
+        "research_bundle": {
+          "timestamp": "2026-03-14T17:29:13.236441",
+          "company": "Vivriti Capital Limited",
+          "sector": "NBFC",
+          "news": {
+            "articles": [
+              {
+                "title": "Vivriti Capital raises $25 million ADB loan for climate bond",
+                "url": "https://m.economictimes.indiatimes.com/industry/banking/finance/vivriti-capital-raises-25-million-adb-loan-for-climate-bond/articleshow/113818420.cms",
+                "content": "Vivriti Capital Limited has raised $25 million from the Asian Development Bank to support its green finance initiatives, focusing on renewable energy and",
+                "source": "m.economictimes.indiatimes.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Vivriti Capital standalone net profit rises 22.15% in the December ...",
+                "url": "https://www.business-standard.com/markets/capital-market-news/vivriti-capital-standalone-net-profit-rises-22-15-in-the-december-2025-quarter-126030200150_1.html",
+                "content": "Net profit of Vivriti Capital rose 22.15% to Rs 59.56 crore in the quarter ended December 2025 as against Rs 48.76 crore during the previous",
+                "source": "www.business-standard.com",
+                "sentiment": "POSITIVE"
+              },
+              {
+                "title": "Vivriti Capital standalone net profit declines 14.65% in the June ...",
+                "url": "https://www.business-standard.com/markets/capital-market-news/vivriti-capital-standalone-net-profit-declines-14-65-in-the-june-2025-quarter-125081901052_1.html",
+                "content": "Net profit of Vivriti Capital declined 14.65% to Rs 47.09 crore in the quarter ended June 2025 as against Rs 55.17 crore during the previous",
+                "source": "www.business-standard.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Vivriti Group consolidates under new holding entity - Mint",
+                "url": "https://www.livemint.com/companies/news/vivriti-group-vivriti-next-vineet-sukumar-11771936185829.html",
+                "content": "Mumbai: Vivriti Group, led by Vineet Sukumar, announced a new unified operating and holding structure for its lending and private credit",
+                "source": "www.livemint.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Vivriti Group reports 17% y-o-y PAT growth in Q3FY25, AUM rises ...",
+                "url": "https://www.moneycontrol.com/news/business/earnings/vivriti-group-reports-17-y-o-y-pat-growth-in-q3fy25-aum-rises-28-6-12940914.html",
+                "content": "Vivriti Group reports 17% y-o-y PAT growth in Q3FY25, AUM rises 28.6% \u00b7 Revenue for the quarter rose to Rs 351 crore, up from Rs 282 crore in Q3",
+                "source": "www.moneycontrol.com",
+                "sentiment": "POSITIVE"
+              },
+              {
+                "title": "Latest & Breaking News on Vivriti Capital - Moneycontrol.com",
+                "url": "https://www.moneycontrol.com/news/tags/vivriti-capital.html",
+                "content": "Get all latest & breaking news on Vivriti Capital. Watch videos, top stories and articles on Vivriti Capital at moneycontrol.com.",
+                "source": "www.moneycontrol.com",
+                "sentiment": "NEUTRAL"
+              },
+              {
+                "title": "Latest News & Videos, Photos about vivriti capital ipo",
+                "url": "https://economictimes.indiatimes.com/topic/vivriti-capital-ipo",
+                "content": "India's IPO market is set for a strong year, with fundraising expected to surpass last year's $20 billion. Over 170 draft IPO documents have... 26 Feb, 2026,",
+                "source": "economictimes.indiatimes.com",
+                "sentiment": "POSITIVE"
+              },
+              {
+                "title": "Vivriti founder to infuse Rs 200 cr; group to transition to new holding ...",
+                "url": "https://www.moneycontrol.com/news/business/banks/vivriti-founder-to-infuse-rs-200-cr-group-to-transition-to-new-holding-structure-13841678.html",
+                "content": "Vivriti Group to launch Vivriti Next as new holding company \u00b7 Founder Vineet Sukumar to invest Rs 200 crore in Vivriti Next \u00b7 Vivriti Capital,",
+                "source": "www.moneycontrol.com",
+                "sentiment": "NEUTRAL"
+              }
+            ],
+            "positive": 3,
+            "negative": 0,
+            "neutral": 5,
+            "overall_sentiment": "POSITIVE",
+            "risk_alerts": []
+          },
+          "legal": {
+            "cases": [
+              {
+                "title": "M/s. Bell Finvest India Ltd And Ors v. M/s. Vivriti Capital Limited",
+                "url": "https://www.legitquest.com/case/ms-bell-finvest-india-ltd-and-ors-v-ms-vivriti-capital-limited/7A082D",
+                "content": "> 34. Civil court not to have jurisdiction.\u2014No civil court shall have jurisdiction to entertain any suit or proceeding in respect of any matter which a Debts Recovery Tribunal or the Appellate Tribunal is empowered by or under this Act to determine and no injunction shall be granted by any court or other authority in respect of any action taken or to be taken in pursuance of any power conferred by or under this Act or under the Recovery of Debts Due to Banks and Financial Institutions Act, 1993 ",
+                "source": "www.legitquest.com"
+              },
+              {
+                "title": "Vivriti Capital Limited., v. Saurabh Pradhan | Madras High Court | Law",
+                "url": "https://www.casemine.com/judgement/in/6995de4669579d20ddc1b048",
+                "content": "5. In view of the above, this Court appoints Hon'ble Dr.Justice R.N.Manjula, Former Judge, High Court of Madras, Vedhamayur, 32, Kamaraj Nagar, 2ndWest Street, Thiruvanmiyur, Chennai - 600 041 [Mobile No.99407 90290] as the sole Arbitrator and the Hon'ble Sole Arbitrator is requested to adjudicate the arbitral disputes that had arisen between the parties and render arbitral award by holding sittings in the 'Madras High Court Arbitration Centre under the aegis of this Court' (MHCAC) as per Madras",
+                "source": "www.casemine.com"
+              },
+              {
+                "title": "Bell Finvest India Ltd v. Vivriti Capital Limited | Madras High Court",
+                "url": "https://www.casemine.com/judgement/in/65db5e8ad78061191912a66f",
+                "content": "On the appellants' statutory bar argument relying on Section 34 of the SARFAESI Act, the Court analysed the statutory text: Section 34 removes civil court jurisdiction to entertain suits challenging actions a secured creditor may take under the Act, but it does not bar general suits for recovery. Section 37 was read as clarifying that the SARFAESI Act is in addition to and not in derogation of other laws, leaving other modes of recovery available to secured creditors. On that basis, the Court re",
+                "source": "www.casemine.com"
+              },
+              {
+                "title": "VIVRITI CAPITAL LIMITED (Formerly Vivriti Capital v. GENSOL ...",
+                "url": "https://www.casemine.com/judgement/in/68912b81e7821107eb49d045",
+                "content": "2. The applicant is having the benefit of an order of interim injunction in these applications since 24.04.2025. The interim injunction was granted by this Court after this Court found that the applicant has made out a prima  facie case and they also established balance of convenience and irreparable hardship. Since the respondents have been set exparte by this Court and since the applicant has made out prima facie case and they also established\n\n1/2\n\nABDUL QUDDHOSE.J.,",
+                "source": "www.casemine.com"
+              }
+            ],
+            "nclt_cases": [
+              {
+                "title": "2025 \u2013 Page 267 - IBC Laws",
+                "url": "https://ibclaw.in/case-year/2025/page/267/",
+                "content": "IBC Laws. Vivriti Capital Ltd. Vs. Gensol Electric Vehicles Pvt. Ltd. \u2013 NCLT Mumbai Bench. September 10, 2025. Kanak Jani RP of Eagle Electronic (India) Pvt.",
+                "source": "ibclaw.in"
+              },
+              {
+                "title": "[PDF] national company law tribunal - IBBI",
+                "url": "https://ibbi.gov.in/uploads/order/6dd67489d4684ea26b1ea0a18ca146fe.pdf",
+                "content": "The Adjudicating Authority vide order dated 01.05.2024, admitted the Company Petition bearing number CP(IB)1152(MB)/2023 filed by Vivriti Capital Limited (\u201cFinancial Creditor\u201d) for initiation of Corporate Insolvency Resolution Process (CIRP) of the Corporate Debtor and appointed the Respondent as Interim Resolution Professional (IRP) for conducting CIRP of the Corporate Debtor. 7. The present IA dated 20.03.2025 has been filed under Section 60(5) of the Insolvency and Bankruptcy Code, 2016 (the ",
+                "source": "ibbi.gov.in"
+              }
+            ],
+            "case_count": 4,
+            "nclt_count": 2,
+            "risk_level": "MEDIUM",
+            "penalty": -40
+          },
+          "market_sentiment": {
+            "articles": [
+              {
+                "title": "Vivriti Capital Stock Price, Funding, Valuation, Revenue & Financial ...",
+                "url": "https://www.cbinsights.com/company/vivriti-capital/financials",
+                "content": "Vivriti Capital's **latest funding round** was a **Debt for $25M** on **September 30, 2024**. Asian Development Bank invested in Vivriti Capital's  **Debt funding round**. | 4/4/2025 | Debt - II | Aerem | $11.76M | Yes | AU Small Finance Bank, Axis Bank, IDFC Bank, MAS Financial Services, and Northern Arc | 1 |. | Co-Investors | Trifecta Capital Advisors | AU Small Finance Bank, Axis Bank, IDFC Bank, MAS Financial Services, and Northern Arc |  | Subscribe to see more | Subscribe to see more |. V",
+                "source": "www.cbinsights.com"
+              },
+              {
+                "title": "VIVRITI CAPITAL LIMITED - NBFC Retail Bond - GoldenPi",
+                "url": "https://goldenpi.com/bonds/INE01HV07593/vivriti-capital-limited-10-bond-yield?src=preview",
+                "content": "Such Bonds/NCDs carry low credit risk. Stable Outlook suggests that the rating is unlikely to change significantly in the near to medium term, indicating a",
+                "source": "goldenpi.com"
+              },
+              {
+                "title": "Vivriti Capital Limited August 2023 NCD Public Issue Review",
+                "url": "https://www.wintwealth.com/blog/vivriti-capital-limited-august-2023-ncd-public-issue-review/",
+                "content": "* Vivriti Capital Limited August 2023 NCD Public Issue Review. # Vivriti Capital Limited August 2023 NCD Public Issue Review. Vivriti Capital Limited has launched its public issue of NCDs to mobilise funds from the debt market. The company on a standalone basis is primarily engaged in offering lending products to mid-corporates which includes products like term loans, working capital demand loans, co-lending with financial partners, securitisation of receivables, direct assignment of receivables",
+                "source": "www.wintwealth.com"
+              },
+              {
+                "title": "[PDF] Vivriti Capital Limited (Revised) - CareEdge | Ratings",
+                "url": "https://www.careratings.com/upload/CompanyFiles/PR/202505120538_Vivriti_Capital_Limited.pdf",
+                "content": "Rationale and key rating drivers Reaffirmation of ratings assigned to debt instruments and bank facilities of Vivriti Capital Limited (VCL) consider continued increase in scale of operations with assets under management (AUM) increasing from \u20b95,836 crore as on March 31, 2023, to \u20b99,437 crore as on March 31, 2025, and improvement in VCL\u2019s earnings profile. Improving AUM and earnings profile VCL\u2019s AUM increased to \u20b99,437 crore as on March 31, 2025 (March 31, 2024: \u20b98,071 crore), compared to \u20b95,836",
+                "source": "www.careratings.com"
+              },
+              {
+                "title": "Vivriti Capital: Financial services companies",
+                "url": "https://www.vivriticapital.com/",
+                "content": "The Vivriti Group, founded in 2017, is changing the landscape of Mid-market lending lending by empowering unprecedented debt solutions, including easy business",
+                "source": "www.vivriticapital.com"
+              }
+            ],
+            "overall_sentiment": "NEGATIVE",
+            "positive": 0,
+            "negative": 3
+          },
+          "macro_trends": {
+            "articles": [
+              {
+                "title": "[PDF] India NBFC Sector Roundup \u2013 FY25 - Boston Consulting Group",
+                "url": "https://web-assets.bcg.com/b2/80/e347b44a4e78bc2053b68f53099b/nbfc-sector-update-fy25.pdf",
+                "content": "Economic growth: GDP growth for FY25 at 6.4% YoY vs. projected growth rate of 6.2-7%; RBI and other agencies project GDP growth at 6.4-6.5%",
+                "source": "web-assets.bcg.com"
+              },
+              {
+                "title": "NBFC Growth Outlook | Moody's & ICRA Decode India's Credit Trends",
+                "url": "https://www.youtube.com/watch?v=e9iKrSR-6ss",
+                "content": "NBFC Growth Outlook | Moody's & ICRA Decode India's Credit Trends | What's Next for NBFC Sector? Experts from Moody's and ICRA share their",
+                "source": "www.youtube.com"
+              },
+              {
+                "title": "[PDF] Analysis of NBFC Sector in India - Tata Capital",
+                "url": "https://www.tatacapital.com/content/dam/tata-capital/pdf/investors-and-financial-reports/offer-documents/Offer_Documents/Tata%20Capital%20Limited_Industry%20Report.pdf",
+                "content": "Country CY 2024 CY 2029P Gross domestic product based on purchasing-power-parity (PPP) share of world total (%) Ranking Gross domestic product based on purchasing-power-parity (PPP) share of world total (%) Ranking China 19.1 1 19.6 1 United States 15.0 2 14.3 2 India 8.2 3 9.7 3 Russia 3.6 4 3.2 4 Japan 3.4 5 3.0 5 Germany 3.1 6 2.8 6 Brazil 2.4 7 2.3 8 Indonesia 2.4 8 2.6 7 France 2.2 9 2.1 9 United Kingdom 2.2 10 2.0 10 Note: P- Projected, Source: IMF World Economic Outlook- July 2025, Oct Da",
+                "source": "www.tatacapital.com"
+              },
+              {
+                "title": "[PDF] NBFCs in India: Growth and stability",
+                "url": "https://assets.kpmg.com/content/dam/kpmg/in/pdf/2024/02/nbfcs-in-india-growth-and-stability.pdf",
+                "content": "3 00 tittle Table of contents NBFC landscape 4 10 16 19 25 30 33 Evolving business landscape and scope of penetration Role of technology, data and analytics across the value chain Liquidity and fund management Competition faced from the banking industry Evolving regulatory landscape Conclusion \u00a9 2024 KPMG Assurance and Consulting Services LLP, an Indian Limited Liability Partnership and a member firm of the KPMG global organization of independent member firms affiliated with KPMG International L",
+                "source": "assets.kpmg.com"
+              },
+              {
+                "title": "India's NBFCs show resilience, growth in 2024, positive outlook for ...",
+                "url": "https://www.linkedin.com/posts/irfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU",
+                "content": "[Sign in](https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fposts%2Firfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU&fromSignIn=true&trk=public_post_nav-header-signin)[Join now](https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fposts%2Firfan-shaikh-abb45062_new-delhi-india-indias-non-banking-financial-activity-7376933182933233665-q9mU&trk=public_post_nav-header-joi",
+                "source": "www.linkedin.com"
+              }
+            ],
+            "themes": [
+              "Interest Rate Risk",
+              "GDP Growth"
+            ],
+            "overall_sentiment": "POSITIVE"
+          },
+          "regulatory": {
+            "articles": [
+              {
+                "title": "vtvfl tt",
+                "url": "https://www.vivriticapital.com/assets/files/restructuring/bse/Report%20on%20Unpaid%20dues.pdf",
+                "content": "7, 2024, had imposed a monetary penalty of Rs. t,L8O/- against Vivriti Capital Limited. (\"Company'') for alleged non-compliance of. Regulation 52",
+                "source": "www.vivriticapital.com"
+              },
+              {
+                "title": "RBI Imposes Fine on Three NBFCs For Regulatory Violations",
+                "url": "https://knnindia.co.in/news/newsdetails/sectors/rbi-imposes-fine-on-three-nbfcs-for-regulatory-violations",
+                "content": "The penalties, ranging from Rs 7,90,000 to Rs 23,10,000, were levied between September 3 and September 11, 2024, underscoring the central bank's",
+                "source": "knnindia.co.in"
+              },
+              {
+                "title": "[__] INFORMATION MEMORANDUM Vivriti Capital Private ...",
+                "url": "https://assets.indiabonds.com/vendor/3ebce3c2-43de-40c0-904b-0ee0d1fe96e5/imfiles/INE01HV07213-imfile-1632130068.pdf",
+                "content": "This Information Memorandum has been prepared in conformity with the SEBI Debt Listing Regulations as amended from time to time and applicable",
+                "source": "assets.indiabonds.com"
+              },
+              {
+                "title": "RBI imposes monetary penalty on this nbfc",
+                "url": "https://www.psuconnect.in/bank-news/rbi-imposes-monetary-penalty-on-this-nbfc",
+                "content": "**New Delhi:** The Reserve Bank of India (RBI) has imposed a monetary penalty of Rs 2.40 lakh on Valuecorp Securities & Finance Ltd, for non-compliance with certain directions issued by RBI on \u2018Submission of data to Credit Information Companies\u2019, \u2018Transfer of Loan Exposure\u2019 and \u2018Know Your Customer (KYC)\u2019. The penalty has been imposed in exercise of powers conferred on RBI under Section 25(1)(iii) read with Section 23(4) of the Credit Information Companies (Regulation) Act, 2005 and Section 58G(1",
+                "source": "www.psuconnect.in"
+              }
+            ],
+            "flags": [
+              "vtvfl tt",
+              "RBI imposes monetary penalty on this nbfc"
+            ],
+            "has_issues": true
+          },
+          "management": {
+            "articles": [
+              {
+                "title": "Vivriti Capital \"management\" Reviews - Glassdoor",
+                "url": "https://www.glassdoor.co.in/Reviews/Vivriti-Capital-management-Reviews-EI_IE1953835.0,15_KH16,26.htm",
+                "content": "Aidez-nous \u00e0 prot\u00e9ger Glassdoor en v\u00e9rifiant que vous n'\u00eates pas un robot. # Helfen Sie uns, Glassdoor zu sch\u00fctzen. Bitte helfen Sie uns, Glassdoor zu sch\u00fctzen. # Help ons Glassdoor te beschermen. Help ons Glassdoor te beschermen door te verifi\u00ebren dat je een echte persoon bent. Ay\u00fadanos a proteger Glassdoor y demu\u00e9stranos que eres una persona real. Si te pones en contacto, incluye una captura de pantalla o una copia de la informaci\u00f3n del error que aparece abajo. Sentimos las molestias y agradec",
+                "source": "www.glassdoor.co.in"
+              },
+              {
+                "title": "The real ugly truth about Vivriti Capital Limited : r/IndianWorkplace",
+                "url": "https://www.reddit.com/r/IndianWorkplace/comments/1krodqb/the_real_ugly_truth_about_vivriti_capital_limited/",
+                "content": "It\u2019s a company that takes pride in harassing subordinates, pushes people to work late nights and weekends and there\u2019s growth only for the team leads, managers and departmental heads who don\u2019t do any work. Company policies will be bent for different people and you will always be left questioning your capabilities because of them. The sad truth is that the management won\u2019t take responsibility or hold people accountable even if someone were to take a drastic step. They had the audacity to send a de",
+                "source": "www.reddit.com"
+              },
+              {
+                "title": "Board of directors - Vivriti Capital",
+                "url": "https://www.vivriticapital.com/board-of-directors.html",
+                "content": "Ms Kaul has been involved in developing the strategy roadmap for Deutsche Bank India as part of the India Board and was instrumental in defining and executing the Asia Focus strategy for the EMEA business. Ms Kaul had earlier worked with ANZ Grindlays Bank in various leadership roles across Treasury, Corporate Banking, Debt Capital Market and Corporate Finance in India and the UK. An alumnus of IIT Madras and the University of Michigan, and served as a board member for multiple companies such as",
+                "source": "www.vivriticapital.com"
+              }
+            ],
+            "overall_sentiment": "NEUTRAL",
+            "positive": 1,
+            "negative": 1
+          },
+          "overall_signals": {
+            "signals": [
+              {
+                "source": "News",
+                "signal": "POSITIVE",
+                "detail": "3 positive articles"
+              },
+              {
+                "source": "Legal",
+                "signal": "MEDIUM",
+                "detail": "4 cases found"
+              },
+              {
+                "source": "Legal",
+                "signal": "HIGH",
+                "detail": "2 NCLT/insolvency cases"
+              },
+              {
+                "source": "Market",
+                "signal": "NEGATIVE",
+                "detail": "Negative investor sentiment"
+              },
+              {
+                "source": "Macro",
+                "signal": "POSITIVE",
+                "detail": "Favorable macro conditions"
+              },
+              {
+                "source": "Regulatory",
+                "signal": "NEGATIVE",
+                "detail": "2 regulatory flag(s)"
+              }
+            ],
+            "risk_signal_count": 3,
+            "positive_signal_count": 2,
+            "overall_risk": "MEDIUM"
+          }
+        },
+        "triangulation": {
+          "findings": [
+            {
+              "metric": "Revenue Cross-Check",
+              "status": "GAP",
+              "detail": "Missing GST or bank data \u2014 cannot cross-verify revenue",
+              "confidence": 0.0,
+              "sources": []
+            },
+            {
+              "metric": "Litigation Exposure",
+              "status": "WARNING",
+              "detail": "4 legal case(s) found \u2014 leverage is manageable (D/E 1.00)",
+              "confidence": 0.75,
+              "sources": [
+                "Legal Database"
+              ]
+            },
+            {
+              "metric": "Market vs Macro Divergence",
+              "status": "WARNING",
+              "detail": "Market sentiment (NEGATIVE) diverges from macro outlook (POSITIVE)",
+              "confidence": 0.65,
+              "sources": [
+                "Market News",
+                "Macro Data"
+              ]
+            },
+            {
+              "metric": "Regulatory Compliance",
+              "status": "CONTRADICTION",
+              "detail": "2 regulatory concern(s): vtvfl tt; RBI imposes monetary penalty on this nbfc",
+              "confidence": 0.8,
+              "sources": [
+                "Regulatory Sources"
+              ]
+            }
+          ],
+          "summary": {
+            "confirmed": 0,
+            "contradictions": 1,
+            "warnings": 2,
+            "gaps": 1,
+            "total": 4,
+            "confidence_grade": "MODERATE"
+          }
+        },
+        "recommendation": {
+          "timestamp": "2026-03-14T17:29:21.266511",
+          "decision": "REJECT",
+          "credit_score": 58,
+          "confidence_pct": 80,
+          "gates": [
+            {
+              "gate": 1,
+              "name": "Primary Financial Score",
+              "score": 58,
+              "threshold": 60,
+              "passed": false,
+              "verdict": "FAIL"
+            },
+            {
+              "gate": 2,
+              "name": "Secondary Research Validation",
+              "score": 65,
+              "threshold": 40,
+              "passed": true,
+              "verdict": "PASS"
+            },
+            {
+              "gate": 3,
+              "name": "Triangulation Consistency",
+              "score": 30,
+              "threshold": 40,
+              "passed": true,
+              "verdict": "PASS"
+            }
+          ],
+          "reason_chain": [
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Character",
+              "score": 45,
+              "weight": 0.2,
+              "impact": "NEGATIVE",
+              "detail": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 NCLT/insolvency cases",
+              "source": "Legal"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Market",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "Negative investor sentiment",
+              "source": "Market"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Regulatory",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 regulatory flag(s)",
+              "source": "Regulatory"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Regulatory Compliance",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "2 regulatory concern(s): vtvfl tt; RBI imposes monetary penalty on this nbfc",
+              "source": "Regulatory Sources"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Capacity",
+              "score": 50,
+              "weight": 0.3,
+              "impact": "NEUTRAL",
+              "detail": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Collateral",
+              "score": 50,
+              "weight": 0.2,
+              "impact": "NEUTRAL",
+              "detail": "Collateral data not available \u2014 assessed on financials only",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "4 cases found",
+              "source": "Legal"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Revenue Cross-Check",
+              "score": 0,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "Missing GST or bank data \u2014 cannot cross-verify revenue",
+              "source": "Cross-reference"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Litigation Exposure",
+              "score": 75,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "4 legal case(s) found \u2014 leverage is manageable (D/E 1.00)",
+              "source": "Legal Database"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Market vs Macro Divergence",
+              "score": 65,
+              "weight": 0.1,
+              "impact": "NEUTRAL",
+              "detail": "Market sentiment (NEGATIVE) diverges from macro outlook (POSITIVE)",
+              "source": "Market News, Macro Data"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Capital",
+              "score": 95,
+              "weight": 0.2,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Excellent D/E 1.00",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Conditions",
+              "score": 95,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Stable sector, low macro risk",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 News",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "3 positive articles",
+              "source": "News"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Macro",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Favorable macro conditions",
+              "source": "Macro"
+            }
+          ],
+          "narrative": "This application is **REJECTED** with a credit score of 58/100. Multiple gates have failed with 80% confidence in this assessment.\n\nGate 1 (Primary Financial Score): FAIL (Score 58, threshold 60)\n\nGate 2 (Secondary Research Validation): PASS (Score 65, threshold 40)\n\nGate 3 (Triangulation Consistency): PASS (Score 30, threshold 40)\n\nStrengths: \u2705 Excellent D/E 1.00; \u2705 Stable sector, low macro risk; 3 positive articles\n\nRisks: \u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction pa; 2 NCLT/insolvency cases; Negative investor sentiment",
+          "loan_recommendation": {
+            "revenue_limit_cr": 0.0,
+            "cashflow_limit_cr": 0,
+            "collateral_limit_cr": 0.0,
+            "base_limit_cr": 4.0,
+            "risk_adjustment_factor": 0.4,
+            "recommended_limit_cr": 1.6,
+            "requested_limit_cr": 8.0,
+            "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+          },
+          "interest_rate": {
+            "base_rate": 9.5,
+            "risk_premium": null,
+            "final_interest_rate": null,
+            "rate_category": "Rejected",
+            "offered": false
+          },
+          "key_risks": [
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Character",
+              "score": 45,
+              "weight": 0.2,
+              "impact": "NEGATIVE",
+              "detail": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Legal",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 NCLT/insolvency cases",
+              "source": "Legal"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Market",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "Negative investor sentiment",
+              "source": "Market"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Regulatory",
+              "score": null,
+              "weight": 0.15,
+              "impact": "NEGATIVE",
+              "detail": "2 regulatory flag(s)",
+              "source": "Regulatory"
+            },
+            {
+              "gate": 3,
+              "factor": "Triangulation \u2014 Regulatory Compliance",
+              "score": 80,
+              "weight": 0.1,
+              "impact": "NEGATIVE",
+              "detail": "2 regulatory concern(s): vtvfl tt; RBI imposes monetary penalty on this nbfc",
+              "source": "Regulatory Sources"
+            }
+          ],
+          "key_strengths": [
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Capital",
+              "score": 95,
+              "weight": 0.2,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Excellent D/E 1.00",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 1,
+              "factor": "Five Cs \u2014 Conditions",
+              "score": 95,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "\u2705 Stable sector, low macro risk",
+              "source": "Financial Analysis"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 News",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "3 positive articles",
+              "source": "News"
+            },
+            {
+              "gate": 2,
+              "factor": "Secondary \u2014 Macro",
+              "score": null,
+              "weight": 0.1,
+              "impact": "POSITIVE",
+              "detail": "Favorable macro conditions",
+              "source": "Macro"
+            }
+          ]
+        },
+        "swot": {
+          "strengths": [
+            "High capital score (95/100) \u2014 above-average performance",
+            "High conditions score (95/100) \u2014 above-average performance",
+            "Conservative leverage with D/E ratio of 1.00"
+          ],
+          "weaknesses": [
+            "Credit score of 58/100 is below the approval threshold",
+            "Low character score (45/100) needs attention",
+            "4 legal case(s) found \u2014 litigation exposure"
+          ],
+          "opportunities": [
+            "Favorable macro conditions for the NBFC sector",
+            "Macro theme: Interest Rate Risk could provide tailwinds",
+            "Macro theme: GDP Growth could provide tailwinds",
+            "Continued investment in NBFC sector driven by policy support"
+          ],
+          "threats": [
+            "Regulatory compliance concerns identified",
+            "Negative market sentiment may affect valuation and access to capital",
+            "Global economic uncertainty and interest rate movements"
+          ],
+          "executive_summary": "Vivriti Capital Limited in the NBFC sector scores 58/100. The analysis identifies 3 strength(s) and 3 weakness(es), with 4 opportunities and 3 threats in the operating environment."
+        },
+        "scoring": {
+          "model_version": "five-cs-v3.0",
+          "final_credit_score": 58,
+          "max_score": 100,
+          "decision": "REJECT",
+          "risk_grade": "BBB",
+          "requested_limit_cr": 8.0,
+          "recommended_limit_cr": 0.0,
+          "approval_percentage": 0,
+          "sub_scores": {
+            "character": {
+              "score": 45,
+              "weight": 0.2
+            },
+            "capacity": {
+              "score": 50,
+              "weight": 0.3
+            },
+            "capital": {
+              "score": 95,
+              "weight": 0.2
+            },
+            "collateral": {
+              "score": 50,
+              "weight": 0.2
+            },
+            "conditions": {
+              "score": 95,
+              "weight": 0.1
+            }
+          },
+          "explanations": {
+            "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns",
+            "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+            "capital": "\u2705 Excellent D/E 1.00",
+            "collateral": "Collateral data not available \u2014 assessed on financials only",
+            "conditions": "\u2705 Stable sector, low macro risk",
+            "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+          },
+          "key_factors": [
+            "Capital Structure (D/E, Net Worth)",
+            "Repayment Capacity (DSCR, Cash Flow)",
+            "Collateral Coverage (LTV)"
+          ]
+        },
+        "financials": {
+          "dscr": 1.0,
+          "current_ratio": 1.0,
+          "gst_vs_bank_variance": 0,
+          "debt_to_equity": 1.0,
+          "revenue_cr": 0,
+          "gst_sales_cr": 0,
+          "gst_3b_sales_cr": 0,
+          "bank_inflows_cr": 0,
+          "bank_outflows_cr": 0,
+          "operating_cash_flow_cr": 0,
+          "bounced_cheques": 0,
+          "overdraft_instances": 0,
+          "fixed_assets_cr": 0,
+          "total_assets_cr": 0.0,
+          "net_worth_cr": 0,
+          "promoter_holding_pct": 0,
+          "public_holding_pct": 0,
+          "pledged_holding_pct": 0,
+          "top10_borrowings_pct": 0,
+          "significant_counterparty_liabilities_pct": 0,
+          "short_term_liabilities_pct_total_liabilities": 0,
+          "liquidity_management_note": ""
+        },
+        "loan_recommendation": {
+          "revenue_limit_cr": 0.0,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 4.0,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 1.6,
+          "requested_limit_cr": 8.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        }
+      }
+    },
+    "cam_generation": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "status": "cam_generated",
+        "document_url": "/api/v1/cam/APP-2026-165CA/download",
+        "scoring": {
+          "model_version": "five-cs-v3.0",
+          "final_credit_score": 58,
+          "max_score": 100,
+          "decision": "REJECT",
+          "risk_grade": "BBB",
+          "requested_limit_cr": 8.0,
+          "recommended_limit_cr": 0.0,
+          "approval_percentage": 0,
+          "sub_scores": {
+            "character": {
+              "score": 45,
+              "weight": 0.2
+            },
+            "capacity": {
+              "score": 50,
+              "weight": 0.3
+            },
+            "capital": {
+              "score": 95,
+              "weight": 0.2
+            },
+            "collateral": {
+              "score": 50,
+              "weight": 0.2
+            },
+            "conditions": {
+              "score": 95,
+              "weight": 0.1
+            }
+          },
+          "explanations": {
+            "character": "\u26a0\ufe0f 1 litigation case(s) found | \u274c Adverse promoter/management news detected | \u2705 Clean transaction patterns",
+            "capacity": "\u26a0\ufe0f Low DSCR 1.00 | \u2705 GST-Bank aligned (0.0%)",
+            "capital": "\u2705 Excellent D/E 1.00",
+            "collateral": "Collateral data not available \u2014 assessed on financials only",
+            "conditions": "\u2705 Stable sector, low macro risk",
+            "due_diligence": "\u26a0\ufe0f MEDIUM finding: Visited core operations and reviewed controls. Management bandwidth is strong, but liquidity discipline and borrowing co"
+          },
+          "key_factors": [
+            "Capital Structure (D/E, Net Worth)",
+            "Repayment Capacity (DSCR, Cash Flow)",
+            "Collateral Coverage (LTV)"
+          ]
+        },
+        "loan_recommendation": {
+          "revenue_limit_cr": 0.0,
+          "cashflow_limit_cr": 0,
+          "collateral_limit_cr": 0.0,
+          "base_limit_cr": 4.0,
+          "risk_adjustment_factor": 0.4,
+          "recommended_limit_cr": 1.6,
+          "requested_limit_cr": 8.0,
+          "methodology": "min(Revenue\u00d70.25, CashFlow\u00d74, Collateral\u00d70.7) \u00d7 risk_adj"
+        },
+        "interest_rate": {
+          "base_rate": 9.5,
+          "risk_premium": null,
+          "final_interest_rate": null,
+          "rate_category": "Rejected",
+          "offered": false
+        },
+        "decision_reasons": [
+          {
+            "text": "Conservative leverage (D/E 1.00)",
+            "impact": "POSITIVE",
+            "weight": 2
+          },
+          {
+            "text": "Adverse news about promoter/management found in web research",
+            "impact": "NEGATIVE",
+            "weight": 2
+          },
+          {
+            "text": "1 litigation case(s) on record",
+            "impact": "NEGATIVE",
+            "weight": 1
+          },
+          {
+            "text": "GST and bank records well-aligned",
+            "impact": "POSITIVE",
+            "weight": 1
+          }
+        ],
+        "executive_summary": "See document for details.",
+        "file_path": "./downloads/cam_reports\\APP-2026-165CA.docx"
+      }
+    },
+    "application_summary": {
+      "status_code": 200,
+      "data": {
+        "application_id": "APP-2026-165CA",
+        "company_name": "Vivriti Capital Limited",
+        "mca_cin": "U67190TN2007PLC065149",
+        "sector": "NBFC",
+        "requested_limit_cr": 8.0,
+        "status": "PENDING",
+        "created_at": "2026-03-14 17:07:40",
+        "pipeline": {
+          "ingestion": {
+            "docs_uploaded": 4,
+            "docs_parsed": 4,
+            "status": "completed"
+          },
+          "research": {
+            "count": 5,
+            "types": [
+              "litigation",
+              "promoter",
+              "regulatory",
+              "sector",
+              "news"
+            ],
+            "overall_risk": "HIGH",
+            "status": "completed"
+          },
+          "due_diligence": {
+            "count": 2,
+            "total_adjustment": -6,
+            "status": "completed"
+          },
+          "fraud": {
+            "risk_level": "LOW",
+            "red_flag": false,
+            "status": "completed"
+          },
+          "scoring": {
+            "score": 58,
+            "decision": "REJECT",
+            "status": "completed"
+          },
+          "cam": {
+            "url": "/api/v1/cam/APP-2026-165CA/download",
+            "status": "completed"
+          },
+          "analysis": {
+            "status": "completed"
+          }
+        }
+      }
+    }
+  },
+  "status": "completed"
+}
