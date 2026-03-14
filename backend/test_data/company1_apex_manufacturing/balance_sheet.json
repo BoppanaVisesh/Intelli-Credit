@@ -1,0 +1,53 @@
+{
+  "company_name": "Apex Manufacturing Pvt Ltd",
+  "financial_year": "2025-26",
+  "as_of_date": "2026-03-31",
+  "assets": {
+    "non_current_assets": {
+      "property_plant_equipment_cr": 28.0,
+      "intangible_assets_cr": 2.0,
+      "capital_wip_cr": 3.0,
+      "long_term_investments_cr": 5.0,
+      "deferred_tax_asset_cr": 1.5,
+      "total_non_current_cr": 39.5
+    },
+    "current_assets": {
+      "inventories_cr": 8.0,
+      "trade_receivables_cr": 7.5,
+      "cash_and_equivalents_cr": 3.0,
+      "short_term_loans_cr": 2.0,
+      "other_current_assets_cr": 1.5,
+      "total_current_cr": 22.0
+    },
+    "total_assets_cr": 61.5
+  },
+  "liabilities": {
+    "shareholders_equity": {
+      "share_capital_cr": 10.0,
+      "reserves_surplus_cr": 15.0,
+      "total_equity_cr": 25.0
+    },
+    "non_current_liabilities": {
+      "long_term_borrowings_cr": 8.0,
+      "deferred_tax_liability_cr": 1.0,
+      "long_term_provisions_cr": 1.0,
+      "total_non_current_cr": 10.0
+    },
+    "current_liabilities": {
+      "short_term_borrowings_cr": 2.0,
+      "trade_payables_cr": 6.5,
+      "other_current_liabilities_cr": 2.0,
+      "short_term_provisions_cr": 1.5,
+      "total_current_cr": 12.0
+    },
+    "total_liabilities_cr": 47.0
+  },
+  "total_equity_and_liabilities_cr": 61.5,
+  "key_ratios": {
+    "current_ratio": 1.83,
+    "debt_to_equity": 0.4,
+    "return_on_equity_pct": 20.8,
+    "return_on_assets_pct": 8.5,
+    "working_capital_cr": 10.0
+  }
+}

@@ -1,11 +1,12 @@
 """
-Seed Pipeline Runner — Processes the 3 demo applications through the full pipeline.
+Seed Pipeline Runner — Processes demo applications through the full pipeline.
 Runs as a background thread after server startup so demo apps show real results.
 """
 import requests
 import time
 import threading
 import os
+from pathlib import Path
 
 from core.database import SessionLocal
 from models.application import Application, ApplicationStatus
@@ -42,6 +43,118 @@ DEMO_PIPELINES = [
         "promoters": "Anand Rao, Priya Rao",
         "dd_notes": "Retail stores appear under-stocked. Most transactions seem to be inter-company. Customer footfall very low for claimed revenue. Related party transactions dominate the books.",
     },
+    {
+        "app_id": "DEMO-KINARA-004",
+        "pdf_path": os.path.join(os.path.dirname(__file__), "downloads", "kinara_capital", "fy24-annual-report-kinara-capital.pdf"),
+        "pdf_filename": "fy24-annual-report-kinara-capital.pdf",
+        "document_type": "ANNUAL_REPORT",
+        "company_name": "Kinara Capital Private Limited",
+        "sector": "NBFC",
+        "cin": "U65923KA1996PTC020518",
+        "promoters": "Hardika Shah, Kalpana Sankar",
+        "dd_notes": "Annual report indicates strong growth and improving profitability. Monitor debt mix and contingent liabilities as portfolio scales.",
+    },
+    {
+        "app_id": "DEMO-TATA-005",
+        "pdf_path": os.path.join(os.path.dirname(__file__), "downloads", "tata_capital", "tata-capital-limited.pdf"),
+        "pdf_filename": "tata-capital-limited.pdf",
+        "document_type": "ANNUAL_REPORT",
+        "company_name": "Tata Capital Limited",
+        "sector": "NBFC",
+        "cin": "U65990MH1991PLC060670",
+        "promoters": "Tata Sons Private Limited",
+        "dd_notes": "Large diversified lender with strong operating scale; underwriting should monitor leverage and asset quality through cycle.",
+    },
+    {
+        "app_id": "DEMO-MONEYBOXX-006",
+        "seed_files": [
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "annual_report_primary_001_1756892129.pdf"),
+                "filename": "annual_report_primary_001_1756892129.pdf",
+                "document_type": "ANNUAL_REPORT",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_002_1770898482.pdf"),
+                "filename": "balance_sheet_financial_results_002_1770898482.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_003_1761828852.pdf"),
+                "filename": "balance_sheet_financial_results_003_1761828852.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_004_1753539558.pdf"),
+                "filename": "balance_sheet_financial_results_004_1753539558.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_005_1748436574.pdf"),
+                "filename": "balance_sheet_financial_results_005_1748436574.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_006_1739353411.pdf"),
+                "filename": "balance_sheet_financial_results_006_1739353411.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "balance_sheet_financial_results_007_1739352866.pdf"),
+                "filename": "balance_sheet_financial_results_007_1739352866.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "alm_liquidity_disclosure_008_1762339316.pdf"),
+                "filename": "alm_liquidity_disclosure_008_1762339316.pdf",
+                "document_type": "ALM",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "alm_liquidity_disclosure_009_1754051517.pdf"),
+                "filename": "alm_liquidity_disclosure_009_1754051517.pdf",
+                "document_type": "ALM",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "moneyboxx", "shareholding_pattern_010_1769083116.pdf"),
+                "filename": "shareholding_pattern_010_1769083116.pdf",
+                "document_type": "SHAREHOLDING_PATTERN",
+            },
+        ],
+        "company_name": "Moneyboxx Finance Limited",
+        "sector": "NBFC",
+        "cin": "L65999DL1994PLC061485",
+        "promoters": "Dilip Singh, Deepak Aggarwal",
+        "dd_notes": "Well-diversified MSME lender with multiple public disclosures; underwriting should monitor leverage, collections efficiency, and liquidity buffers.",
+    },
+    {
+        "app_id": "DEMO-VIVRITI-007",
+        "seed_files": [
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "vivriti", "01_Annual Report FY 2024-25.pdf"),
+                "filename": "01_Annual Report FY 2024-25.pdf",
+                "document_type": "ANNUAL_REPORT",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "vivriti", "02_VCL Standalone Financial Statements - FY 24-25.pdf"),
+                "filename": "02_VCL Standalone Financial Statements - FY 24-25.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "vivriti", "03_VCL Consolidated Financial Statements - FY 24-25.pdf"),
+                "filename": "03_VCL Consolidated Financial Statements - FY 24-25.pdf",
+                "document_type": "BALANCE_SHEET",
+            },
+            {
+                "path": os.path.join(os.path.dirname(__file__), "downloads", "vivriti", "04_Annual Return FY 24-25.pdf"),
+                "filename": "04_Annual Return FY 24-25.pdf",
+                "document_type": "ANNUAL_REPORT",
+            },
+        ],
+        "company_name": "Vivriti Capital Limited",
+        "sector": "NBFC",
+        "cin": "U67190TN2007PLC065149",
+        "promoters": "Gaurav Kumar, R Sridhar",
+        "dd_notes": "Credit profile should consider liability franchise, asset quality, and risk management in structured credit operations.",
+    },
 ]
 
 
@@ -75,33 +188,83 @@ def _already_processed(app_id):
 def _process_demo_app(cfg):
     """Run the full pipeline on one demo application."""
     app_id = cfg["app_id"]
-    data_dir = cfg["data_dir"]
     label = cfg["company_name"]
 
-    # 1. Upload 5 documents
-    files_to_upload = []
-    file_handles = []
-    for fname, ctype in [
-        ("annual_report.json", "application/json"),
-        ("bank_statement.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-        ("gst_returns.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-        ("itr_returns.json", "application/json"),
-        ("balance_sheet.json", "application/json"),
-    ]:
-        fpath = os.path.join(data_dir, fname)
-        if os.path.exists(fpath):
-            fh = open(fpath, "rb")
+    # 1. Upload documents (only if app has no documents yet)
+    existing_docs_count = 0
+    r_docs = requests.get(f"{API}/ingestion/documents/{app_id}")
+    if r_docs.status_code == 200:
+        existing_docs_count = r_docs.json().get("total_documents", 0)
+
+    if existing_docs_count > 0:
+        r = None
+    else:
+        files_to_upload = []
+        file_handles = []
+
+        if "data_dir" in cfg:
+            data_dir = cfg["data_dir"]
+            for fname, ctype in [
+                ("annual_report.json", "application/json"),
+                ("bank_statement.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                ("gst_returns.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                ("itr_returns.json", "application/json"),
+                ("balance_sheet.json", "application/json"),
+            ]:
+                fpath = os.path.join(data_dir, fname)
+                if os.path.exists(fpath):
+                    fh = open(fpath, "rb")
+                    file_handles.append(fh)
+                    files_to_upload.append(("files", (fname, fh, ctype)))
+            upload_data = {"application_id": app_id}
+        elif "seed_files" in cfg:
+            for seed_file in cfg["seed_files"]:
+                seed_path = Path(seed_file["path"])
+                if not seed_path.exists():
+                    print(f"      ✗ Missing seed PDF for {label}: {seed_path}")
+                    return False
+                fh = open(seed_path, "rb")
+                file_handles.append(fh)
+                files_to_upload.append((fh, seed_file))
+
+            for fh, seed_file in files_to_upload:
+                r = requests.post(
+                    f"{API}/ingestion/upload-documents",
+                    data={
+                        "application_id": app_id,
+                        "document_type": seed_file["document_type"],
+                    },
+                    files=[("files", (seed_file.get("filename", Path(seed_file["path"]).name), fh, "application/pdf"))],
+                )
+                if r.status_code != 200:
+                    print(f"      ✗ Upload failed for {label}: {r.status_code}")
+                    for open_fh in file_handles:
+                        open_fh.close()
+                    return False
+            for fh in file_handles:
+                fh.close()
+            r = None
+        else:
+            pdf_path = Path(cfg["pdf_path"])
+            if not pdf_path.exists():
+                print(f"      ✗ Missing seed PDF for {label}: {pdf_path}")
+                return False
+            fh = open(pdf_path, "rb")
             file_handles.append(fh)
-            files_to_upload.append(("files", (fname, fh, ctype)))
+            files_to_upload.append(("files", (cfg.get("pdf_filename", pdf_path.name), fh, "application/pdf")))
+            upload_data = {
+                "application_id": app_id,
+                "document_type": cfg.get("document_type", "ANNUAL_REPORT"),
+            }
 
-    r = requests.post(f"{API}/ingestion/upload-documents",
-                      data={"application_id": app_id}, files=files_to_upload)
-    for fh in file_handles:
-        fh.close()
+        if files_to_upload:
+            r = requests.post(f"{API}/ingestion/upload-documents", data=upload_data, files=files_to_upload)
+            for fh in file_handles:
+                fh.close()
 
-    if r.status_code != 200:
-        print(f"      ✗ Upload failed for {label}: {r.status_code}")
-        return False
+            if r.status_code != 200:
+                print(f"      ✗ Upload failed for {label}: {r.status_code}")
+                return False
 
     # 2. Parse documents
     r = requests.post(f"{API}/ingestion/parse-documents/{app_id}")

@@ -5,6 +5,7 @@ Automatically classifies uploaded documents by type using filename patterns and 
 
 import os
 import io
+import re
 from typing import Tuple
 import google.generativeai as genai
 from PIL import Image
@@ -64,14 +65,68 @@ class DocumentClassifier:
                     print(f"📄 Classified by filename: {doc_type} (confidence: 0.80)")
                     return doc_type, 0.80
         
-        # If filename doesn't match, try content-based classification for PDFs
+        # If filename doesn't match, try PDF text heuristics before model-based classification.
         is_pdf = file_path.lower().endswith('.pdf') or filename.lower().endswith('.pdf')
+        if is_pdf:
+            heuristic_type, heuristic_conf = self._classify_by_text_heuristic(file_path)
+            if heuristic_type != "OTHER":
+                print(f"📄 Classified by text heuristic: {heuristic_type} (confidence: {heuristic_conf:.2f})")
+                return heuristic_type, heuristic_conf
+
         if is_pdf and self.api_key:
             return self._classify_by_content(file_path)
         
         # Default to OTHER
         print(f"📄 Could not classify: {filename} -> OTHER")
         return "OTHER", 0.30
+
+    def _classify_by_text_heuristic(self, pdf_path: str) -> Tuple[str, float]:
+        """Classify PDF using lightweight text cues when API key is unavailable."""
+        try:
+            doc = fitz.open(pdf_path)
+            sample_pages = min(len(doc), 8)
+            text_parts = []
+            for i in range(sample_pages):
+                text_parts.append(doc[i].get_text() or "")
+            doc.close()
+
+            text = "\n".join(text_parts).lower()
+            text = re.sub(r"\s+", " ", text)
+
+            annual_cues = [
+                "annual report",
+                "board's report",
+                "directors' report",
+                "independent auditor",
+                "statement of financial position",
+                "statement of profit and loss",
+                "notes to financial statements",
+            ]
+            financial_cues = [
+                "balance sheet",
+                "financial results",
+                "quarter ended",
+                "statement of unaudited",
+            ]
+            bank_cues = ["bank statement", "account number", "opening balance", "closing balance"]
+            gst_cues = ["gstr", "goods and services tax", "gstin"]
+            itr_cues = ["income tax return", "acknowledgement number", "itr-"]
+
+            if any(c in text for c in annual_cues):
+                return "ANNUAL_REPORT", 0.75
+            if any(c in text for c in financial_cues):
+                return "BALANCE_SHEET", 0.70
+            if any(c in text for c in bank_cues):
+                return "BANK_STATEMENT", 0.70
+            if any(c in text for c in gst_cues):
+                return "GST_RETURN", 0.70
+            if any(c in text for c in itr_cues):
+                return "ITR", 0.70
+
+            return "OTHER", 0.30
+        except Exception as e:
+            print(f"⚠️ Text heuristic classification failed: {str(e)}")
+            return "OTHER", 0.30
     
     def _classify_by_content(self, pdf_path: str) -> Tuple[str, float]:
         """Use Gemini Vision to classify by content"""

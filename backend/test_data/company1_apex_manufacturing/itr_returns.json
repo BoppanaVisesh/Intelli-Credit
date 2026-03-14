@@ -1,0 +1,34 @@
+{
+  "pan": "AABCA1234Z",
+  "company_name": "Apex Manufacturing Pvt Ltd",
+  "assessment_year": "2025-26",
+  "filing_date": "2025-09-15",
+  "itr_form": "ITR-6",
+  "gross_total_income": 52000000,
+  "total_deductions": 5000000,
+  "taxable_income": 47000000,
+  "total_tax_liability": 14100000,
+  "total_tax_paid": 14100000,
+  "tds_deducted": 9500000,
+  "advance_tax_paid": 4600000,
+  "refund_due": 0,
+  "income_sources": [
+    {
+      "type": "Business Income",
+      "amount": 48000000
+    },
+    {
+      "type": "Capital Gains",
+      "amount": 2000000
+    },
+    {
+      "type": "Other Sources (Interest)",
+      "amount": 2000000
+    }
+  ],
+  "turnover_reported": 450000000,
+  "depreciation_claimed": 8000000,
+  "brought_forward_losses": 0,
+  "audit_status": "Tax audit completed u/s 44AB",
+  "previous_year_income": 42000000
+}

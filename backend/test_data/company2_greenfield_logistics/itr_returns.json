@@ -1,0 +1,32 @@
+{
+  "pan": "AADCG2345H",
+  "company_name": "GreenField Logistics Ltd",
+  "assessment_year": "2025-26",
+  "filing_date": "2025-11-28",
+  "itr_form": "ITR-6",
+  "gross_total_income": 20000000,
+  "total_deductions": 3000000,
+  "taxable_income": 17000000,
+  "total_tax_liability": 5100000,
+  "total_tax_paid": 3200000,
+  "tds_deducted": 2800000,
+  "advance_tax_paid": 400000,
+  "refund_due": 0,
+  "self_assessment_tax_due": 1900000,
+  "income_sources": [
+    {
+      "type": "Business Income",
+      "amount": 18000000
+    },
+    {
+      "type": "Other Sources (Interest)",
+      "amount": 2000000
+    }
+  ],
+  "turnover_reported": 600000000,
+  "depreciation_claimed": 12000000,
+  "brought_forward_losses": 5000000,
+  "audit_status": "Tax audit completed u/s 44AB — qualifications noted",
+  "previous_year_income": 15000000,
+  "notes": "Turnover in ITR (60 Cr) far exceeds bank inflows (20 Cr). Advance tax shortfall. Late filing."
+}

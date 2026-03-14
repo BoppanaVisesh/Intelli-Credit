@@ -140,12 +140,20 @@ class AnnualReportParser:
         text = condensed_text or ""
         text_lower = text.lower()
 
-        # Company name: prefer explicit Limited/LLP entities in early text.
-        company_match = re.search(r"\b([A-Z][A-Za-z&.,'\- ]{3,80}(?:LIMITED|LTD|LLP|PRIVATE LIMITED))\b", text)
+        # Company name: robust matching for uppercase and title-case report styles.
+        company_match = re.search(
+            r"\b([A-Za-z][A-Za-z&.,'\- ]{3,90}(?:LIMITED|LTD|LLP|PRIVATE LIMITED))\b",
+            text,
+            re.IGNORECASE,
+        )
         if not company_match:
-            company_match = re.search(r"\b([A-Za-z][A-Za-z&.,'\- ]{3,80}(?:Capital|Finance|Holdings|Technologies)[A-Za-z&.,'\- ]{0,40}(?:Limited|Ltd|LLP|Private Limited))\b", text, re.IGNORECASE)
+            company_match = re.search(
+                r"(?:for\s+the\s+year\s+ended[\s\S]{0,80})\b([A-Za-z][A-Za-z&.,'\- ]{3,90}(?:Limited|Ltd|LLP|Private Limited))\b",
+                text,
+                re.IGNORECASE,
+            )
         if company_match:
-            data["company_name"] = company_match.group(1).strip()
+            data["company_name"] = re.sub(r"\s+", " ", company_match.group(1)).strip().title()
         else:
             stem = Path(pdf_path).stem.replace("_", " ").strip()
             if stem and not re.fullmatch(r"[0-9a-fA-F\-]{20,}", stem):

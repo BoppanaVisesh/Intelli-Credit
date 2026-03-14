@@ -18,8 +18,5 @@ downloads/*
 !downloads/.gitkeep
 backend/test_output.txt
 
-# Test data (regenerated via generate_test_data.py)
-backend/test_data/company*/
-
 # Docker volumes
 pgdata/

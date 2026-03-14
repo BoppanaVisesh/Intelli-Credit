@@ -1,0 +1,31 @@
+{
+  "pan": "AAACO4567D",
+  "company_name": "Orion Retail Pvt Ltd",
+  "assessment_year": "2025-26",
+  "filing_date": "2025-10-30",
+  "itr_form": "ITR-6",
+  "gross_total_income": 5000000,
+  "total_deductions": 1500000,
+  "taxable_income": 3500000,
+  "total_tax_liability": 1050000,
+  "total_tax_paid": 1050000,
+  "tds_deducted": 800000,
+  "advance_tax_paid": 250000,
+  "refund_due": 0,
+  "income_sources": [
+    {
+      "type": "Business Income",
+      "amount": 4500000
+    },
+    {
+      "type": "Other Sources",
+      "amount": 500000
+    }
+  ],
+  "turnover_reported": 300000000,
+  "depreciation_claimed": 5000000,
+  "brought_forward_losses": 2000000,
+  "audit_status": "Tax audit completed u/s 44AB",
+  "previous_year_income": 4000000,
+  "notes": "Very thin profit margin (0.5 Cr on 30 Cr revenue) — consistent with round-tripping."
+}

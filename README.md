@@ -41,12 +41,15 @@ At a high level, Intelli-Credit helps a lender move from raw borrower data to a 
 
 ### What is already seeded
 
-On backend startup, the system seeds three demo applications and runs them through the pipeline in the background to visualize easily how it wors and what it extracts:
+On backend startup, the system seeds seven applications and runs them through the pipeline in the background so the app is usable immediately without any manual data preparation:
 
 - `DEMO-APEX-001`: healthier manufacturing borrower
 - `DEMO-GREENFIELD-002`: logistics borrower with stronger fraud concerns
 - `DEMO-ORION-003`: retail borrower with circular-trading style risk patterns
-That means the app is usable immediately after startup without asking a reviewer to prepare data first.
+- `DEMO-KINARA-004`: Kinara annual-report walkthrough from `backend/downloads/kinara_capital/`
+- `DEMO-TATA-005`: Tata annual-report walkthrough from `backend/downloads/tata_capital/`
+- `DEMO-MONEYBOXX-006`: Moneyboxx public-disclosure walkthrough from `backend/downloads/moneyboxx/`
+- `DEMO-VIVRITI-007`: Vivriti annual-report walkthrough from `backend/downloads/vivriti/`
 
 ---
 
@@ -56,7 +59,7 @@ If you need to demo this fast.
 ### 2-minute version
 
 1. Start the app with `RUN_LOCAL.bat` or `docker-compose up --build`.
-2. Open the dashboard and point out the three seeded demo borrowers.
+2. Open the dashboard and point out the seven seeded borrowers.
 3. Open `DEMO-APEX-001` to show a cleaner borrower journey.
 4. Open the ingestion page and show the five working document categories.
 5. Open extraction, fraud, research, and scoring to show this is a real pipeline, not a static UI.
