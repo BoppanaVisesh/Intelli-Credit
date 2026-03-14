@@ -1,8 +1,8 @@
-# Intelli-Credit
+# Intelli-Credit : FinIntel
 
 Corporate credit underwriting is still painfully manual. A credit officer has to collect borrower documents, reconcile numbers across filings, look for fraud signals, scan public intelligence, write a credit note, and then justify the final recommendation. That process is slow, inconsistent, and hard to scale.
 
-Intelli-Credit compresses that workflow into a single system. It ingests borrower documents, extracts structured financial data, runs verification and fraud checks, pulls external intelligence, scores the borrower using an explainable credit model, and generates a CAM-style output that a lending team can actually review.
+FinIntel compresses that workflow into a single system. It ingests borrower documents, extracts structured financial data, runs verification and fraud checks, pulls external intelligence, scores the borrower using an explainable credit model, and generates a CAM-style output that a lending team can actually review.
 
 ---
 
@@ -46,15 +46,6 @@ On backend startup, the system seeds three demo applications and runs them throu
 - `DEMO-APEX-001`: healthier manufacturing borrower
 - `DEMO-GREENFIELD-002`: logistics borrower with stronger fraud concerns
 - `DEMO-ORION-003`: retail borrower with circular-trading style risk patterns
-
-Each demo application is populated with five working document types:
-
-- Annual Report
-- Bank Statement
-- GST Return
-- ITR
-- Balance Sheet
-
 That means the app is usable immediately after startup without asking a reviewer to prepare data first.
 
 ---
@@ -122,15 +113,17 @@ This turns the system from a document reader into a fuller underwriting assistan
 ### 6. Due Diligence Layer
 
 - capture credit officer notes from site visits, management interactions, and reference checks
-- bring qualitative field observations into the same decision workflow as the financial data
-
+- Loan Limit = min(
+    Revenue × 0.25,
+    Operating Cash Flow × 4,
+    Collateral Value × 0.7
+) × Risk Multiplier
+  
 ### 7. Credit Decision Engine
 
 - compute an explainable final credit score
 - use a Five Cs style scoring structure
 - output a lending recommendation such as approve, conditional approve, or reject
-- estimate a recommended limit
-- calculate a pricing / risk premium band
 - generate reasoning that explains why the recommendation was reached
 
 ### 8. CAM and Analysis Output
@@ -146,31 +139,16 @@ This turns the system from a document reader into a fuller underwriting assistan
 - end-to-end API pipeline test script
 - test-data generation utilities for the included demo borrowers
 
----
-
-## Product Approach
-
-The design philosophy was simple: do not build a vague “AI for finance” shell. Build the exact steps a credit team actually performs and wire those steps into a single product.
-
-### Approach principles
-
-- start from the real underwriting workflow, not a model-first demo
-- combine rule-based verification with ML signals instead of overclaiming pure AI judgment
-- keep the output explainable so the recommendation can be defended
-- support both structured data and messy real-world document inputs
-- reduce demo friction with seeded borrowers and pre-run pipelines
-
-### Why the hybrid approach matters
-
-Credit decisioning is not just text generation. The useful part is the combination of:
-
-- deterministic checks for document consistency
-- structured financial extraction
-- external intelligence gathering
-- qualitative due diligence
-- final recommendation logic with explainability
-
-That is why the system mixes parsers, heuristics, graph checks, ML scoring, and LLM-generated narrative in specific places instead of using an LLM as the whole product.
+<table>
+<tr>
+<td><img src="https://github.com/user-attachments/assets/b525ec16-6404-415c-ace5-2e9a1ad16ceb" width="450"/></td>
+<td><img src="https://github.com/user-attachments/assets/b6f7d83b-e65d-4cec-a6b5-19c7e05d7a85" width="450"/></td>
+</tr>
+<tr>
+<td><img src="https://github.com/user-attachments/assets/da2a0429-67cc-48a6-8d36-eee5bb477d96" width="450"/></td>
+<td><img src="https://github.com/user-attachments/assets/89bd99cb-4caf-40a8-b5e8-fb0bf7145e23" width="450"/></td>
+</tr>
+</table>
 
 ---
 
@@ -178,113 +156,6 @@ That is why the system mixes parsers, heuristics, graph checks, ML scoring, and 
 
 The application is split into a React frontend and a FastAPI backend, with the backend organized around three credit-analysis pillars.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                         Frontend                             │
-│  React + Vite + Tailwind + Zustand                          │
-│  Dashboard | Intake | Ingestion | Extraction | Analysis     │
-│  Research | Due Diligence | Fraud | Scoring | CAM Viewer    │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               │ REST API
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                     FastAPI Backend                          │
-│     Applications | Ingestion | Extraction | Analysis        │
-│     Research | Due Diligence | Fraud | Scoring | CAM        │
-└───────────────┬───────────────────────┬──────────────────────┘
-                │                       │
-                ▼                       ▼
-      ┌──────────────────┐    ┌────────────────────────────┐
-      │ Pillar 1         │    │ Pillar 2                  │
-      │ Ingestion        │    │ External Research         │
-      │ Parsing          │    │ Promoter / News / MCA     │
-      │ Normalization    │    │ Litigation / Sector       │
-      │ Cross-verify     │    └────────────────────────────┘
-      │ Circular trading │
-      └─────────┬────────┘
-                │
-                ▼
-      ┌──────────────────────────────────────────────────────┐
-      │ Pillar 3                                             │
-      │ Credit Scoring | Loan Limit | Risk Premium | CAM     │
-      │ Explainability | Recommendation                      │
-      └──────────────────────────────────────────────────────┘
-                │
-                ▼
-      ┌──────────────────────────────────────────────────────┐
-      │ Data + Model Layer                                   │
-      │ SQLite / PostgreSQL | uploaded docs | parsed data    │
-      │ fraud model | generated reports                      │
-      └──────────────────────────────────────────────────────┘
-```
-
----
-
-## Pillar Breakdown
-
-### Pillar 1: Data Ingestion and Verification
-
-Purpose: turn borrower documents into lender-usable structured evidence.
-
-Major components:
-
-- document classification
-- annual report parser
-- bank statement parser
-- GST parser
-- ITR parser
-- data normalizer
-- cross-verification engine
-- circular trading detector
-
-Outputs:
-
-- parsed document data
-- normalized financial facts
-- verification mismatches
-- fraud indicators
-
-### Pillar 2: Secondary Research and Risk Signals
-
-Purpose: pull intelligence that will never appear in the borrower’s uploaded documents.
-
-Major components:
-
-- promoter profiler
-- eCourt fetcher
-- MCA fetcher
-- news analyzer
-- sector analyzer
-- web crawler
-
-Outputs:
-
-- promoter red flags
-- litigation findings
-- public-profile intelligence
-- sector headwinds and contextual risk
-
-### Pillar 3: Credit Recommendation
-
-Purpose: convert all the evidence into a recommendation a credit committee can act on.
-
-Major components:
-
-- Five Cs scoring engine
-- loan limit engine
-- risk premium calculator
-- explainability engine
-- CAM generator
-- recommendation engine
-
-Outputs:
-
-- final credit score
-- decision band
-- recommended exposure
-- pricing guidance
-- explainable CAM-style output
 
 ---
 
@@ -304,97 +175,37 @@ Outputs:
 
 ### Fraud logic
 
-- rule-based cross-verification catches mismatches that are easy to justify
-- graph-based detection helps identify circular transaction patterns
-- an ML model adds a second signal instead of replacing deterministic checks
-
-### Recommendation logic
-
-- final scoring uses a business-readable structure rather than a black-box score only
-- recommendation is tied to score, risk, and exposure logic
-- explainability is built into the pipeline rather than added as an afterthought
-
+- 14-rule verification engine covering:
+    - GST sales vs. bank inflows variance
+    - GSTR-1 vs. GSTR-3B consistency
+    - ITR revenue vs. annual report revenue
+    - Bank inflows vs. annual report revenue
+    - Cash flow stability (monthly variability)
+    - Bounced cheque rate and overdraft patterns
+    - Debt-to-equity sanity check
+    - Related party transaction exposure
+    - Contingent liabilities assessment
+    - Auditor opinion check (qualified/adverse)
+    - Purchase-to-sales ratio (round-tripping signal)
+    - Net cash retention percentage
+    - graph-based detection helps identify circular transaction patterns
+    - an ML model adds a second signal instead of replacing deterministic checks
 ---
 
 ## Tech Stack
-
-### Frontend
-
-- React 18
-- Vite
-- Tailwind CSS
-- React Router
-- Zustand
-- Recharts
-- Lucide React
-- Axios
-- react-dropzone
-
-### Backend
-
-- FastAPI
-- Uvicorn
-- SQLAlchemy
-- Pydantic
-- Python multipart handling for uploads
-
-### Parsing and data handling
-
-- pandas
-- openpyxl
-- PyPDF2
-- pdfplumber
-- pypdf
-- python-docx
-- Pillow
-- pdf2image
-- pytesseract
-
-### AI and ML
-
-- Google Gemini
-- OpenAI client support in dependencies
-- scikit-learn
-- XGBoost
-- SHAP
-- NumPy
-- joblib
-
-### Research and web intelligence
-
-- requests
-- BeautifulSoup4
-- Selenium
-- Tavily API integration
-
-### Graph and analytics
-
-- NetworkX
-- matplotlib
-
-### Infrastructure
-
-- Docker
-- Docker Compose
-- NGINX
-- SQLite for local simplicity
-- PostgreSQL for containerized team/shared setup
+| Category                        | Technologies                                                                                       |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Frontend**                    | React 18, Vite, Tailwind CSS, React Router, Zustand, Recharts, Lucide React, Axios, react-dropzone |
+| **Backend**                     | FastAPI, Uvicorn, SQLAlchemy, Pydantic, Python multipart uploads                                   |
+| **Parsing & Data Handling**     | pandas, openpyxl, PyPDF2, pdfplumber, pypdf, python-docx, Pillow, pdf2image, pytesseract           |
+| **AI / ML**                     | Google Gemini, OpenAI Client, scikit-learn, XGBoost, SHAP, NumPy, joblib                           |
+| **Research & Web Intelligence** | requests, BeautifulSoup4, Selenium, Tavily API                                                     |
+| **Graph & Analytics**           | NetworkX, matplotlib                                                                               |
+| **Infrastructure**              | Docker, Docker Compose, NGINX, SQLite, PostgreSQL                                                  |
 
 ---
 
 ## Backend API Surface
-
-The FastAPI app exposes route groups for the full pipeline:
-
-- `/api/v1/applications`
-- `/api/v1/ingestion`
-- `/api/v1/extraction`
-- `/api/v1/analysis`
-- `/api/v1/research`
-- `/api/v1/due-diligence`
-- `/api/v1/fraud`
-- `/api/v1/scoring`
-- `/api/v1/cam`
 
 Useful local endpoints:
 
@@ -439,14 +250,6 @@ That script:
 - opens the app in the browser
 
 ### Option 2: Local development
-
-#### Prerequisites
-
-- Python 3.10+
-- Node.js 18+
-- npm
-- Gemini API key
-- Tavily API key
 
 #### Backend setup
 
@@ -513,36 +316,6 @@ GEMINI_API_KEY=
 TAVILY_API_KEY=
 POSTGRES_PASSWORD=intellicredit123
 ```
-
-### Backend `.env`
-
-Important keys used by local development:
-
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-TAVILY_API_KEY=your_tavily_api_key_here
-DATABASE_URL=sqlite:///./intellicredit.db
-DEBUG=True
-LLM_PROVIDER=gemini
-```
-
-### Frontend `.env`
-
-```env
-VITE_API_URL=http://localhost:8000/api/v1
-```
-
----
-
-## Demo Data and Seeded Flow
-
-One of the stronger parts of this repo is that it is demo-friendly out of the box.
-
-### Seed behaviour
-
-- if the database is empty, three demo applications are inserted automatically
-- a background seed pipeline uploads five documents per demo application
-- the same pipeline runs parsing, extraction review, fraud checks, research, due diligence, scoring, analysis, and CAM generation.
 
 ### Full pipeline test
 
