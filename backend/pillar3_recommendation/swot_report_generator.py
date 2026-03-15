@@ -78,7 +78,7 @@ Research Signals (top 6):
 {json.dumps(signals[:6], indent=2)}
 
 Triangulation Findings:
-{json.dumps([{{"metric": f["metric"], "status": f["status"], "detail": f["detail"]}} for f in tri_findings[:8]], indent=2)}
+{json.dumps([{"metric": f.get("metric"), "status": f.get("status"), "detail": f.get("detail")} for f in tri_findings[:8]], indent=2)}
 
 Return JSON with this EXACT structure (3-5 items per category, each a single sentence):
 {{

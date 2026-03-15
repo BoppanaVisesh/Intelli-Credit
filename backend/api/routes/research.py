@@ -222,6 +222,9 @@ async def trigger_research(
             max_results=5,
         )
 
+        if web_crawler.last_error:
+            raise RuntimeError(web_crawler.last_error)
+
         reg_findings = []
         reg_risk = "LOW"
         for r in reg_results:
@@ -257,6 +260,17 @@ async def trigger_research(
         print(f"   ✅ Regulatory: {len(reg_findings)} concerns, risk={reg_risk}")
     except Exception as e:
         print(f"   ❌ Regulatory check failed: {e}")
+        db.add(ResearchResult(
+            application_id=request.application_id,
+            research_type="regulatory",
+            entity_name=company_name,
+            risk_level="UNKNOWN",
+            findings_summary="Regulatory search unavailable (Tavily quota/config issue)",
+            findings_json=json.dumps({"error": str(e)}),
+            sentiment="NEUTRAL",
+            severity_penalty=0,
+            confidence=0.0,
+        ))
         all_results.append({"type": "regulatory", "status": "failed", "error": str(e)})
 
     db.commit()

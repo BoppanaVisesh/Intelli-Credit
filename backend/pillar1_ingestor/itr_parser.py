@@ -6,7 +6,10 @@ Extracts structured data from ITR PDFs using Gemini Vision API
 import os
 import json
 from typing import Dict, Any
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 import fitz  # PyMuPDF
 from PIL import Image
 import io
@@ -18,7 +21,7 @@ class ITRParser:
     def __init__(self, gemini_api_key: str = None):
         self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY")
         
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
     
     def parse(self, pdf_path: str) -> Dict[str, Any]:
@@ -34,7 +37,7 @@ class ITRParser:
         if pdf_path.lower().endswith('.json'):
             return self._parse_json_itr(pdf_path)
 
-        if not self.api_key:
+        if not self.api_key or genai is None:
             print("⚠️ GEMINI_API_KEY not configured")
             return self._get_empty_structure()
         

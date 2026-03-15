@@ -9,20 +9,23 @@ import os
 from typing import Any, Dict
 
 import fitz
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 from PIL import Image
 
 
 class ShareholdingPatternParser:
     def __init__(self, gemini_api_key: str = None):
         self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY")
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
 
     def parse(self, pdf_path: str) -> Dict[str, Any]:
         if not os.path.exists(pdf_path):
             return self._default_data(note="File not found")
-        if not self.api_key:
+        if not self.api_key or genai is None:
             return self._default_data(note="GEMINI_API_KEY not configured")
 
         try:

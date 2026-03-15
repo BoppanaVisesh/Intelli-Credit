@@ -28,6 +28,53 @@ UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 
+def _is_unhealthy_completed_doc(doc: UploadedDocument) -> bool:
+    if doc.parse_status != ParseStatus.COMPLETED:
+        return False
+    if not doc.parsed_data:
+        return True
+
+    try:
+        parsed = json.loads(doc.parsed_data) if isinstance(doc.parsed_data, str) else doc.parsed_data
+    except Exception:
+        return True
+
+    quality = parsed.get("document_quality") or {}
+    if quality.get("should_exclude_from_scoring"):
+        return True
+
+    if parsed.get("key_risks") == ["Document parsing failed"]:
+        core_values = [
+            parsed.get("revenue_cr", 0),
+            parsed.get("net_profit_cr", 0),
+            parsed.get("total_debt_cr", 0),
+            parsed.get("total_equity_cr", 0),
+            parsed.get("total_assets_cr", 0),
+        ]
+        return not any(float(value or 0) > 0 for value in core_values)
+
+    doc_type = doc.document_type
+    if hasattr(doc_type, "value"):
+        doc_type = doc_type.value
+
+    if doc_type == DocumentType.ANNUAL_REPORT.value:
+        fallback_risks = parsed.get("key_risks") or []
+        if isinstance(fallback_risks, str):
+            fallback_risks = [fallback_risks]
+        if any("LLM parsing unavailable" in str(item) for item in fallback_risks):
+            return True
+
+        try:
+            total_equity = float(parsed.get("total_equity_cr") or 0)
+        except Exception:
+            total_equity = 0.0
+        # Guardrail: extreme equity values are usually OCR/unit errors and should be reparsed.
+        if total_equity > 1_000_000:
+            return True
+
+    return False
+
+
 @router.post("/upload-documents")
 async def upload_documents(
     application_id: str = Form(...),
@@ -118,6 +165,8 @@ async def upload_documents(
 @router.post("/parse-documents/{application_id}")
 async def parse_documents(
     application_id: str,
+    retry_failed: bool = False,
+    retry_unhealthy: bool = False,
     db: Session = Depends(get_db)
 ):
     """
@@ -125,10 +174,26 @@ async def parse_documents(
     """
     
     # Get all pending documents for this application
+    parse_statuses = [ParseStatus.PENDING]
+    if retry_failed:
+        parse_statuses.append(ParseStatus.FAILED)
+
     pending_docs = db.query(UploadedDocument).filter(
         UploadedDocument.application_id == application_id,
-        UploadedDocument.parse_status == ParseStatus.PENDING
+        UploadedDocument.parse_status.in_(parse_statuses)
     ).all()
+
+    if retry_unhealthy:
+        unhealthy_docs = db.query(UploadedDocument).filter(
+            UploadedDocument.application_id == application_id,
+            UploadedDocument.parse_status == ParseStatus.COMPLETED
+        ).all()
+        pending_docs.extend([doc for doc in unhealthy_docs if _is_unhealthy_completed_doc(doc)])
+
+    unique_docs = {}
+    for doc in pending_docs:
+        unique_docs[doc.id] = doc
+    pending_docs = list(unique_docs.values())
     
     if not pending_docs:
         return {
@@ -154,6 +219,9 @@ async def parse_documents(
         try:
             # Update status to IN_PROGRESS
             doc.parse_status = ParseStatus.IN_PROGRESS
+            doc.parse_error = None
+            doc.parsed_data = None
+            doc.parsed_at = None
             db.commit()
             
             file_path = UPLOAD_DIR / doc.file_path

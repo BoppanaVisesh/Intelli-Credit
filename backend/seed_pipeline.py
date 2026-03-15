@@ -174,15 +174,162 @@ def _wait_for_server(timeout=30):
 def _already_processed(app_id):
     """Check if the demo app already has pipeline results."""
     try:
+        cfg = next((item for item in DEMO_PIPELINES if item["app_id"] == app_id), None)
+        if cfg is not None:
+            existing_docs = _fetch_existing_docs(app_id)
+            if _needs_seed_repair(cfg, existing_docs):
+                return False
+
         r = requests.get(f"{API}/applications/{app_id}/summary", timeout=5)
         if r.status_code == 200:
             pipeline = r.json().get("pipeline", {})
-            # If scoring and CAM are done, skip
-            return (pipeline.get("scoring", {}).get("status") == "completed" and
-                    pipeline.get("cam", {}).get("status") == "completed")
+            required_steps = (
+                "ingestion",
+                "research",
+                "due_diligence",
+                "fraud",
+                "scoring",
+                "analysis",
+                "cam",
+            )
+            return all(pipeline.get(step, {}).get("status") == "completed" for step in required_steps)
     except Exception:
         pass
     return False
+
+
+def _expected_seed_docs(cfg):
+    if "seed_files" in cfg:
+        return [
+            {
+                "filename": seed_file.get("filename", Path(seed_file["path"]).name),
+                "document_type": seed_file["document_type"],
+                "path": seed_file["path"],
+            }
+            for seed_file in cfg["seed_files"]
+        ]
+
+    if "pdf_path" in cfg:
+        return [{
+            "filename": cfg.get("pdf_filename", Path(cfg["pdf_path"]).name),
+            "document_type": cfg.get("document_type", "ANNUAL_REPORT"),
+            "path": cfg["pdf_path"],
+        }]
+
+    if "data_dir" in cfg:
+        data_dir = cfg["data_dir"]
+        expected = []
+        for fname, ctype in [
+            ("annual_report.json", "application/json"),
+            ("bank_statement.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            ("gst_returns.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            ("itr_returns.json", "application/json"),
+            ("balance_sheet.json", "application/json"),
+        ]:
+            fpath = os.path.join(data_dir, fname)
+            if os.path.exists(fpath):
+                expected.append({"filename": fname, "content_type": ctype, "path": fpath})
+        return expected
+
+    return []
+
+
+def _fetch_existing_docs(app_id):
+    r_docs = requests.get(f"{API}/ingestion/documents/{app_id}")
+    if r_docs.status_code != 200:
+        return []
+    return r_docs.json().get("documents", [])
+
+
+def _needs_seed_repair(cfg, existing_docs):
+    expected = _expected_seed_docs(cfg)
+    if not expected:
+        return False
+
+    by_name = {doc.get("filename"): doc for doc in existing_docs}
+    for expected_doc in expected:
+        existing = by_name.get(expected_doc["filename"])
+        if not existing:
+            return True
+        if existing.get("parse_status") != "COMPLETED":
+            return True
+        parsed = existing.get("parsed_data") or {}
+        if parsed.get("key_risks") == ["Document parsing failed"]:
+            return True
+
+    return False
+
+
+def _upload_seed_documents(cfg, app_id, label, existing_docs):
+    existing_by_name = {doc.get("filename"): doc for doc in existing_docs}
+    expected = _expected_seed_docs(cfg)
+
+    if "seed_files" in cfg:
+        for seed_file in expected:
+            existing = existing_by_name.get(seed_file["filename"])
+            if existing and existing.get("parse_status") == "COMPLETED":
+                continue
+            seed_path = Path(seed_file["path"])
+            if not seed_path.exists():
+                print(f"      ✗ Missing seed PDF for {label}: {seed_path}")
+                return False
+            with open(seed_path, "rb") as fh:
+                r = requests.post(
+                    f"{API}/ingestion/upload-documents",
+                    data={
+                        "application_id": app_id,
+                        "document_type": seed_file["document_type"],
+                    },
+                    files=[("files", (seed_file["filename"], fh, "application/pdf"))],
+                )
+            if r.status_code != 200:
+                print(f"      ✗ Upload failed for {label}: {r.status_code}")
+                return False
+        return True
+
+    if "pdf_path" in cfg:
+        expected_doc = expected[0]
+        existing = existing_by_name.get(expected_doc["filename"])
+        if existing and existing.get("parse_status") == "COMPLETED":
+            return True
+        pdf_path = Path(expected_doc["path"])
+        if not pdf_path.exists():
+            print(f"      ✗ Missing seed PDF for {label}: {pdf_path}")
+            return False
+        with open(pdf_path, "rb") as fh:
+            r = requests.post(
+                f"{API}/ingestion/upload-documents",
+                data={
+                    "application_id": app_id,
+                    "document_type": expected_doc["document_type"],
+                },
+                files=[("files", (expected_doc["filename"], fh, "application/pdf"))],
+            )
+        if r.status_code != 200:
+            print(f"      ✗ Upload failed for {label}: {r.status_code}")
+            return False
+        return True
+
+    if "data_dir" in cfg:
+        files_to_upload = []
+        file_handles = []
+        for expected_doc in expected:
+            if expected_doc["filename"] in existing_by_name:
+                continue
+            fh = open(expected_doc["path"], "rb")
+            file_handles.append(fh)
+            files_to_upload.append(("files", (expected_doc["filename"], fh, expected_doc["content_type"])))
+        if not files_to_upload:
+            return True
+        r = requests.post(f"{API}/ingestion/upload-documents", data={"application_id": app_id}, files=files_to_upload)
+        for fh in file_handles:
+            fh.close()
+        if r.status_code != 200:
+            print(f"      ✗ Upload failed for {label}: {r.status_code}")
+            return False
+        return True
+
+    return True
 
 
 def _process_demo_app(cfg):
@@ -190,84 +337,17 @@ def _process_demo_app(cfg):
     app_id = cfg["app_id"]
     label = cfg["company_name"]
 
-    # 1. Upload documents (only if app has no documents yet)
-    existing_docs_count = 0
-    r_docs = requests.get(f"{API}/ingestion/documents/{app_id}")
-    if r_docs.status_code == 200:
-        existing_docs_count = r_docs.json().get("total_documents", 0)
-
-    if existing_docs_count > 0:
-        r = None
-    else:
-        files_to_upload = []
-        file_handles = []
-
-        if "data_dir" in cfg:
-            data_dir = cfg["data_dir"]
-            for fname, ctype in [
-                ("annual_report.json", "application/json"),
-                ("bank_statement.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                ("gst_returns.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                ("itr_returns.json", "application/json"),
-                ("balance_sheet.json", "application/json"),
-            ]:
-                fpath = os.path.join(data_dir, fname)
-                if os.path.exists(fpath):
-                    fh = open(fpath, "rb")
-                    file_handles.append(fh)
-                    files_to_upload.append(("files", (fname, fh, ctype)))
-            upload_data = {"application_id": app_id}
-        elif "seed_files" in cfg:
-            for seed_file in cfg["seed_files"]:
-                seed_path = Path(seed_file["path"])
-                if not seed_path.exists():
-                    print(f"      ✗ Missing seed PDF for {label}: {seed_path}")
-                    return False
-                fh = open(seed_path, "rb")
-                file_handles.append(fh)
-                files_to_upload.append((fh, seed_file))
-
-            for fh, seed_file in files_to_upload:
-                r = requests.post(
-                    f"{API}/ingestion/upload-documents",
-                    data={
-                        "application_id": app_id,
-                        "document_type": seed_file["document_type"],
-                    },
-                    files=[("files", (seed_file.get("filename", Path(seed_file["path"]).name), fh, "application/pdf"))],
-                )
-                if r.status_code != 200:
-                    print(f"      ✗ Upload failed for {label}: {r.status_code}")
-                    for open_fh in file_handles:
-                        open_fh.close()
-                    return False
-            for fh in file_handles:
-                fh.close()
-            r = None
-        else:
-            pdf_path = Path(cfg["pdf_path"])
-            if not pdf_path.exists():
-                print(f"      ✗ Missing seed PDF for {label}: {pdf_path}")
-                return False
-            fh = open(pdf_path, "rb")
-            file_handles.append(fh)
-            files_to_upload.append(("files", (cfg.get("pdf_filename", pdf_path.name), fh, "application/pdf")))
-            upload_data = {
-                "application_id": app_id,
-                "document_type": cfg.get("document_type", "ANNUAL_REPORT"),
-            }
-
-        if files_to_upload:
-            r = requests.post(f"{API}/ingestion/upload-documents", data=upload_data, files=files_to_upload)
-            for fh in file_handles:
-                fh.close()
-
-            if r.status_code != 200:
-                print(f"      ✗ Upload failed for {label}: {r.status_code}")
-                return False
+    # 1. Upload missing / unhealthy seed documents
+    existing_docs = _fetch_existing_docs(app_id)
+    if _needs_seed_repair(cfg, existing_docs):
+        if not _upload_seed_documents(cfg, app_id, label, existing_docs):
+            return False
 
     # 2. Parse documents
-    r = requests.post(f"{API}/ingestion/parse-documents/{app_id}")
+    r = requests.post(
+        f"{API}/ingestion/parse-documents/{app_id}",
+        params={"retry_failed": True, "retry_unhealthy": True}
+    )
     if r.status_code != 200:
         print(f"      ✗ Parse failed for {label}: {r.status_code}")
         return False

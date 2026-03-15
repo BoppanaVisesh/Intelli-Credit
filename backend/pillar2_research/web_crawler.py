@@ -16,6 +16,7 @@ class WebCrawler:
     
     def __init__(self, tavily_api_key: str = None):
         self.api_key = tavily_api_key or os.getenv("TAVILY_API_KEY")
+        self.last_error = None
         
         if self.api_key:
             self.client = TavilyClient(api_key=self.api_key)
@@ -32,9 +33,11 @@ class WebCrawler:
         
         if not self.client:
             print("⚠️ TAVILY_API_KEY not configured")
+            self.last_error = "TAVILY_API_KEY not configured"
             return []
         
         try:
+            self.last_error = None
             response = self.client.search(
                 query=query,
                 max_results=max_results,
@@ -55,7 +58,8 @@ class WebCrawler:
             return results
             
         except Exception as e:
-            print(f"❌ Web search failed: {str(e)}")
+            self.last_error = str(e)
+            print(f"❌ Web search failed: {self.last_error}")
             return []
     
     def search_company_info(self, company_name: str) -> Dict[str, Any]:

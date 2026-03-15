@@ -8,7 +8,10 @@ import os
 import re
 from typing import Any, Dict
 
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 
 from pillar1_ingestor.pdf_parser import PDFParser
 
@@ -16,7 +19,7 @@ from pillar1_ingestor.pdf_parser import PDFParser
 class LiquidityDisclosureParser:
     def __init__(self, gemini_api_key: str = None):
         self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY")
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
         self.pdf_parser = PDFParser()
 
@@ -30,15 +33,15 @@ class LiquidityDisclosureParser:
         if not text:
             return self._default_data(note="No extractable text found")
 
-        if not self.api_key:
-            return self._regex_fallback(text, table_blobs, note="GEMINI_API_KEY not configured")
-
         table_blobs = []
         for table in tables[:5]:
             for row in table[:12]:
                 cleaned = [str(cell).strip() for cell in row if cell]
                 if cleaned:
                     table_blobs.append(" | ".join(cleaned))
+
+        if not self.api_key or genai is None:
+            return self._regex_fallback(text, table_blobs, note="GEMINI_API_KEY not configured")
 
         condensed = text[:20000]
         if table_blobs:

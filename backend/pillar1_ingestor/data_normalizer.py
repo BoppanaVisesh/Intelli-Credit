@@ -48,6 +48,9 @@ class DataNormalizer:
                 except json.JSONDecodeError:
                     continue
 
+            if self._should_exclude_document(doc_type, raw):
+                continue
+
             if doc_type == "BANK_STATEMENT":
                 unified["bank"] = self._normalize_bank(raw)
                 unified["sources_available"].append("bank")
@@ -58,7 +61,10 @@ class DataNormalizer:
                 unified["itr"] = self._normalize_itr(raw)
                 unified["sources_available"].append("itr")
             elif doc_type == "ANNUAL_REPORT":
-                unified["annual_report"] = self._normalize_annual_report(raw)
+                normalized_annual = self._normalize_annual_report(raw)
+                unified["annual_report"] = self._merge_annual_like(
+                    unified["annual_report"], normalized_annual
+                )
                 unified["sources_available"].append("annual_report")
             elif doc_type == "BALANCE_SHEET":
                 normalized_balance_sheet = self._normalize_balance_sheet(raw)
@@ -149,9 +155,14 @@ class DataNormalizer:
             "revenue_cr": _safe_float(data.get("revenue_cr", 0)),
             "net_profit_cr": _safe_float(data.get("net_profit_cr", 0)),
             "ebitda_cr": _safe_float(data.get("ebitda_cr", 0)),
+            "cash_from_operations_cr": _safe_float(data.get("cash_from_operations_cr", 0)),
+            "operating_cash_flow_cr": _safe_float(data.get("operating_cash_flow_cr", data.get("cash_from_operations_cr", 0))),
+            "finance_cost_cr": _safe_float(data.get("finance_cost_cr", 0)),
+            "current_maturities_cr": _safe_float(data.get("current_maturities_cr", 0)),
             "total_debt_cr": _safe_float(data.get("total_debt_cr", 0)),
             "total_equity_cr": _safe_float(data.get("total_equity_cr", 0)),
             "total_assets_cr": _safe_float(data.get("total_assets_cr", 0)),
+            "fixed_assets_cr": _safe_float(data.get("fixed_assets_cr", 0)),
             "current_assets_cr": _safe_float(data.get("current_assets_cr", 0)),
             "current_liabilities_cr": _safe_float(data.get("current_liabilities_cr", 0)),
             "contingent_liabilities_cr": _safe_float(data.get("contingent_liabilities_cr", 0)),
@@ -164,7 +175,10 @@ class DataNormalizer:
     def _empty_annual_report(self) -> Dict[str, Any]:
         return {"company_name": "Unknown", "financial_year": "Unknown",
                 "revenue_cr": 0, "net_profit_cr": 0, "ebitda_cr": 0,
+                "cash_from_operations_cr": 0, "operating_cash_flow_cr": 0,
+                "finance_cost_cr": 0, "current_maturities_cr": 0,
                 "total_debt_cr": 0, "total_equity_cr": 0, "total_assets_cr": 0,
+                "fixed_assets_cr": 0,
                 "current_assets_cr": 0, "current_liabilities_cr": 0,
                 "contingent_liabilities_cr": 0, "related_party_transactions_cr": 0,
                 "auditor_name": "Unknown", "auditor_opinion": "Unknown",
@@ -177,6 +191,10 @@ class DataNormalizer:
             "revenue_cr": _safe_float(data.get("revenue_cr", 0)),
             "net_profit_cr": _safe_float(data.get("net_profit_cr", 0)),
             "ebitda_cr": _safe_float(data.get("ebitda_cr", 0)),
+            "cash_from_operations_cr": _safe_float(data.get("cash_from_operations_cr", 0)),
+            "operating_cash_flow_cr": _safe_float(data.get("operating_cash_flow_cr", data.get("cash_from_operations_cr", 0))),
+            "finance_cost_cr": _safe_float(data.get("finance_cost_cr", 0)),
+            "current_maturities_cr": _safe_float(data.get("current_maturities_cr", 0)),
             "total_debt_cr": _safe_float(data.get("total_debt_cr", 0)),
             "total_equity_cr": _safe_float(data.get("total_equity_cr", 0)),
             "total_assets_cr": _safe_float(data.get("total_assets_cr", 0)),
@@ -201,6 +219,26 @@ class DataNormalizer:
             elif isinstance(val, list) and val and not existing:
                 merged[key] = val
         return merged
+
+    def _should_exclude_document(self, doc_type: str, data: Dict[str, Any]) -> bool:
+        quality = data.get("document_quality") or {}
+        if quality.get("should_exclude_from_scoring"):
+            return True
+
+        if doc_type not in {"ANNUAL_REPORT", "BALANCE_SHEET"}:
+            return False
+
+        core_values = [
+            _safe_float(data.get("revenue_cr", 0)),
+            _safe_float(data.get("net_profit_cr", 0)),
+            _safe_float(data.get("total_debt_cr", 0)),
+            _safe_float(data.get("total_equity_cr", 0)),
+            _safe_float(data.get("total_assets_cr", 0)),
+        ]
+        has_financial_signal = any(value > 0 for value in core_values)
+        failed_marker = data.get("key_risks") == ["Document parsing failed"]
+
+        return failed_marker and not has_financial_signal
 
     def _normalize_shareholding(self, data: Dict[str, Any]) -> Dict[str, Any]:
         return {

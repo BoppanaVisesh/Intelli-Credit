@@ -7,7 +7,10 @@ import os
 import io
 import re
 from typing import Tuple
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 from PIL import Image
 import fitz  # PyMuPDF
 
@@ -39,7 +42,7 @@ class DocumentClassifier:
     def __init__(self, gemini_api_key: str = None):
         self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY", "")
         
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
             print(f"📄 DocumentClassifier initialized with Gemini API key")
     
@@ -73,7 +76,7 @@ class DocumentClassifier:
                 print(f"📄 Classified by text heuristic: {heuristic_type} (confidence: {heuristic_conf:.2f})")
                 return heuristic_type, heuristic_conf
 
-        if is_pdf and self.api_key:
+        if is_pdf and self.api_key and genai is not None:
             return self._classify_by_content(file_path)
         
         # Default to OTHER

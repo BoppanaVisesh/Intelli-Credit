@@ -7,7 +7,10 @@ import os
 import json
 import re
 from pathlib import Path
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 import fitz  # PyMuPDF
 
 
@@ -55,7 +58,7 @@ class AnnualReportParser:
     
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv('GEMINI_API_KEY')
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
     
     def parse_annual_report(self, pdf_path: str) -> Dict[str, Any]:
@@ -73,8 +76,8 @@ class AnnualReportParser:
         if pdf_path.lower().endswith('.json'):
             return self._parse_json_report(pdf_path)
         
-        if not self.api_key:
-            print("WARNING: GEMINI_API_KEY not set, returning default data")
+        if not self.api_key or genai is None:
+            print("WARNING: Gemini unavailable, using local text fallback")
             try:
                 doc = fitz.open(pdf_path)
                 all_pages_text = self._extract_all_text(doc)
@@ -197,6 +200,9 @@ class AnnualReportParser:
                 raw = m.group(1).replace(",", "")
                 try:
                     v = float(raw)
+                    # If OCR captures rupee-denominated whole values, normalize to crores.
+                    if v >= 1e7:
+                        v = v / 1e7
                     return v
                 except Exception:
                     continue

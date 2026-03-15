@@ -23,6 +23,7 @@ from pillar3_recommendation.credit_scorer_fixed import CreditScorerFixed
 from pillar3_recommendation.loan_limit_engine import LoanLimitEngine
 from pillar3_recommendation.risk_premium_calculator import RiskPremiumCalculator
 from pillar3_recommendation.explainability import Explainability
+from services.financial_snapshot import build_financials
 
 router = APIRouter()
 
@@ -59,9 +60,8 @@ async def calculate_score(application_id: str, db: Session = Depends(get_db)):
         if not documents:
             print(f"   ⚠ WARNING: No parsed documents found for {application_id} — scoring will use defaults")
 
-        gst    = normalized.get("gst", {})
-        bank   = normalized.get("bank", {})
-        annual = normalized.get("annual_report", {})
+        gst = normalized.get("gst", {})
+        bank = normalized.get("bank", {})
         shareholding = normalized.get("shareholding", {})
         liquidity = normalized.get("liquidity", {})
 
@@ -75,40 +75,7 @@ async def calculate_score(application_id: str, db: Session = Depends(get_db)):
         bank_outflows = bank.get("total_outflows_cr", 0) or 0
         gst_variance  = abs(gst_sales - bank_inflows) / gst_sales * 100 if gst_sales > 0 else 0
 
-        ar_debt    = annual.get("total_debt_cr", 0) or 0
-        ar_equity  = annual.get("total_equity_cr", 0) or 0
-        ar_revenue = annual.get("revenue_cr", 0) or 0
-        debt_to_equity = ar_debt / ar_equity if ar_equity > 0 else 1.0
-
-        derived_current_ratio = (
-            (annual.get("current_assets_cr", 0) or 0) / (annual.get("current_liabilities_cr", 0) or 1)
-            if (annual.get("current_assets_cr", 0) or 0) > 0 and (annual.get("current_liabilities_cr", 0) or 0) > 0
-            else 1.0
-        )
-
-        financials = {
-            "dscr": application.dscr or 1.0,
-            "current_ratio": application.current_ratio or derived_current_ratio,
-            "gst_vs_bank_variance": round(gst_variance, 2),
-            "debt_to_equity": round(debt_to_equity, 2),
-            "revenue_cr": ar_revenue or gst_sales,
-            "gst_sales_cr": gst_sales,
-            "bank_inflows_cr": bank_inflows,
-            "bank_outflows_cr": bank_outflows,
-            "operating_cash_flow_cr": max(bank_inflows - bank_outflows, 0),
-            "bounced_cheques": bank.get("bounced_cheques", 0),
-            "overdraft_instances": bank.get("overdraft_instances", 0),
-            "fixed_assets_cr": annual.get("fixed_assets_cr", 0),
-            "total_assets_cr": annual.get("total_assets_cr", 0),
-            "net_worth_cr": ar_equity,
-            "promoter_holding_pct": shareholding.get("promoter_holding_pct", 0),
-            "public_holding_pct": shareholding.get("public_holding_pct", 0),
-            "pledged_holding_pct": shareholding.get("pledged_holding_pct", 0),
-            "top10_borrowings_pct": liquidity.get("top10_borrowings_pct", 0),
-            "significant_counterparty_liabilities_pct": liquidity.get("significant_counterparty_liabilities_pct", 0),
-            "short_term_liabilities_pct_total_liabilities": liquidity.get("short_term_liabilities_pct_total_liabilities", 0),
-            "liquidity_management_note": liquidity.get("liquidity_management_note", ""),
-        }
+        financials = build_financials(application, normalized)
 
         # ── 3. Research findings ──────────────────────────────────
         research_rows = db.query(ResearchResult).filter(

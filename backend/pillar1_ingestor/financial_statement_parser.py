@@ -8,7 +8,10 @@ import os
 import re
 from typing import Any, Dict
 
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 
 from pillar1_ingestor.pdf_parser import PDFParser
 
@@ -16,7 +19,7 @@ from pillar1_ingestor.pdf_parser import PDFParser
 class FinancialStatementParser:
     def __init__(self, gemini_api_key: str = None):
         self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY")
-        if self.api_key:
+        if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
         self.pdf_parser = PDFParser()
 
@@ -59,7 +62,7 @@ class FinancialStatementParser:
         if table_blobs:
             condensed += "\n\nTABLE EXTRACTS:\n" + "\n".join(table_blobs[:60])
 
-        if not self.api_key:
+        if not self.api_key or genai is None:
             return self._regex_fallback(fallback_text, note="Extracted using local text fallback (model unavailable)")
 
         try:
