@@ -1,4 +1,9 @@
 # Intelli-Credit : FinIntel
+ deployed visit - https://intellicredit-9p5e.vercel.app/
+ 
+ backend apis - https://intelli-credit-upe7.onrender.com/docs
+ 
+ demo video - https://drive.google.com/file/d/18nZpRP-Phr_1xcHB06Q3Enb9juiqyjkX/view?usp=sharing
 
 Corporate credit underwriting is still painfully manual. A credit officer has to collect borrower documents, reconcile numbers across filings, look for fraud signals, scan public intelligence, write a credit note, and then justify the final recommendation. That process is slow, inconsistent, and hard to scale.
 
@@ -158,6 +163,9 @@ This turns the system from a document reader into a fuller underwriting assistan
 ## System Architecture
 
 The application is split into a React frontend and a FastAPI backend, with the backend organized around three credit-analysis pillars.
+
+<img src="https://github.com/user-attachments/assets/af887dd0-37ff-4a24-b238-7f24ef4d74fc" width="800"/>
+
 
 
 ---
