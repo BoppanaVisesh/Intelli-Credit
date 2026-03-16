@@ -12,7 +12,7 @@ from core.config import get_settings
 from core.database import engine, Base
 from api.routes import applications, ingestion, research, scoring, cam, due_diligence, fraud_detection, extraction, analysis
 from seed_data import seed_demo_applications
-from seed_pipeline import start_seed_pipeline_thread
+from seed_pipeline import start_seed_pipeline_thread, run_seed_pipeline
 import uvicorn
 
 
@@ -72,6 +72,27 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+
+# Secure admin endpoint to trigger demo seed pipeline manually
+import os
+from fastapi import Request, HTTPException
+from fastapi.responses import JSONResponse
+
+ADMIN_SEED_TOKEN = os.getenv("ADMIN_SEED_TOKEN", "changeme")
+
+@app.post("/admin/trigger-demo-seed")
+async def trigger_demo_seed(request: Request):
+    data = await request.json()
+    token = data.get("token")
+    if token != ADMIN_SEED_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    # Run seed pipeline synchronously (not thread)
+    try:
+        run_seed_pipeline()
+        return JSONResponse({"status": "ok", "message": "Demo seed pipeline triggered"})
+    except Exception as e:
+        return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
 
 
 if __name__ == "__main__":

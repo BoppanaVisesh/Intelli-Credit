@@ -213,6 +213,17 @@ def _already_processed(app_id):
     return False
 
 
+def _get_pipeline_statuses(app_id):
+    """Return pipeline status map for the application summary."""
+    try:
+        r = requests.get(f"{API}/applications/{app_id}/summary", timeout=5)
+        if r.status_code == 200:
+            return r.json().get("pipeline", {})
+    except Exception:
+        pass
+    return {}
+
+
 def _expected_seed_docs(cfg):
     if "seed_files" in cfg:
         return [
@@ -351,69 +362,82 @@ def _process_demo_app(cfg):
     """Run the full pipeline on one demo application."""
     app_id = cfg["app_id"]
     label = cfg["company_name"]
+    pipeline = _get_pipeline_statuses(app_id)
+
+    def _is_completed(step_name):
+        return pipeline.get(step_name, {}).get("status") == "completed"
 
     # 1. Upload missing / unhealthy seed documents
     existing_docs = _fetch_existing_docs(app_id)
-    if _needs_seed_repair(cfg, existing_docs):
+    needs_repair = _needs_seed_repair(cfg, existing_docs)
+    if needs_repair:
         if not _upload_seed_documents(cfg, app_id, label, existing_docs):
             return False
 
     # 2. Parse documents
-    r = requests.post(
-        f"{API}/ingestion/parse-documents/{app_id}",
-        params={"retry_failed": True, "retry_unhealthy": True}
-    )
-    if r.status_code != 200:
-        print(f"      ✗ Parse failed for {label}: {r.status_code}")
-        return False
+    if needs_repair or not _is_completed("ingestion"):
+        r = requests.post(
+            f"{API}/ingestion/parse-documents/{app_id}",
+            params={"retry_failed": True, "retry_unhealthy": True}
+        )
+        if r.status_code != 200:
+            print(f"      ✗ Parse failed for {label}: {r.status_code}")
+            return False
 
-    # 3. Extraction — extract each document with defaults
-    r = requests.get(f"{API}/extraction/documents/{app_id}")
-    if r.status_code == 200:
-        for doc in r.json().get("documents", []):
-            fid = doc["file_id"]
-            requests.put(f"{API}/extraction/documents/{fid}/review", json={"action": "approve"})
-            requests.post(f"{API}/extraction/extract/{fid}", json={})
+        # 3. Extraction — extract each document with defaults
+        r = requests.get(f"{API}/extraction/documents/{app_id}")
+        if r.status_code == 200:
+            for doc in r.json().get("documents", []):
+                fid = doc["file_id"]
+                requests.put(f"{API}/extraction/documents/{fid}/review", json={"action": "approve"})
+                requests.post(f"{API}/extraction/extract/{fid}", json={})
 
     # 4. Fraud detection
-    r = requests.post(f"{API}/fraud/run-verification/{app_id}")
-    if r.status_code != 200:
-        print(f"      ⚠ Fraud detection failed for {label} — continuing")
+    if not _is_completed("fraud"):
+        r = requests.post(f"{API}/fraud/run-verification/{app_id}")
+        if r.status_code != 200:
+            print(f"      ⚠ Fraud detection failed for {label} — continuing")
 
     # 5. External research
-    r = requests.post(f"{API}/research/trigger-research", json={
-        "application_id": app_id,
-        "company_name": cfg["company_name"],
-        "sector": cfg["sector"],
-    })
-    if r.status_code != 200:
-        print(f"      ⚠ Research failed for {label} — continuing")
+    if not _is_completed("research"):
+        r = requests.post(f"{API}/research/trigger-research", json={
+            "application_id": app_id,
+            "company_name": cfg["company_name"],
+            "sector": cfg["sector"],
+        })
+        if r.status_code != 200:
+            print(f"      ⚠ Research failed for {label} — continuing")
 
     # 6. Due diligence notes
-    r = requests.post(f"{API}/due-diligence/add-notes", json={
-        "application_id": app_id,
-        "insight_type": "site_visit",
-        "credit_officer_notes": cfg["dd_notes"],
-    })
-    if r.status_code != 200:
-        print(f"      ⚠ DD notes failed for {label} — continuing")
+    if not _is_completed("due_diligence"):
+        r = requests.post(f"{API}/due-diligence/add-notes", json={
+            "application_id": app_id,
+            "insight_type": "site_visit",
+            "credit_officer_notes": cfg["dd_notes"],
+        })
+        if r.status_code != 200:
+            print(f"      ⚠ DD notes failed for {label} — continuing")
 
     # 7. Credit scoring
-    r = requests.post(f"{API}/scoring/calculate-score", params={"application_id": app_id})
-    if r.status_code != 200:
-        print(f"      ✗ Scoring failed for {label}: {r.status_code}")
-        return False
-    score_data = r.json()
+    score_data = {}
+    if not _is_completed("scoring"):
+        r = requests.post(f"{API}/scoring/calculate-score", params={"application_id": app_id})
+        if r.status_code != 200:
+            print(f"      ✗ Scoring failed for {label}: {r.status_code}")
+            return False
+        score_data = r.json()
 
     # 8. Pre-cognitive analysis
-    r = requests.post(f"{API}/analysis/run/{app_id}", json={"use_llm": True}, timeout=120)
-    if r.status_code != 200:
-        print(f"      ⚠ Analysis failed for {label} — continuing")
+    if not _is_completed("analysis"):
+        r = requests.post(f"{API}/analysis/run/{app_id}", json={"use_llm": True}, timeout=120)
+        if r.status_code != 200:
+            print(f"      ⚠ Analysis failed for {label} — continuing")
 
     # 9. CAM generation
-    r = requests.post(f"{API}/cam/generate", json={"application_id": app_id})
-    if r.status_code != 200:
-        print(f"      ⚠ CAM generation failed for {label} — continuing")
+    if not _is_completed("cam"):
+        r = requests.post(f"{API}/cam/generate", json={"application_id": app_id})
+        if r.status_code != 200:
+            print(f"      ⚠ CAM generation failed for {label} — continuing")
 
     # 10. Mark application as COMPLETED
     db = SessionLocal()
