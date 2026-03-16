@@ -8,6 +8,7 @@ sys.path.insert(0, str(backend_dir))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from core.config import get_settings
 from core.database import engine, Base
 from api.routes import applications, ingestion, research, scoring, cam, due_diligence, fraud_detection, extraction, analysis
 from seed_data import seed_demo_applications
@@ -20,8 +21,12 @@ async def lifespan(app: FastAPI):
     # Startup
     Base.metadata.create_all(bind=engine)
     print("✅ Database tables created")
-    seed_demo_applications()
-    start_seed_pipeline_thread()
+    settings = get_settings()
+    if settings.ENABLE_DEMO_SEED:
+        seed_demo_applications()
+        start_seed_pipeline_thread()
+    else:
+        print("ℹ️ Demo seed disabled (ENABLE_DEMO_SEED=false)")
     yield
     # Shutdown
     print("👋 Shutting down...")

@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Intelli-Credit"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
+    ENABLE_DEMO_SEED: bool = True
     
     # Database
     DATABASE_URL: str = "sqlite:///./intellicredit.db"

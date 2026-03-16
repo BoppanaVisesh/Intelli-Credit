@@ -307,6 +307,20 @@ Containerized services:
 
 The compose setup uses PostgreSQL and passes API keys through environment variables.
 
+### Option 4: Cloud Deployment (Render + Vercel)
+
+Recommended cloud path:
+
+- Deploy backend (`backend/`) as a Python Web Service on Render.
+- Deploy frontend (`frontend/`) as a Vite app on Vercel.
+- Use Render PostgreSQL and set `DATABASE_URL` in backend environment variables.
+- Set frontend env `VITE_API_URL` to your Render backend URL + `/api/v1`.
+
+Important for Render backend compatibility:
+
+- `backend/runtime.txt` pins Python to `3.10.14`
+- `backend/.python-version` pins Python to `3.10.14`
+
 ---
 
 ## Environment Variables
