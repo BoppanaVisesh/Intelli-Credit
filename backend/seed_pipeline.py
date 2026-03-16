@@ -11,7 +11,22 @@ from pathlib import Path
 from core.database import SessionLocal
 from models.application import Application, ApplicationStatus
 
-BASE_URL = "http://localhost:8000"
+def _resolve_base_url():
+    """Resolve API base URL for local and hosted environments."""
+    # Explicit override for cloud/runtime troubleshooting.
+    explicit = os.getenv("SEED_BASE_URL")
+    if explicit:
+        return explicit.rstrip("/")
+
+    # Render exposes the internal listening port via PORT.
+    port = os.getenv("PORT")
+    if port:
+        return f"http://127.0.0.1:{port}"
+
+    return "http://localhost:8000"
+
+
+BASE_URL = _resolve_base_url()
 API = f"{BASE_URL}/api/v1"
 
 # Map demo IDs to test data directories and context
@@ -418,7 +433,7 @@ def _process_demo_app(cfg):
 
 def run_seed_pipeline():
     """Background worker: wait for server, then process all demo apps."""
-    print("\n   🔄 Seed pipeline: waiting for server...")
+    print(f"\n   🔄 Seed pipeline: waiting for server at {BASE_URL}...")
     if not _wait_for_server():
         print("   ✗ Seed pipeline: server not reachable — skipping")
         return
