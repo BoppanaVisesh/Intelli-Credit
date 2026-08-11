@@ -173,8 +173,9 @@ DEMO_PIPELINES = [
 ]
 
 
-def _wait_for_server(timeout=30):
-    """Block until the server responds."""
+def _wait_for_server(timeout=90):
+    """Block until the server responds.  Render free-tier cold-starts can
+    take 50+ seconds, so the default timeout is generous."""
     for _ in range(timeout):
         try:
             r = requests.get(f"{BASE_URL}/health", timeout=2)
@@ -378,7 +379,8 @@ def _process_demo_app(cfg):
     if needs_repair or not _is_completed("ingestion"):
         r = requests.post(
             f"{API}/ingestion/parse-documents/{app_id}",
-            params={"retry_failed": True, "retry_unhealthy": True}
+            params={"retry_failed": True, "retry_unhealthy": True},
+            timeout=180,
         )
         if r.status_code != 200:
             print(f"      ✗ Parse failed for {label}: {r.status_code}")
@@ -394,7 +396,7 @@ def _process_demo_app(cfg):
 
     # 4. Fraud detection
     if not _is_completed("fraud"):
-        r = requests.post(f"{API}/fraud/run-verification/{app_id}")
+        r = requests.post(f"{API}/fraud/run-verification/{app_id}", timeout=120)
         if r.status_code != 200:
             print(f"      ⚠ Fraud detection failed for {label} — continuing")
 
@@ -404,7 +406,7 @@ def _process_demo_app(cfg):
             "application_id": app_id,
             "company_name": cfg["company_name"],
             "sector": cfg["sector"],
-        })
+        }, timeout=180)
         if r.status_code != 200:
             print(f"      ⚠ Research failed for {label} — continuing")
 
@@ -414,14 +416,14 @@ def _process_demo_app(cfg):
             "application_id": app_id,
             "insight_type": "site_visit",
             "credit_officer_notes": cfg["dd_notes"],
-        })
+        }, timeout=60)
         if r.status_code != 200:
             print(f"      ⚠ DD notes failed for {label} — continuing")
 
     # 7. Credit scoring
     score_data = {}
     if not _is_completed("scoring"):
-        r = requests.post(f"{API}/scoring/calculate-score", params={"application_id": app_id})
+        r = requests.post(f"{API}/scoring/calculate-score", params={"application_id": app_id}, timeout=120)
         if r.status_code != 200:
             print(f"      ✗ Scoring failed for {label}: {r.status_code}")
             return False
@@ -435,7 +437,7 @@ def _process_demo_app(cfg):
 
     # 9. CAM generation
     if not _is_completed("cam"):
-        r = requests.post(f"{API}/cam/generate", json={"application_id": app_id})
+        r = requests.post(f"{API}/cam/generate", json={"application_id": app_id}, timeout=180)
         if r.status_code != 200:
             print(f"      ⚠ CAM generation failed for {label} — continuing")
 
