@@ -19,12 +19,19 @@ import uvicorn
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    Base.metadata.create_all(bind=engine)
-    print("✅ Database tables created")
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database tables created")
+    except Exception as e:
+        print(f"⚠️  Database table creation error: {e}")
+        print("   Server will start anyway — some features may be limited")
     settings = get_settings()
     if settings.ENABLE_DEMO_SEED:
-        seed_demo_applications()
-        start_seed_pipeline_thread()
+        try:
+            seed_demo_applications()
+            start_seed_pipeline_thread()
+        except Exception as e:
+            print(f"⚠️  Seed pipeline startup error: {e}")
     else:
         print("ℹ️ Demo seed disabled (ENABLE_DEMO_SEED=false)")
     yield
